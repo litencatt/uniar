@@ -3,4 +3,4 @@ air-cmd:
 	sqlc generate
 	go build -o ./tmp/main .
 build:
-	docker build -t litencatt/unisonair:latest .
+	docker build -t litencatt/unisonair:latest  --build-arg GITHUB_COM_TOKEN=$$GITHUB_COM_TOKEN .
