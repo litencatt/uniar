@@ -1,0 +1,7 @@
+version: 1
+packages:
+  - engine: "mysql"
+    path: "repository"
+    name: "repository"
+    schema: "sql/schema.sql"
+    queries: "sql/query.sql"
