@@ -10,7 +10,7 @@ import (
 )
 
 const getGroup = `-- name: GetGroup :many
-SELECT id, name FROM ` + "`" + `groups` + "`" + `
+SELECT id, name, created_at FROM ` + "`" + `groups` + "`" + `
 `
 
 func (q *Queries) GetGroup(ctx context.Context) ([]Group, error) {
@@ -22,7 +22,7 @@ func (q *Queries) GetGroup(ctx context.Context) ([]Group, error) {
 	var items []Group
 	for rows.Next() {
 		var i Group
-		if err := rows.Scan(&i.ID, &i.Name); err != nil {
+		if err := rows.Scan(&i.ID, &i.Name, &i.CreatedAt); err != nil {
 			return nil, err
 		}
 		items = append(items, i)

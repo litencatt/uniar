@@ -1,18 +1,21 @@
 CREATE TABLE center_skills (
   `id` int NOT NULL AUTO_INCREMENT,
   `name` varchar(191) NOT NULL,
+  created_at DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 CREATE TABLE color_types (
   `id` int NOT NULL AUTO_INCREMENT,
   `name` varchar(191) NOT NULL,
+  created_at DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 CREATE TABLE `groups` (
   `id` int NOT NULL AUTO_INCREMENT,
   `name` varchar(191) NOT NULL,
+  created_at DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
@@ -20,6 +23,7 @@ CREATE TABLE lives (
   `id` int NOT NULL AUTO_INCREMENT,
   `name` varchar(191) NOT NULL,
   `group_id` int NOT NULL,
+  created_at DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
   PRIMARY KEY (`id`),
   KEY `group_id` (`group_id`),
   CONSTRAINT `Live_ibfk_1` FOREIGN KEY (`group_id`) REFERENCES `groups` (`id`) ON DELETE CASCADE ON UPDATE CASCADE
@@ -30,6 +34,7 @@ CREATE TABLE members (
   `name` varchar(191) NOT NULL,
   `group_id` int NOT NULL,
   `graduated` tinyint(1) NOT NULL DEFAULT '0',
+  created_at DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
   PRIMARY KEY (`id`),
   KEY `group_id` (`group_id`),
   CONSTRAINT `Member_ibfk_1` FOREIGN KEY (`group_id`) REFERENCES `groups` (`id`) ON DELETE CASCADE ON UPDATE CASCADE
@@ -47,6 +52,7 @@ CREATE TABLE music (
   `pro_plus` int NOT NULL,
   `music_bonus` tinyint(1) NOT NULL,
   `setlist_id` int NOT NULL,
+  created_at DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
   PRIMARY KEY (`id`),
   KEY `live_id` (`live_id`),
   KEY `color_type_id` (`color_type_id`),
@@ -60,6 +66,7 @@ CREATE TABLE photograph (
   `group_id` int NOT NULL,
   `abbreviation` varchar(191) NOT NULL DEFAULT '',
   `type` varchar(191) NOT NULL,
+  created_at DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
   PRIMARY KEY (`id`),
   KEY `group_id` (`group_id`),
   CONSTRAINT `Photograph_ibfk_1` FOREIGN KEY (`group_id`) REFERENCES `groups` (`id`) ON DELETE CASCADE ON UPDATE CASCADE
@@ -76,6 +83,7 @@ CREATE TABLE scenes (
   `center_skill_name` varchar(191)  DEFAULT NULL,
   `skill_name` varchar(191)  DEFAULT NULL,
   `ssr_plus` tinyint(1) NOT NULL DEFAULT '0',
+  created_at DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
   PRIMARY KEY (`id`),
   KEY `member_id` (`member_id`),
   KEY `photograph_id` (`photograph_id`),
@@ -94,5 +102,6 @@ CREATE TABLE skills (
   `interval_sec` int NOT NULL,
   `occurrence_percent` int NOT NULL,
   `score_up_percent` int DEFAULT NULL,
+  created_at DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;

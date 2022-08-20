@@ -6,27 +6,32 @@ package repository
 
 import (
 	"database/sql"
+	"time"
 )
 
 type CenterSkill struct {
-	ID   int32
-	Name string
+	ID        int32
+	Name      string
+	CreatedAt time.Time
 }
 
 type ColorType struct {
-	ID   int32
-	Name string
+	ID        int32
+	Name      string
+	CreatedAt time.Time
 }
 
 type Group struct {
-	ID   int32
-	Name string
+	ID        int32
+	Name      string
+	CreatedAt time.Time
 }
 
 type Life struct {
-	ID      int32
-	Name    string
-	GroupID int32
+	ID        int32
+	Name      string
+	GroupID   int32
+	CreatedAt time.Time
 }
 
 type Member struct {
@@ -34,6 +39,7 @@ type Member struct {
 	Name      string
 	GroupID   int32
 	Graduated bool
+	CreatedAt time.Time
 }
 
 type Music struct {
@@ -48,6 +54,7 @@ type Music struct {
 	ProPlus     int32
 	MusicBonus  bool
 	SetlistID   int32
+	CreatedAt   time.Time
 }
 
 type Photograph struct {
@@ -56,6 +63,7 @@ type Photograph struct {
 	GroupID      int32
 	Abbreviation string
 	Type         string
+	CreatedAt    time.Time
 }
 
 type Scene struct {
@@ -69,6 +77,7 @@ type Scene struct {
 	CenterSkillName sql.NullString
 	SkillName       sql.NullString
 	SsrPlus         bool
+	CreatedAt       time.Time
 }
 
 type Skill struct {
@@ -80,4 +89,5 @@ type Skill struct {
 	IntervalSec       int32
 	OccurrencePercent int32
 	ScoreUpPercent    sql.NullInt32
+	CreatedAt         time.Time
 }

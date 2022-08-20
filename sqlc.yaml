@@ -4,4 +4,4 @@ packages:
     path: "repository"
     name: "repository"
     schema: "sql/schema.sql"
-    queries: "sql/query.sql"
+    queries: "sql/queries/"
