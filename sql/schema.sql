@@ -105,3 +105,22 @@ CREATE TABLE skills (
   created_at DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+CREATE TABLE producers (
+  `id` int NOT NULL AUTO_INCREMENT,
+  created_at DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+CREATE TABLE producer_scenes (
+  `id` int NOT NULL AUTO_INCREMENT,
+  producer_id INT NOT NULL,
+  photograph_id INT NOT NULL,
+  member_id INT NOT NULL,
+  have TINYINT(1) DEFAULT 0,
+  created_at DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  PRIMARY KEY (`id`),
+  CONSTRAINT `fk_producer_scenes_producer_id` FOREIGN KEY (`producer_id`) REFERENCES `producers` (`id`),
+  CONSTRAINT `fk_producer_scenes_photo_id` FOREIGN KEY (`photograph_id`) REFERENCES `photograph` (`id`),
+  CONSTRAINT `fk_producer_scenes_member_id` FOREIGN KEY (`member_id`) REFERENCES `members` (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
