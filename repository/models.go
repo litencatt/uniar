@@ -68,14 +68,14 @@ type Photograph struct {
 
 type Scene struct {
 	ID              int32
-	ColorTypeID     int32
-	DanceMax        int32
-	MemberID        int32
-	PeformanceMax   int32
 	PhotographID    int32
+	MemberID        int32
+	ColorTypeID     int32
 	VocalMax        int32
+	DanceMax        int32
+	PeformanceMax   int32
 	CenterSkillName sql.NullString
-	SkillName       sql.NullString
+	ExpectedValue   sql.NullString
 	SsrPlus         bool
 	CreatedAt       time.Time
 }

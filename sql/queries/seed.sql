@@ -344,7 +344,7 @@ INSERT INTO `photograph` (`id`, `name`, `group_id`, `abbreviation`, `type`) VALU
 (77, 'Tour\'21 at 2.5th Anniv.', 2, '', '限定');
 
 -- name: SeedScenes :exec
-INSERT INTO `scenes` (`id`, `color_type_id`, `dance_max`, `member_id`, `peformance_max`, `photograph_id`, `vocal_max`, `center_skill_name`, `skill_name`, `ssr_plus`) VALUES
+INSERT INTO `scenes` (`id`, `color_type_id`, `dance_max`, `member_id`, `peformance_max`, `photograph_id`, `vocal_max`, `center_skill_name`, `expected_value`, `ssr_plus`) VALUES
 (1, 1, 2920, 42, 4565, 45, 5059, '', '3.68', 1),
 (2, 1, 3811, 42, 4872, 41, 3789, '', '2.75', 1),
 (3, 1, 4578, 10, 3845, 3, 4006, '', '3.68', 1),
