@@ -1,27 +1,27 @@
 CREATE TABLE center_skills (
   `id` int NOT NULL AUTO_INCREMENT,
-  `name` varchar(191) NOT NULL,
+  `name` varchar(100) NOT NULL,
   created_at DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 CREATE TABLE color_types (
   `id` int NOT NULL AUTO_INCREMENT,
-  `name` varchar(191) NOT NULL,
+  `name` varchar(100) NOT NULL,
   created_at DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 CREATE TABLE `groups` (
   `id` int NOT NULL AUTO_INCREMENT,
-  `name` varchar(191) NOT NULL,
+  `name` varchar(100) NOT NULL,
   created_at DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 CREATE TABLE lives (
   `id` int NOT NULL AUTO_INCREMENT,
-  `name` varchar(191) NOT NULL,
+  `name` varchar(100) NOT NULL,
   `group_id` int NOT NULL,
   created_at DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
   PRIMARY KEY (`id`),
@@ -31,7 +31,7 @@ CREATE TABLE lives (
 
 CREATE TABLE members (
   `id` int NOT NULL AUTO_INCREMENT,
-  `name` varchar(191) NOT NULL,
+  `name` varchar(100) NOT NULL,
   first_name varchar(100) DEFAULT NULL,
   `group_id` int NOT NULL,
   `phase` int NOT NULL,
@@ -44,7 +44,7 @@ CREATE TABLE members (
 
 CREATE TABLE music (
   `id` int NOT NULL AUTO_INCREMENT,
-  `name` varchar(191) NOT NULL,
+  `name` varchar(100) NOT NULL,
   `normal` int NOT NULL,
   `pro` int NOT NULL,
   `master` int NOT NULL,
@@ -64,10 +64,10 @@ CREATE TABLE music (
 
 CREATE TABLE photograph (
   `id` int NOT NULL AUTO_INCREMENT,
-  `name` varchar(191) NOT NULL,
+  `name` varchar(100) NOT NULL,
   `group_id` int NOT NULL,
-  `abbreviation` varchar(191) NOT NULL DEFAULT '',
-  `type` varchar(191) NOT NULL,
+  `abbreviation` varchar(10) NOT NULL DEFAULT '',
+  `type` varchar(10) NOT NULL,
   created_at DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
   PRIMARY KEY (`id`),
   KEY `group_id` (`group_id`),
@@ -97,7 +97,7 @@ CREATE TABLE scenes (
 
 CREATE TABLE skills (
   `id` int NOT NULL AUTO_INCREMENT,
-  `name` varchar(191) NOT NULL,
+  `name` varchar(100) NOT NULL,
   `combo_up_percent` int DEFAULT NULL,
   `duration_sec` int DEFAULT NULL,
   `expected_value` double NOT NULL,

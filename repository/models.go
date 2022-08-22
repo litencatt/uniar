@@ -37,7 +37,9 @@ type Life struct {
 type Member struct {
 	ID        int32
 	Name      string
+	FirstName sql.NullString
 	GroupID   int32
+	Phase     int32
 	Graduated bool
 	CreatedAt time.Time
 }
@@ -63,6 +65,20 @@ type Photograph struct {
 	GroupID      int32
 	Abbreviation string
 	Type         string
+	CreatedAt    time.Time
+}
+
+type Producer struct {
+	ID        int32
+	CreatedAt time.Time
+}
+
+type ProducerScene struct {
+	ID           int32
+	ProducerID   int32
+	PhotographID int32
+	MemberID     int32
+	Have         sql.NullBool
 	CreatedAt    time.Time
 }
 
