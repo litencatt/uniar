@@ -32,7 +32,9 @@ CREATE TABLE lives (
 CREATE TABLE members (
   `id` int NOT NULL AUTO_INCREMENT,
   `name` varchar(191) NOT NULL,
+  first_name varchar(100) DEFAULT NULL,
   `group_id` int NOT NULL,
+  `phase` int NOT NULL,
   `graduated` tinyint(1) NOT NULL DEFAULT '0',
   created_at DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
   PRIMARY KEY (`id`),
