@@ -22,21 +22,57 @@ THE SOFTWARE.
 package cmd
 
 import (
-	"fmt"
+	"context"
+	"log"
+	"os"
+	"strconv"
 
+	"github.com/litencatt/unisonair/repository"
+	"github.com/olekukonko/tablewriter"
 	"github.com/spf13/cobra"
+	"github.com/xo/dburl"
 )
 
-// listCmd represents the list command
-var listCmd = &cobra.Command{
-	Use:   "list",
+// groupCmd represents the listGroup command
+var groupCmd = &cobra.Command{
+	Use:   "group",
 	Short: "A brief description of your command",
 	Long:  `A longer description`,
 	Run: func(cmd *cobra.Command, args []string) {
-		fmt.Println("list called")
+		ctx := context.Background()
+		dsn := os.Getenv("UNIAR_DSN")
+		db, err := dburl.Open(dsn)
+		if err != nil {
+			log.Print(err)
+		}
+
+		queries := repository.New(db)
+		groups, err := queries.GetGroup(ctx)
+		if err != nil {
+			log.Print(err)
+		}
+
+		table := tablewriter.NewWriter(os.Stdout)
+		table.SetHeader([]string{"No", "Group"})
+
+		for _, v := range groups {
+			g := []string{strconv.Itoa(int(v.ID)), v.Name}
+			table.Append(g)
+		}
+		table.Render()
 	},
 }
 
 func init() {
-	rootCmd.AddCommand(listCmd)
+	listCmd.AddCommand(groupCmd)
+
+	// Here you will define your flags and configuration settings.
+
+	// Cobra supports Persistent Flags which will work for this command
+	// and all subcommands, e.g.:
+	// listGroupCmd.PersistentFlags().String("foo", "", "A help for foo")
+
+	// Cobra supports local flags which will only run when this command
+	// is called directly, e.g.:
+	// listGroupCmd.Flags().BoolP("toggle", "t", false, "Help message for toggle")
 }
