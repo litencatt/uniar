@@ -35,3 +35,58 @@ func (q *Queries) GetGroup(ctx context.Context) ([]Group, error) {
 	}
 	return items, nil
 }
+
+const getMusicList = `-- name: GetMusicList :many
+SELECT
+	l.` + "`" + `name` + "`" + ` AS live,
+	m.name AS music,
+	c.name AS TYPE,
+	m.` + "`" + `length` + "`" + `,
+	m.music_bonus AS bonus,
+	m.master
+FROM
+	music m
+	JOIN lives l ON m.live_id = l.id
+	JOIN color_types c ON m.color_type_id = c.id
+ORDER BY
+	l.id
+`
+
+type GetMusicListRow struct {
+	Live   string
+	Music  string
+	Type   string
+	Length int32
+	Bonus  bool
+	Master int32
+}
+
+func (q *Queries) GetMusicList(ctx context.Context) ([]GetMusicListRow, error) {
+	rows, err := q.db.QueryContext(ctx, getMusicList)
+	if err != nil {
+		return nil, err
+	}
+	defer rows.Close()
+	var items []GetMusicListRow
+	for rows.Next() {
+		var i GetMusicListRow
+		if err := rows.Scan(
+			&i.Live,
+			&i.Music,
+			&i.Type,
+			&i.Length,
+			&i.Bonus,
+			&i.Master,
+		); err != nil {
+			return nil, err
+		}
+		items = append(items, i)
+	}
+	if err := rows.Close(); err != nil {
+		return nil, err
+	}
+	if err := rows.Err(); err != nil {
+		return nil, err
+	}
+	return items, nil
+}
