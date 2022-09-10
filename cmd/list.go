@@ -1,5 +1,4 @@
-The MIT License (MIT)
-
+/*
 Copyright © 2022 Kosuke Nakamura <ncl0709@gmail.com>
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
@@ -19,3 +18,44 @@ AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
 LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 THE SOFTWARE.
+*/
+package cmd
+
+import (
+	"context"
+	"fmt"
+	"log"
+	"os"
+
+	"github.com/litencatt/unisonair/repository"
+	"github.com/spf13/cobra"
+	"github.com/xo/dburl"
+)
+
+// listCmd represents the list command
+var listCmd = &cobra.Command{
+	Use:   "list",
+	Short: "A brief description of your command",
+	Long:  `A longer description`,
+	Run: func(cmd *cobra.Command, args []string) {
+		ctx := context.Background()
+		dsn := os.Getenv("UNIAR_DSN")
+		db, err := dburl.Open(dsn)
+		if err != nil {
+			log.Print(err)
+		}
+
+		queries := repository.New(db)
+
+		// list all authors
+		groups, err := queries.GetGroup(ctx)
+		if err != nil {
+			log.Print(err)
+		}
+		fmt.Println(groups)
+	},
+}
+
+func init() {
+	rootCmd.AddCommand(listCmd)
+}
