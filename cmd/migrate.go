@@ -48,6 +48,7 @@ func execute() error {
 		Host:     u.Hostname(),
 		Port:     port,
 	}
+
 	if options.DesiredFile == "" {
 		f, err := os.CreateTemp("", "schema")
 		if err != nil {
