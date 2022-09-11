@@ -5,3 +5,4 @@ packages:
     name: "repository"
     schema: "sql/schema.sql"
     queries: "sql/queries/"
+    emit_interface: true
