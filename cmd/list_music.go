@@ -32,10 +32,10 @@ import (
 	"github.com/spf13/cobra"
 )
 
-// sceneCmd represents the scene command
-var sceneCmd = &cobra.Command{
-	Use:   "scene",
-	Short: "List scene",
+// musicCmd represents the music command
+var listMusicCmd = &cobra.Command{
+	Use:   "music",
+	Short: "List music",
 	Run: func(cmd *cobra.Command, args []string) {
 		ctx := context.Background()
 		db, err := repository.NewConnection()
@@ -44,25 +44,22 @@ var sceneCmd = &cobra.Command{
 		}
 
 		q := repository.New()
-		m, err := q.GetScenes(ctx, db)
+		m, err := q.GetMusicList(ctx, db)
 		if err != nil {
 			log.Print(err)
 		}
 
 		table := tablewriter.NewWriter(os.Stdout)
-		table.SetHeader([]string{"photograph", "member", "color", "total", "vocal", "dance", "performance", "expected_value", "ssr+"})
+		table.SetHeader([]string{"Live", "Music", "Type", "Length", "Bonus", "master"})
 
 		for _, v := range m {
 			g := []string{
-				v.Photograph,
-				v.Member,
-				v.Color,
-				fmt.Sprintf("%d", v.Total),
-				fmt.Sprintf("%d", v.VocalMax),
-				fmt.Sprintf("%d", v.DanceMax),
-				fmt.Sprintf("%d", v.PeformanceMax),
-				v.ExpectedValue.String,
-				fmt.Sprintf("%t", v.SsrPlus),
+				v.Live,
+				v.Music,
+				v.Type,
+				fmt.Sprintf("%d", v.Length),
+				fmt.Sprintf("%T", v.Bonus),
+				fmt.Sprintf("%d", v.Master),
 			}
 			table.Append(g)
 		}
@@ -71,15 +68,15 @@ var sceneCmd = &cobra.Command{
 }
 
 func init() {
-	listCmd.AddCommand(sceneCmd)
+	listCmd.AddCommand(listMusicCmd)
 
 	// Here you will define your flags and configuration settings.
 
 	// Cobra supports Persistent Flags which will work for this command
 	// and all subcommands, e.g.:
-	// sceneCmd.PersistentFlags().String("foo", "", "A help for foo")
+	// musicCmd.PersistentFlags().String("foo", "", "A help for foo")
 
 	// Cobra supports local flags which will only run when this command
 	// is called directly, e.g.:
-	// sceneCmd.Flags().BoolP("toggle", "t", false, "Help message for toggle")
+	// musicCmd.Flags().BoolP("toggle", "t", false, "Help message for toggle")
 }

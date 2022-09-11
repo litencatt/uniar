@@ -23,19 +23,19 @@ package cmd
 
 import (
 	"context"
-	"fmt"
 	"log"
 	"os"
+	"strconv"
 
 	"github.com/litencatt/uniar/repository"
 	"github.com/olekukonko/tablewriter"
 	"github.com/spf13/cobra"
 )
 
-// collectionCmd represents the collection command
-var collectionCmd = &cobra.Command{
-	Use:   "collection",
-	Short: "List collection",
+// groupCmd represents the listGroup command
+var listGroupCmd = &cobra.Command{
+	Use:   "group",
+	Short: "List group",
 	Run: func(cmd *cobra.Command, args []string) {
 		ctx := context.Background()
 		db, err := repository.NewConnection()
@@ -44,22 +44,16 @@ var collectionCmd = &cobra.Command{
 		}
 
 		q := repository.New()
-		m, err := q.GetCollections(ctx, db)
+		groups, err := q.GetGroup(ctx, db)
 		if err != nil {
 			log.Print(err)
 		}
 
 		table := tablewriter.NewWriter(os.Stdout)
-		table.SetHeader([]string{"photograph", "member", "color", "expected_value", "ssr+"})
+		table.SetHeader([]string{"No", "Group"})
 
-		for _, v := range m {
-			g := []string{
-				v.Photograph,
-				v.Member,
-				v.Color,
-				v.ExpectedValue.String,
-				fmt.Sprintf("%t", v.SsrPlus),
-			}
+		for _, v := range groups {
+			g := []string{strconv.Itoa(int(v.ID)), v.Name}
 			table.Append(g)
 		}
 		table.Render()
@@ -67,15 +61,15 @@ var collectionCmd = &cobra.Command{
 }
 
 func init() {
-	listCmd.AddCommand(collectionCmd)
+	listCmd.AddCommand(listGroupCmd)
 
 	// Here you will define your flags and configuration settings.
 
 	// Cobra supports Persistent Flags which will work for this command
 	// and all subcommands, e.g.:
-	// collectionCmd.PersistentFlags().String("foo", "", "A help for foo")
+	// listGroupCmd.PersistentFlags().String("foo", "", "A help for foo")
 
 	// Cobra supports local flags which will only run when this command
 	// is called directly, e.g.:
-	// collectionCmd.Flags().BoolP("toggle", "t", false, "Help message for toggle")
+	// listGroupCmd.Flags().BoolP("toggle", "t", false, "Help message for toggle")
 }
