@@ -23,12 +23,9 @@ package cmd
 
 import (
 	"context"
-	"fmt"
 	"log"
-	"os"
 
 	"github.com/litencatt/uniar/repository"
-	"github.com/olekukonko/tablewriter"
 	"github.com/spf13/cobra"
 )
 
@@ -44,29 +41,12 @@ var listSceneCmd = &cobra.Command{
 		}
 
 		q := repository.New()
-		m, err := q.GetScenes(ctx, db)
+		scenes, err := q.GetScenes(ctx, db)
 		if err != nil {
 			log.Print(err)
 		}
 
-		table := tablewriter.NewWriter(os.Stdout)
-		table.SetHeader([]string{"photograph", "member", "color", "total", "vocal", "dance", "performance", "expected_value", "ssr+"})
-
-		for _, v := range m {
-			g := []string{
-				v.Photograph,
-				v.Member,
-				v.Color,
-				fmt.Sprintf("%d", v.Total),
-				fmt.Sprintf("%d", v.VocalMax),
-				fmt.Sprintf("%d", v.DanceMax),
-				fmt.Sprintf("%d", v.PeformanceMax),
-				v.ExpectedValue.String,
-				fmt.Sprintf("%t", v.SsrPlus),
-			}
-			table.Append(g)
-		}
-		table.Render()
+		render(scenes)
 	},
 }
 

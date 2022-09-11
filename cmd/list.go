@@ -23,7 +23,10 @@ package cmd
 
 import (
 	"fmt"
+	"os"
+	"reflect"
 
+	"github.com/olekukonko/tablewriter"
 	"github.com/spf13/cobra"
 )
 
@@ -39,4 +42,36 @@ var listCmd = &cobra.Command{
 
 func init() {
 	rootCmd.AddCommand(listCmd)
+}
+
+func render(data any) {
+	// // SetHeaderのためにフィールド名取得
+	var fields []string
+	d := reflect.TypeOf(data).Elem()
+	for i := 0; i < d.NumField(); i++ {
+		field := d.Field(i)
+		fields = append(fields, field.Name)
+	}
+	//fmt.Printf("%v\n", fields)
+
+	table := tablewriter.NewWriter(os.Stdout)
+	table.SetHeader(fields)
+
+	// 各Rowの値を設定
+	var b [][]string
+	v := reflect.ValueOf(data)
+	for i := 0; i < v.Len(); i++ {
+		rv := v.Index(i)
+		//fmt.Printf("v\n", rv.NumField())
+
+		var r []string
+		for i := 0; i < rv.NumField(); i++ {
+			field := rv.Field(i)
+			// fmt.Printf("%s\n", field)
+			r = append(r, fmt.Sprintf("%v", field))
+		}
+		b = append(b, r)
+	}
+	table.AppendBulk(b)
+	table.Render()
 }
