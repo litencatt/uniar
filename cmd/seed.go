@@ -45,15 +45,33 @@ var seedCmd = &cobra.Command{
 		}
 
 		queries := repository.New(db)
-		queries.SeedGroups(ctx)
-		queries.SeedCenterSkills(ctx)
-		queries.SeedColorTypes(ctx)
-		queries.SeedLives(ctx)
-		queries.SeedMembers(ctx)
-		queries.SeedMusic(ctx)
-		queries.SeedPhotograph(ctx)
-		queries.SeedScenes(ctx)
-		queries.SeedSkills(ctx)
+		if err := queries.SeedGroups(ctx); err != nil {
+			log.Print(err)
+		}
+		if err := queries.SeedCenterSkills(ctx); err != nil {
+			log.Print(err)
+		}
+		if err := queries.SeedColorTypes(ctx); err != nil {
+			log.Print(err)
+		}
+		if err := queries.SeedLives(ctx); err != nil {
+			log.Print(err)
+		}
+		if err := queries.SeedMembers(ctx); err != nil {
+			log.Print(err)
+		}
+		if err := queries.SeedMusic(ctx); err != nil {
+			log.Print(err)
+		}
+		if err := queries.SeedPhotograph(ctx); err != nil {
+			log.Print(err)
+		}
+		if err := queries.SeedScenes(ctx); err != nil {
+			log.Print(err)
+		}
+		if err := queries.SeedSkills(ctx); err != nil {
+			log.Print(err)
+		}
 	},
 }
 
