@@ -32,10 +32,10 @@ import (
 	"github.com/spf13/cobra"
 )
 
-// musicCmd represents the music command
-var musicCmd = &cobra.Command{
-	Use:   "music",
-	Short: "List music",
+// memberCmd represents the member command
+var listMemberCmd = &cobra.Command{
+	Use:   "member",
+	Short: "List member",
 	Run: func(cmd *cobra.Command, args []string) {
 		ctx := context.Background()
 		db, err := repository.NewConnection()
@@ -44,22 +44,21 @@ var musicCmd = &cobra.Command{
 		}
 
 		q := repository.New()
-		m, err := q.GetMusicList(ctx, db)
+		m, err := q.GetMembers(ctx, db)
 		if err != nil {
 			log.Print(err)
 		}
 
 		table := tablewriter.NewWriter(os.Stdout)
-		table.SetHeader([]string{"Live", "Music", "Type", "Length", "Bonus", "master"})
+		table.SetHeader([]string{"group", "member_id", "name", "phase", "graduated"})
 
 		for _, v := range m {
 			g := []string{
-				v.Live,
-				v.Music,
-				v.Type,
-				fmt.Sprintf("%d", v.Length),
-				fmt.Sprintf("%T", v.Bonus),
-				fmt.Sprintf("%d", v.Master),
+				v.Group,
+				fmt.Sprintf("%d", v.MemberID),
+				v.Name,
+				fmt.Sprintf("%d", v.Phase),
+				fmt.Sprintf("%t", v.Graduated),
 			}
 			table.Append(g)
 		}
@@ -68,15 +67,15 @@ var musicCmd = &cobra.Command{
 }
 
 func init() {
-	listCmd.AddCommand(musicCmd)
+	listCmd.AddCommand(listMemberCmd)
 
 	// Here you will define your flags and configuration settings.
 
 	// Cobra supports Persistent Flags which will work for this command
 	// and all subcommands, e.g.:
-	// musicCmd.PersistentFlags().String("foo", "", "A help for foo")
+	// memberCmd.PersistentFlags().String("foo", "", "A help for foo")
 
 	// Cobra supports local flags which will only run when this command
 	// is called directly, e.g.:
-	// musicCmd.Flags().BoolP("toggle", "t", false, "Help message for toggle")
+	// memberCmd.Flags().BoolP("toggle", "t", false, "Help message for toggle")
 }

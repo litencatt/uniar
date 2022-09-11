@@ -23,19 +23,19 @@ package cmd
 
 import (
 	"context"
+	"fmt"
 	"log"
 	"os"
-	"strconv"
 
 	"github.com/litencatt/uniar/repository"
 	"github.com/olekukonko/tablewriter"
 	"github.com/spf13/cobra"
 )
 
-// groupCmd represents the listGroup command
-var groupCmd = &cobra.Command{
-	Use:   "group",
-	Short: "List group",
+// sceneCmd represents the scene command
+var listSceneCmd = &cobra.Command{
+	Use:   "scene",
+	Short: "List scene",
 	Run: func(cmd *cobra.Command, args []string) {
 		ctx := context.Background()
 		db, err := repository.NewConnection()
@@ -44,16 +44,26 @@ var groupCmd = &cobra.Command{
 		}
 
 		q := repository.New()
-		groups, err := q.GetGroup(ctx, db)
+		m, err := q.GetScenes(ctx, db)
 		if err != nil {
 			log.Print(err)
 		}
 
 		table := tablewriter.NewWriter(os.Stdout)
-		table.SetHeader([]string{"No", "Group"})
+		table.SetHeader([]string{"photograph", "member", "color", "total", "vocal", "dance", "performance", "expected_value", "ssr+"})
 
-		for _, v := range groups {
-			g := []string{strconv.Itoa(int(v.ID)), v.Name}
+		for _, v := range m {
+			g := []string{
+				v.Photograph,
+				v.Member,
+				v.Color,
+				fmt.Sprintf("%d", v.Total),
+				fmt.Sprintf("%d", v.VocalMax),
+				fmt.Sprintf("%d", v.DanceMax),
+				fmt.Sprintf("%d", v.PeformanceMax),
+				v.ExpectedValue.String,
+				fmt.Sprintf("%t", v.SsrPlus),
+			}
 			table.Append(g)
 		}
 		table.Render()
@@ -61,15 +71,15 @@ var groupCmd = &cobra.Command{
 }
 
 func init() {
-	listCmd.AddCommand(groupCmd)
+	listCmd.AddCommand(listSceneCmd)
 
 	// Here you will define your flags and configuration settings.
 
 	// Cobra supports Persistent Flags which will work for this command
 	// and all subcommands, e.g.:
-	// listGroupCmd.PersistentFlags().String("foo", "", "A help for foo")
+	// sceneCmd.PersistentFlags().String("foo", "", "A help for foo")
 
 	// Cobra supports local flags which will only run when this command
 	// is called directly, e.g.:
-	// listGroupCmd.Flags().BoolP("toggle", "t", false, "Help message for toggle")
+	// sceneCmd.Flags().BoolP("toggle", "t", false, "Help message for toggle")
 }

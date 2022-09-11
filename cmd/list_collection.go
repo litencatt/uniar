@@ -32,10 +32,10 @@ import (
 	"github.com/spf13/cobra"
 )
 
-// memberCmd represents the member command
-var memberCmd = &cobra.Command{
-	Use:   "member",
-	Short: "List member",
+// collectionCmd represents the collection command
+var listCollectionCmd = &cobra.Command{
+	Use:   "collection",
+	Short: "List collection",
 	Run: func(cmd *cobra.Command, args []string) {
 		ctx := context.Background()
 		db, err := repository.NewConnection()
@@ -44,21 +44,21 @@ var memberCmd = &cobra.Command{
 		}
 
 		q := repository.New()
-		m, err := q.GetMembers(ctx, db)
+		m, err := q.GetCollections(ctx, db)
 		if err != nil {
 			log.Print(err)
 		}
 
 		table := tablewriter.NewWriter(os.Stdout)
-		table.SetHeader([]string{"group", "member_id", "name", "phase", "graduated"})
+		table.SetHeader([]string{"photograph", "member", "color", "expected_value", "ssr+"})
 
 		for _, v := range m {
 			g := []string{
-				v.Group,
-				fmt.Sprintf("%d", v.MemberID),
-				v.Name,
-				fmt.Sprintf("%d", v.Phase),
-				fmt.Sprintf("%t", v.Graduated),
+				v.Photograph,
+				v.Member,
+				v.Color,
+				v.ExpectedValue.String,
+				fmt.Sprintf("%t", v.SsrPlus),
 			}
 			table.Append(g)
 		}
@@ -67,15 +67,15 @@ var memberCmd = &cobra.Command{
 }
 
 func init() {
-	listCmd.AddCommand(memberCmd)
+	listCmd.AddCommand(listCollectionCmd)
 
 	// Here you will define your flags and configuration settings.
 
 	// Cobra supports Persistent Flags which will work for this command
 	// and all subcommands, e.g.:
-	// memberCmd.PersistentFlags().String("foo", "", "A help for foo")
+	// collectionCmd.PersistentFlags().String("foo", "", "A help for foo")
 
 	// Cobra supports local flags which will only run when this command
 	// is called directly, e.g.:
-	// memberCmd.Flags().BoolP("toggle", "t", false, "Help message for toggle")
+	// collectionCmd.Flags().BoolP("toggle", "t", false, "Help message for toggle")
 }
