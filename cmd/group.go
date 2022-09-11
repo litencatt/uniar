@@ -30,7 +30,6 @@ import (
 	"github.com/litencatt/uniar/repository"
 	"github.com/olekukonko/tablewriter"
 	"github.com/spf13/cobra"
-	"github.com/xo/dburl"
 )
 
 // groupCmd represents the listGroup command
@@ -39,14 +38,13 @@ var groupCmd = &cobra.Command{
 	Short: "List group",
 	Run: func(cmd *cobra.Command, args []string) {
 		ctx := context.Background()
-		dsn := os.Getenv("UNIAR_DSN")
-		db, err := dburl.Open(dsn)
+		db, err := repository.NewConnection()
 		if err != nil {
 			log.Print(err)
 		}
 
-		queries := repository.New(db)
-		groups, err := queries.GetGroup(ctx)
+		q := repository.New()
+		groups, err := q.GetGroup(ctx, db)
 		if err != nil {
 			log.Print(err)
 		}
