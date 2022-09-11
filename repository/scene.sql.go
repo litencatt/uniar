@@ -42,8 +42,8 @@ type SelectSceneListRow struct {
 	SsrPlus       bool
 }
 
-func (q *Queries) SelectSceneList(ctx context.Context) ([]SelectSceneListRow, error) {
-	rows, err := q.db.QueryContext(ctx, selectSceneList)
+func (q *Queries) SelectSceneList(ctx context.Context, db DBTX) ([]SelectSceneListRow, error) {
+	rows, err := db.QueryContext(ctx, selectSceneList)
 	if err != nil {
 		return nil, err
 	}

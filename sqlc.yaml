@@ -6,3 +6,4 @@ packages:
     schema: "sql/schema.sql"
     queries: "sql/queries/"
     emit_interface: true
+    emit_methods_with_db_argument: true

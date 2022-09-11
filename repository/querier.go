@@ -9,23 +9,23 @@ import (
 )
 
 type Querier interface {
-	GetCollections(ctx context.Context) ([]GetCollectionsRow, error)
-	GetGroup(ctx context.Context) ([]Group, error)
-	GetMembers(ctx context.Context) ([]GetMembersRow, error)
-	GetMusicList(ctx context.Context) ([]GetMusicListRow, error)
+	GetCollections(ctx context.Context, db DBTX) ([]GetCollectionsRow, error)
+	GetGroup(ctx context.Context, db DBTX) ([]Group, error)
+	GetMembers(ctx context.Context, db DBTX) ([]GetMembersRow, error)
+	GetMusicList(ctx context.Context, db DBTX) ([]GetMusicListRow, error)
 	// WHERE
 	// 	p.id = 1
-	GetScenes(ctx context.Context) ([]GetScenesRow, error)
-	SeedCenterSkills(ctx context.Context) error
-	SeedColorTypes(ctx context.Context) error
-	SeedGroups(ctx context.Context) error
-	SeedLives(ctx context.Context) error
-	SeedMembers(ctx context.Context) error
-	SeedMusic(ctx context.Context) error
-	SeedPhotograph(ctx context.Context) error
-	SeedScenes(ctx context.Context) error
-	SeedSkills(ctx context.Context) error
-	SelectSceneList(ctx context.Context) ([]SelectSceneListRow, error)
+	GetScenes(ctx context.Context, db DBTX) ([]GetScenesRow, error)
+	SeedCenterSkills(ctx context.Context, db DBTX) error
+	SeedColorTypes(ctx context.Context, db DBTX) error
+	SeedGroups(ctx context.Context, db DBTX) error
+	SeedLives(ctx context.Context, db DBTX) error
+	SeedMembers(ctx context.Context, db DBTX) error
+	SeedMusic(ctx context.Context, db DBTX) error
+	SeedPhotograph(ctx context.Context, db DBTX) error
+	SeedScenes(ctx context.Context, db DBTX) error
+	SeedSkills(ctx context.Context, db DBTX) error
+	SelectSceneList(ctx context.Context, db DBTX) ([]SelectSceneListRow, error)
 }
 
 var _ Querier = (*Queries)(nil)
