@@ -10,7 +10,7 @@ import (
 
 type Querier interface {
 	GetCollections(ctx context.Context, db DBTX) ([]GetCollectionsRow, error)
-	GetGroup(ctx context.Context, db DBTX) ([]Group, error)
+	GetGroup(ctx context.Context, db DBTX) ([]GetGroupRow, error)
 	GetMembers(ctx context.Context, db DBTX) ([]GetMembersRow, error)
 	GetMusicList(ctx context.Context, db DBTX) ([]GetMusicListRow, error)
 	// WHERE

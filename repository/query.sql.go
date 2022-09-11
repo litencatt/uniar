@@ -69,19 +69,24 @@ func (q *Queries) GetCollections(ctx context.Context, db DBTX) ([]GetCollections
 }
 
 const getGroup = `-- name: GetGroup :many
-SELECT id, name, created_at FROM ` + "`" + `groups` + "`" + `
+SELECT id, name FROM ` + "`" + `groups` + "`" + `
 `
 
-func (q *Queries) GetGroup(ctx context.Context, db DBTX) ([]Group, error) {
+type GetGroupRow struct {
+	ID   int32
+	Name string
+}
+
+func (q *Queries) GetGroup(ctx context.Context, db DBTX) ([]GetGroupRow, error) {
 	rows, err := db.QueryContext(ctx, getGroup)
 	if err != nil {
 		return nil, err
 	}
 	defer rows.Close()
-	var items []Group
+	var items []GetGroupRow
 	for rows.Next() {
-		var i Group
-		if err := rows.Scan(&i.ID, &i.Name, &i.CreatedAt); err != nil {
+		var i GetGroupRow
+		if err := rows.Scan(&i.ID, &i.Name); err != nil {
 			return nil, err
 		}
 		items = append(items, i)
