@@ -23,12 +23,9 @@ package cmd
 
 import (
 	"context"
-	"fmt"
 	"log"
-	"os"
 
 	"github.com/litencatt/uniar/repository"
-	"github.com/olekukonko/tablewriter"
 	"github.com/spf13/cobra"
 )
 
@@ -44,26 +41,12 @@ var listMusicCmd = &cobra.Command{
 		}
 
 		q := repository.New()
-		m, err := q.GetMusicList(ctx, db)
+		music, err := q.GetMusicList(ctx, db)
 		if err != nil {
 			log.Print(err)
 		}
 
-		table := tablewriter.NewWriter(os.Stdout)
-		table.SetHeader([]string{"Live", "Music", "Type", "Length", "Bonus", "master"})
-
-		for _, v := range m {
-			g := []string{
-				v.Live,
-				v.Music,
-				v.Type,
-				fmt.Sprintf("%d", v.Length),
-				fmt.Sprintf("%T", v.Bonus),
-				fmt.Sprintf("%d", v.Master),
-			}
-			table.Append(g)
-		}
-		table.Render()
+		render(music)
 	},
 }
 
