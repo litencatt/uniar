@@ -1,5 +1,5 @@
 -- name: SeedCenterSkills :exec
-INSERT INTO `center_skills` (`id`, `name`) VALUES
+INSERT IGNORE INTO `center_skills` (`id`, `name`) VALUES
 (1, 'Vo70%'),
 (2, 'Da70%'),
 (3, 'Pe70%'),
@@ -19,7 +19,7 @@ INSERT INTO `center_skills` (`id`, `name`) VALUES
 (17, '5色Pe/Vo55%');
 
 -- name: SeedColorTypes :exec
-INSERT INTO `color_types` (`id`, `name`) VALUES
+INSERT IGNORE INTO `color_types` (`id`, `name`) VALUES
 (1, 'Red'),
 (2, 'Blue'),
 (3, 'Green'),
@@ -28,12 +28,12 @@ INSERT INTO `color_types` (`id`, `name`) VALUES
 (6, 'ALL');
 
 -- name: SeedGroups :exec
-INSERT INTO `groups` (`id`, `name`) VALUES
+INSERT IGNORE INTO `groups` (`id`, `name`) VALUES
 (1, '欅坂46/櫻坂46'),
 (2, 'けやき坂46/日向坂46');
 
 -- name: SeedLives :exec
-INSERT INTO `lives` (`id`, `name`, `group_id`) VALUES
+INSERT IGNORE INTO `lives` (`id`, `name`, `group_id`) VALUES
 (1, '欅坂46 夏の全国アリーナツアー2018', 1),
 (2, 'けやき坂46 「走り出す瞬間」ツアー2018', 2),
 (3, '欅坂46 生中継! デビューカウントダウンライブ!!', 1),
@@ -56,7 +56,7 @@ INSERT INTO `lives` (`id`, `name`, `group_id`) VALUES
 (20, 'W-KEYAKI FES. 2021', 1);
 
 -- name: SeedMembers :exec
-INSERT INTO `members` (`id`, `name`, `group_id`, `graduated`) VALUES
+INSERT IGNORE INTO `members` (`id`, `name`, `group_id`, `graduated`) VALUES
 (1, '井上梨名', 1, 0),
 (2, '遠藤光莉', 1, 0),
 (3, '関有美子', 1, 0),
@@ -115,7 +115,7 @@ INSERT INTO `members` (`id`, `name`, `group_id`, `graduated`) VALUES
 (56, '大沼晶保', 1, 0);
 
 -- name: SeedMusic :exec
-INSERT INTO `music` (`id`, `name`, `normal`, `pro`, `master`, `length`, `color_type_id`, `live_id`, `pro_plus`, `music_bonus`, `setlist_id`) VALUES
+INSERT IGNORE INTO `music` (`id`, `name`, `normal`, `pro`, `master`, `length`, `color_type_id`, `live_id`, `pro_plus`, `music_bonus`, `setlist_id`) VALUES
 (1, 'Student Dance', 8, 15, 21, 128, 2, 1, 0, 0, 1),
 (2, 'AM1:27', 9, 15, 21, 127, 4, 1, 20, 0, 2),
 (3, 'エキセントリック', 11, 17, 23, 197, 5, 1, 0, 0, 3),
@@ -264,7 +264,7 @@ INSERT INTO `music` (`id`, `name`, `normal`, `pro`, `master`, `length`, `color_t
 (146, 'BAN', 0, 0, 23, 0, 2, 19, 0, 1, 5);
 
 -- name: SeedPhotograph :exec
-INSERT INTO `photograph` (`id`, `name`, `group_id`, `abbreviation`, `type`) VALUES
+INSERT IGNORE INTO `photograph` (`id`, `name`, `group_id`, `abbreviation`, `type`) VALUES
 (1, 'サイレントマジョリティー', 1, '', '楽曲'),
 (2, 'ガラスを割れ！', 1, '', '楽曲'),
 (3, '二人セゾン', 1, '', '楽曲'),
@@ -344,7 +344,7 @@ INSERT INTO `photograph` (`id`, `name`, `group_id`, `abbreviation`, `type`) VALU
 (77, 'Tour\'21 at 2.5th Anniv.', 2, '', '限定');
 
 -- name: SeedScenes :exec
-INSERT INTO `scenes` (`id`, `color_type_id`, `dance_max`, `member_id`, `peformance_max`, `photograph_id`, `vocal_max`, `center_skill_name`, `expected_value`, `ssr_plus`) VALUES
+INSERT IGNORE INTO `scenes` (`id`, `color_type_id`, `dance_max`, `member_id`, `peformance_max`, `photograph_id`, `vocal_max`, `center_skill_name`, `expected_value`, `ssr_plus`) VALUES
 (1, 1, 2920, 42, 4565, 45, 5059, '', '3.68', 1),
 (2, 1, 3811, 42, 4872, 41, 3789, '', '2.75', 1),
 (3, 1, 4578, 10, 3845, 3, 4006, '', '3.68', 1),
@@ -1084,7 +1084,7 @@ INSERT INTO `scenes` (`id`, `color_type_id`, `dance_max`, `member_id`, `peforman
 (737, 5, 3589, 9, 3507, 1, 2886, 'ALL35%', '1.63', 0);
 
 -- name: SeedSkills :exec
-INSERT INTO `skills` (`id`, `name`, `combo_up_percent`, `duration_sec`, `expected_value`, `interval_sec`, `occurrence_percent`, `score_up_percent`) VALUES
+INSERT IGNORE INTO `skills` (`id`, `name`, `combo_up_percent`, `duration_sec`, `expected_value`, `interval_sec`, `occurrence_percent`, `score_up_percent`) VALUES
 (1, '7秒おきに28%の確率で6秒間PERFECTのスコア19%アップ', NULL, 6, 3.68, 7, 28, 19),
 (2, '8秒おきに14%の確率で9秒間PERFECTとGREATのスコア25%アップ', NULL, 9, 3.4, 8, 14, 25),
 (3, '6秒おきに24%の確率で5秒間 コンボボーナス12%アップ & スコア12%アップ', 12, 5, 2.75, 6, 24, 12),

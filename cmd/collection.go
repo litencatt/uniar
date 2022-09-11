@@ -23,19 +23,20 @@ package cmd
 
 import (
 	"context"
+	"fmt"
 	"log"
 	"os"
 
 	"github.com/litencatt/unisonair/repository"
+	"github.com/olekukonko/tablewriter"
 	"github.com/spf13/cobra"
 	"github.com/xo/dburl"
 )
 
-// seedCmd represents the seed command
-var seedCmd = &cobra.Command{
-	Use:   "seed",
-	Short: "A brief description of your command",
-	Long:  `A longer description`,
+// collectionCmd represents the collection command
+var collectionCmd = &cobra.Command{
+	Use:   "collection",
+	Short: "List collection",
 	Run: func(cmd *cobra.Command, args []string) {
 		ctx := context.Background()
 		dsn := os.Getenv("UNIAR_DSN")
@@ -45,36 +46,38 @@ var seedCmd = &cobra.Command{
 		}
 
 		queries := repository.New(db)
-		if err := queries.SeedGroups(ctx); err != nil {
+		m, err := queries.GetCollections(ctx)
+		if err != nil {
 			log.Print(err)
 		}
-		if err := queries.SeedCenterSkills(ctx); err != nil {
-			log.Print(err)
+
+		table := tablewriter.NewWriter(os.Stdout)
+		table.SetHeader([]string{"photograph", "member", "color", "expected_value", "ssr+"})
+
+		for _, v := range m {
+			g := []string{
+				v.Photograph,
+				v.Member,
+				v.Color,
+				v.ExpectedValue.String,
+				fmt.Sprintf("%t", v.SsrPlus),
+			}
+			table.Append(g)
 		}
-		if err := queries.SeedColorTypes(ctx); err != nil {
-			log.Print(err)
-		}
-		if err := queries.SeedLives(ctx); err != nil {
-			log.Print(err)
-		}
-		if err := queries.SeedMembers(ctx); err != nil {
-			log.Print(err)
-		}
-		if err := queries.SeedMusic(ctx); err != nil {
-			log.Print(err)
-		}
-		if err := queries.SeedPhotograph(ctx); err != nil {
-			log.Print(err)
-		}
-		if err := queries.SeedScenes(ctx); err != nil {
-			log.Print(err)
-		}
-		if err := queries.SeedSkills(ctx); err != nil {
-			log.Print(err)
-		}
+		table.Render()
 	},
 }
 
 func init() {
-	rootCmd.AddCommand(seedCmd)
+	listCmd.AddCommand(collectionCmd)
+
+	// Here you will define your flags and configuration settings.
+
+	// Cobra supports Persistent Flags which will work for this command
+	// and all subcommands, e.g.:
+	// collectionCmd.PersistentFlags().String("foo", "", "A help for foo")
+
+	// Cobra supports local flags which will only run when this command
+	// is called directly, e.g.:
+	// collectionCmd.Flags().BoolP("toggle", "t", false, "Help message for toggle")
 }

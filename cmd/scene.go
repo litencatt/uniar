@@ -23,19 +23,20 @@ package cmd
 
 import (
 	"context"
+	"fmt"
 	"log"
 	"os"
 
 	"github.com/litencatt/unisonair/repository"
+	"github.com/olekukonko/tablewriter"
 	"github.com/spf13/cobra"
 	"github.com/xo/dburl"
 )
 
-// seedCmd represents the seed command
-var seedCmd = &cobra.Command{
-	Use:   "seed",
-	Short: "A brief description of your command",
-	Long:  `A longer description`,
+// sceneCmd represents the scene command
+var sceneCmd = &cobra.Command{
+	Use:   "scene",
+	Short: "List scene",
 	Run: func(cmd *cobra.Command, args []string) {
 		ctx := context.Background()
 		dsn := os.Getenv("UNIAR_DSN")
@@ -45,36 +46,42 @@ var seedCmd = &cobra.Command{
 		}
 
 		queries := repository.New(db)
-		if err := queries.SeedGroups(ctx); err != nil {
+		m, err := queries.GetScenes(ctx)
+		if err != nil {
 			log.Print(err)
 		}
-		if err := queries.SeedCenterSkills(ctx); err != nil {
-			log.Print(err)
+
+		table := tablewriter.NewWriter(os.Stdout)
+		table.SetHeader([]string{"photograph", "member", "color", "total", "vocal", "dance", "performance", "expected_value", "ssr+"})
+
+		for _, v := range m {
+			g := []string{
+				v.Photograph,
+				v.Member,
+				v.Color,
+				fmt.Sprintf("%d", v.Total),
+				fmt.Sprintf("%d", v.VocalMax),
+				fmt.Sprintf("%d", v.DanceMax),
+				fmt.Sprintf("%d", v.PeformanceMax),
+				v.ExpectedValue.String,
+				fmt.Sprintf("%t", v.SsrPlus),
+			}
+			table.Append(g)
 		}
-		if err := queries.SeedColorTypes(ctx); err != nil {
-			log.Print(err)
-		}
-		if err := queries.SeedLives(ctx); err != nil {
-			log.Print(err)
-		}
-		if err := queries.SeedMembers(ctx); err != nil {
-			log.Print(err)
-		}
-		if err := queries.SeedMusic(ctx); err != nil {
-			log.Print(err)
-		}
-		if err := queries.SeedPhotograph(ctx); err != nil {
-			log.Print(err)
-		}
-		if err := queries.SeedScenes(ctx); err != nil {
-			log.Print(err)
-		}
-		if err := queries.SeedSkills(ctx); err != nil {
-			log.Print(err)
-		}
+		table.Render()
 	},
 }
 
 func init() {
-	rootCmd.AddCommand(seedCmd)
+	listCmd.AddCommand(sceneCmd)
+
+	// Here you will define your flags and configuration settings.
+
+	// Cobra supports Persistent Flags which will work for this command
+	// and all subcommands, e.g.:
+	// sceneCmd.PersistentFlags().String("foo", "", "A help for foo")
+
+	// Cobra supports local flags which will only run when this command
+	// is called directly, e.g.:
+	// sceneCmd.Flags().BoolP("toggle", "t", false, "Help message for toggle")
 }

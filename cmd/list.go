@@ -22,14 +22,9 @@ THE SOFTWARE.
 package cmd
 
 import (
-	"context"
 	"fmt"
-	"log"
-	"os"
 
-	"github.com/litencatt/unisonair/repository"
 	"github.com/spf13/cobra"
-	"github.com/xo/dburl"
 )
 
 // listCmd represents the list command
@@ -38,21 +33,7 @@ var listCmd = &cobra.Command{
 	Short: "A brief description of your command",
 	Long:  `A longer description`,
 	Run: func(cmd *cobra.Command, args []string) {
-		ctx := context.Background()
-		dsn := os.Getenv("UNIAR_DSN")
-		db, err := dburl.Open(dsn)
-		if err != nil {
-			log.Print(err)
-		}
-
-		queries := repository.New(db)
-
-		// list all authors
-		groups, err := queries.GetGroup(ctx)
-		if err != nil {
-			log.Print(err)
-		}
-		fmt.Println(groups)
+		fmt.Println("list called")
 	},
 }
 
