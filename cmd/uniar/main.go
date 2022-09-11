@@ -21,7 +21,7 @@ THE SOFTWARE.
 */
 package main
 
-import "github.com/litencatt/unisonair/cmd"
+import "github.com/litencatt/uniar/cmd"
 
 func main() {
 	cmd.Execute()

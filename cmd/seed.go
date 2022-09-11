@@ -26,7 +26,7 @@ import (
 	"log"
 	"os"
 
-	"github.com/litencatt/unisonair/repository"
+	"github.com/litencatt/uniar/repository"
 	"github.com/spf13/cobra"
 	"github.com/xo/dburl"
 )
