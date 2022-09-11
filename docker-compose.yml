@@ -1,12 +1,12 @@
 version: "3.7"
 services:
   app:
-    image: litencatt/unisonair:latest
+    image: litencatt/uniar:latest
     volumes:
       - .:/app
     environment:
       GITHUB_COM_TOKEN: ${GITHUB_COM_TOKEN}
-      GOPRIVATE: "github.com/litencatt/unisonair"
+      GOPRIVATE: "github.com/litencatt/uniar"
       UNIAR_DSN: mysql://root@db:3306/unisonair?parseTime=true&loc=Asia%2FTokyo
     depends_on:
       - db

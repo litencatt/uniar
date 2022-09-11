@@ -27,7 +27,7 @@ import (
 	"os"
 	"strconv"
 
-	"github.com/litencatt/unisonair/repository"
+	"github.com/litencatt/uniar/repository"
 	"github.com/olekukonko/tablewriter"
 	"github.com/spf13/cobra"
 	"github.com/xo/dburl"

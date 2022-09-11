@@ -33,7 +33,7 @@ import (
 	"github.com/k0kubun/sqldef/database/mysql"
 	"github.com/k0kubun/sqldef/parser"
 	"github.com/k0kubun/sqldef/schema"
-	"github.com/litencatt/unisonair/sql"
+	"github.com/litencatt/uniar/sql"
 	"github.com/spf13/cobra"
 	"github.com/xo/dburl"
 )

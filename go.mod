@@ -1,4 +1,4 @@
-module github.com/litencatt/unisonair
+module github.com/litencatt/uniar
 
 go 1.19
 
