@@ -39,8 +39,8 @@ type GetCollectionsRow struct {
 	ExpectedValue sql.NullString
 }
 
-func (q *Queries) GetCollections(ctx context.Context) ([]GetCollectionsRow, error) {
-	rows, err := q.db.QueryContext(ctx, getCollections)
+func (q *Queries) GetCollections(ctx context.Context, db DBTX) ([]GetCollectionsRow, error) {
+	rows, err := db.QueryContext(ctx, getCollections)
 	if err != nil {
 		return nil, err
 	}
@@ -72,8 +72,8 @@ const getGroup = `-- name: GetGroup :many
 SELECT id, name, created_at FROM ` + "`" + `groups` + "`" + `
 `
 
-func (q *Queries) GetGroup(ctx context.Context) ([]Group, error) {
-	rows, err := q.db.QueryContext(ctx, getGroup)
+func (q *Queries) GetGroup(ctx context.Context, db DBTX) ([]Group, error) {
+	rows, err := db.QueryContext(ctx, getGroup)
 	if err != nil {
 		return nil, err
 	}
@@ -115,8 +115,8 @@ type GetMembersRow struct {
 	Graduated bool
 }
 
-func (q *Queries) GetMembers(ctx context.Context) ([]GetMembersRow, error) {
-	rows, err := q.db.QueryContext(ctx, getMembers)
+func (q *Queries) GetMembers(ctx context.Context, db DBTX) ([]GetMembersRow, error) {
+	rows, err := db.QueryContext(ctx, getMembers)
 	if err != nil {
 		return nil, err
 	}
@@ -169,8 +169,8 @@ type GetMusicListRow struct {
 	Master int32
 }
 
-func (q *Queries) GetMusicList(ctx context.Context) ([]GetMusicListRow, error) {
-	rows, err := q.db.QueryContext(ctx, getMusicList)
+func (q *Queries) GetMusicList(ctx context.Context, db DBTX) ([]GetMusicListRow, error) {
+	rows, err := db.QueryContext(ctx, getMusicList)
 	if err != nil {
 		return nil, err
 	}
@@ -234,8 +234,8 @@ type GetScenesRow struct {
 // WHERE
 //
 //	p.id = 1
-func (q *Queries) GetScenes(ctx context.Context) ([]GetScenesRow, error) {
-	rows, err := q.db.QueryContext(ctx, getScenes)
+func (q *Queries) GetScenes(ctx context.Context, db DBTX) ([]GetScenesRow, error) {
+	rows, err := db.QueryContext(ctx, getScenes)
 	if err != nil {
 		return nil, err
 	}

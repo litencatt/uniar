@@ -24,52 +24,48 @@ package cmd
 import (
 	"context"
 	"log"
-	"os"
 
 	"github.com/litencatt/uniar/repository"
 	"github.com/spf13/cobra"
-	"github.com/xo/dburl"
 )
 
 // seedCmd represents the seed command
 var seedCmd = &cobra.Command{
 	Use:   "seed",
-	Short: "A brief description of your command",
-	Long:  `A longer description`,
+	Short: "Seeding initialize data",
 	Run: func(cmd *cobra.Command, args []string) {
 		ctx := context.Background()
-		dsn := os.Getenv("UNIAR_DSN")
-		db, err := dburl.Open(dsn)
+		db, err := repository.NewConnection()
 		if err != nil {
 			log.Print(err)
 		}
 
-		queries := repository.New(db)
-		if err := queries.SeedGroups(ctx); err != nil {
+		q := repository.New()
+		if err := q.SeedGroups(ctx, db); err != nil {
 			log.Print(err)
 		}
-		if err := queries.SeedCenterSkills(ctx); err != nil {
+		if err := q.SeedCenterSkills(ctx, db); err != nil {
 			log.Print(err)
 		}
-		if err := queries.SeedColorTypes(ctx); err != nil {
+		if err := q.SeedColorTypes(ctx, db); err != nil {
 			log.Print(err)
 		}
-		if err := queries.SeedLives(ctx); err != nil {
+		if err := q.SeedLives(ctx, db); err != nil {
 			log.Print(err)
 		}
-		if err := queries.SeedMembers(ctx); err != nil {
+		if err := q.SeedMembers(ctx, db); err != nil {
 			log.Print(err)
 		}
-		if err := queries.SeedMusic(ctx); err != nil {
+		if err := q.SeedMusic(ctx, db); err != nil {
 			log.Print(err)
 		}
-		if err := queries.SeedPhotograph(ctx); err != nil {
+		if err := q.SeedPhotograph(ctx, db); err != nil {
 			log.Print(err)
 		}
-		if err := queries.SeedScenes(ctx); err != nil {
+		if err := q.SeedScenes(ctx, db); err != nil {
 			log.Print(err)
 		}
-		if err := queries.SeedSkills(ctx); err != nil {
+		if err := q.SeedSkills(ctx, db); err != nil {
 			log.Print(err)
 		}
 	},

@@ -30,8 +30,8 @@ INSERT IGNORE INTO ` + "`" + `center_skills` + "`" + ` (` + "`" + `id` + "`" + `
 (17, '5色Pe/Vo55%')
 `
 
-func (q *Queries) SeedCenterSkills(ctx context.Context) error {
-	_, err := q.db.ExecContext(ctx, seedCenterSkills)
+func (q *Queries) SeedCenterSkills(ctx context.Context, db DBTX) error {
+	_, err := db.ExecContext(ctx, seedCenterSkills)
 	return err
 }
 
@@ -45,8 +45,8 @@ INSERT IGNORE INTO ` + "`" + `color_types` + "`" + ` (` + "`" + `id` + "`" + `, 
 (6, 'ALL')
 `
 
-func (q *Queries) SeedColorTypes(ctx context.Context) error {
-	_, err := q.db.ExecContext(ctx, seedColorTypes)
+func (q *Queries) SeedColorTypes(ctx context.Context, db DBTX) error {
+	_, err := db.ExecContext(ctx, seedColorTypes)
 	return err
 }
 
@@ -56,8 +56,8 @@ INSERT IGNORE INTO ` + "`" + `groups` + "`" + ` (` + "`" + `id` + "`" + `, ` + "
 (2, 'けやき坂46/日向坂46')
 `
 
-func (q *Queries) SeedGroups(ctx context.Context) error {
-	_, err := q.db.ExecContext(ctx, seedGroups)
+func (q *Queries) SeedGroups(ctx context.Context, db DBTX) error {
+	_, err := db.ExecContext(ctx, seedGroups)
 	return err
 }
 
@@ -85,8 +85,8 @@ INSERT IGNORE INTO ` + "`" + `lives` + "`" + ` (` + "`" + `id` + "`" + `, ` + "`
 (20, 'W-KEYAKI FES. 2021', 1)
 `
 
-func (q *Queries) SeedLives(ctx context.Context) error {
-	_, err := q.db.ExecContext(ctx, seedLives)
+func (q *Queries) SeedLives(ctx context.Context, db DBTX) error {
+	_, err := db.ExecContext(ctx, seedLives)
 	return err
 }
 
@@ -150,8 +150,8 @@ INSERT IGNORE INTO ` + "`" + `members` + "`" + ` (` + "`" + `id` + "`" + `, ` + 
 (56, '大沼晶保', 1, 0)
 `
 
-func (q *Queries) SeedMembers(ctx context.Context) error {
-	_, err := q.db.ExecContext(ctx, seedMembers)
+func (q *Queries) SeedMembers(ctx context.Context, db DBTX) error {
+	_, err := db.ExecContext(ctx, seedMembers)
 	return err
 }
 
@@ -305,8 +305,8 @@ INSERT IGNORE INTO ` + "`" + `music` + "`" + ` (` + "`" + `id` + "`" + `, ` + "`
 (146, 'BAN', 0, 0, 23, 0, 2, 19, 0, 1, 5)
 `
 
-func (q *Queries) SeedMusic(ctx context.Context) error {
-	_, err := q.db.ExecContext(ctx, seedMusic)
+func (q *Queries) SeedMusic(ctx context.Context, db DBTX) error {
+	_, err := db.ExecContext(ctx, seedMusic)
 	return err
 }
 
@@ -391,8 +391,8 @@ INSERT IGNORE INTO ` + "`" + `photograph` + "`" + ` (` + "`" + `id` + "`" + `, `
 (77, 'Tour\'21 at 2.5th Anniv.', 2, '', '限定')
 `
 
-func (q *Queries) SeedPhotograph(ctx context.Context) error {
-	_, err := q.db.ExecContext(ctx, seedPhotograph)
+func (q *Queries) SeedPhotograph(ctx context.Context, db DBTX) error {
+	_, err := db.ExecContext(ctx, seedPhotograph)
 	return err
 }
 
@@ -1137,8 +1137,8 @@ INSERT IGNORE INTO ` + "`" + `scenes` + "`" + ` (` + "`" + `id` + "`" + `, ` + "
 (737, 5, 3589, 9, 3507, 1, 2886, 'ALL35%', '1.63', 0)
 `
 
-func (q *Queries) SeedScenes(ctx context.Context) error {
-	_, err := q.db.ExecContext(ctx, seedScenes)
+func (q *Queries) SeedScenes(ctx context.Context, db DBTX) error {
+	_, err := db.ExecContext(ctx, seedScenes)
 	return err
 }
 
@@ -1164,7 +1164,7 @@ INSERT IGNORE INTO ` + "`" + `skills` + "`" + ` (` + "`" + `id` + "`" + `, ` + "
 (18, 'FLEEK!中、3秒おきに20%の確率でFLEEK!中のスコアが14%アップ', NULL, NULL, 0, 3, 20, 14)
 `
 
-func (q *Queries) SeedSkills(ctx context.Context) error {
-	_, err := q.db.ExecContext(ctx, seedSkills)
+func (q *Queries) SeedSkills(ctx context.Context, db DBTX) error {
+	_, err := db.ExecContext(ctx, seedSkills)
 	return err
 }

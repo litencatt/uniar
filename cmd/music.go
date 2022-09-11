@@ -30,7 +30,6 @@ import (
 	"github.com/litencatt/uniar/repository"
 	"github.com/olekukonko/tablewriter"
 	"github.com/spf13/cobra"
-	"github.com/xo/dburl"
 )
 
 // musicCmd represents the music command
@@ -39,14 +38,13 @@ var musicCmd = &cobra.Command{
 	Short: "List music",
 	Run: func(cmd *cobra.Command, args []string) {
 		ctx := context.Background()
-		dsn := os.Getenv("UNIAR_DSN")
-		db, err := dburl.Open(dsn)
+		db, err := repository.NewConnection()
 		if err != nil {
 			log.Print(err)
 		}
 
-		queries := repository.New(db)
-		m, err := queries.GetMusicList(ctx)
+		q := repository.New()
+		m, err := q.GetMusicList(ctx, db)
 		if err != nil {
 			log.Print(err)
 		}
