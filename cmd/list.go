@@ -58,6 +58,7 @@ func render(data any) {
 	table.SetHeader(fields)
 
 	// 各Rowの値を設定
+	var b [][]string
 	v := reflect.ValueOf(data)
 	for i := 0; i < v.Len(); i++ {
 		rv := v.Index(i)
@@ -69,7 +70,8 @@ func render(data any) {
 			// fmt.Printf("%s\n", field)
 			r = append(r, fmt.Sprintf("%v", field))
 		}
-		table.Append(r)
+		b = append(b, r)
 	}
+	table.AppendBulk(b)
 	table.Render()
 }
