@@ -36,8 +36,7 @@ import (
 // groupCmd represents the listGroup command
 var groupCmd = &cobra.Command{
 	Use:   "group",
-	Short: "A brief description of your command",
-	Long:  `A longer description`,
+	Short: "List group",
 	Run: func(cmd *cobra.Command, args []string) {
 		ctx := context.Background()
 		dsn := os.Getenv("UNIAR_DSN")
