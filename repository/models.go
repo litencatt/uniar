@@ -73,6 +73,24 @@ type Producer struct {
 	CreatedAt time.Time
 }
 
+type ProducerMember struct {
+	ID                     int32
+	ProducerID             int32
+	MemberID               int32
+	BondLevelCurent        int32
+	BondLevelCollectionMax int32
+	BondLevelSceneMax      int32
+	DiscographyDiscTotal   int32
+	CreatedAt              time.Time
+}
+
+type ProducerOffice struct {
+	ID          int32
+	ProducerID  int32
+	OfficeBonus sql.NullInt32
+	CreatedAt   time.Time
+}
+
 type ProducerScene struct {
 	ID           int32
 	ProducerID   int32
