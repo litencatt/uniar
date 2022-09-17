@@ -19,3 +19,15 @@ type Scene struct {
 	ExpectedValue string
 	SsrPlus       bool
 }
+
+type SceneTotal struct {
+	Total  int32
+	All35  int32
+	All40  int32
+	VoDa50 int32
+	DaPe50 int32
+	VoPe50 int32
+	Vo85   int32
+	Da85   int32
+	Pe85   int32
+}
