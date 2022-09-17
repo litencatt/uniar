@@ -25,6 +25,7 @@ import (
 	"context"
 	"log"
 
+	"github.com/litencatt/uniar/entity"
 	"github.com/litencatt/uniar/repository"
 	"github.com/spf13/cobra"
 )
@@ -45,15 +46,78 @@ var listSceneCmd = &cobra.Command{
 			log.Print(err)
 		}
 
-		var scenes any
+		var scenes []entity.Scene
 		q := repository.New()
 		if c == "" {
-			scenes, err = q.GetScenes(ctx, db)
+			s, err := q.GetScenes(ctx, db)
+			if err != nil {
+				log.Print(err)
+			}
+			for _, v := range s {
+				all35 := float32(v.Total) * 1.35
+				all40 := float32(v.Total) * 1.40
+				voda50 := float32(v.VocalMax+v.DanceMax)*1.50 + float32(v.PeformanceMax)
+				dape50 := float32(v.DanceMax+v.PeformanceMax)*1.50 + float32(v.VocalMax)
+				vope50 := float32(v.VocalMax+v.PeformanceMax)*1.50 + float32(v.DanceMax)
+				vo85 := float32(v.VocalMax)*1.85 + float32(v.DanceMax) + float32(v.PeformanceMax)
+				da85 := float32(v.DanceMax)*1.85 + float32(v.VocalMax) + float32(v.PeformanceMax)
+				pe85 := float32(v.PeformanceMax)*1.85 + float32(v.VocalMax) + float32(v.DanceMax)
+
+				scene := entity.Scene{
+					Photograph:    v.Photograph,
+					Member:        v.Member,
+					Color:         v.Color,
+					Total:         v.Total,
+					All35:         int32(all35),
+					All40:         int32(all40),
+					VoDa50:        int32(voda50),
+					DaPe50:        int32(dape50),
+					VoPe50:        int32(vope50),
+					Vo85:          int32(vo85),
+					Da85:          int32(da85),
+					Pe85:          int32(pe85),
+					VocalMax:      v.VocalMax,
+					DanceMax:      v.DanceMax,
+					PeformanceMax: v.PeformanceMax,
+					ExpectedValue: v.ExpectedValue.String,
+				}
+				scenes = append(scenes, scene)
+			}
 		} else {
-			scenes, err = q.GetScenesWithColor(ctx, db, c)
-		}
-		if err != nil {
-			log.Print(err)
+			s, err := q.GetScenesWithColor(ctx, db, c)
+			if err != nil {
+				log.Print(err)
+			}
+			for _, v := range s {
+				all35 := float32(v.Total) * 1.35
+				all40 := float32(v.Total) * 1.40
+				voda50 := float32(v.VocalMax+v.DanceMax)*1.50 + float32(v.PeformanceMax)
+				dape50 := float32(v.DanceMax+v.PeformanceMax)*1.50 + float32(v.VocalMax)
+				vope50 := float32(v.VocalMax+v.PeformanceMax)*1.50 + float32(v.DanceMax)
+				vo85 := float32(v.VocalMax)*1.85 + float32(v.DanceMax) + float32(v.PeformanceMax)
+				da85 := float32(v.DanceMax)*1.85 + float32(v.VocalMax) + float32(v.PeformanceMax)
+				pe85 := float32(v.PeformanceMax)*1.85 + float32(v.VocalMax) + float32(v.DanceMax)
+
+				scene := entity.Scene{
+					Photograph:    v.Photograph,
+					Member:        v.Member,
+					Color:         v.Color,
+					Total:         v.Total,
+					All35:         int32(all35),
+					All40:         int32(all40),
+					VoDa50:        int32(voda50),
+					DaPe50:        int32(dape50),
+					VoPe50:        int32(vope50),
+					Vo85:          int32(vo85),
+					Da85:          int32(da85),
+					Pe85:          int32(pe85),
+					VocalMax:      v.VocalMax,
+					DanceMax:      v.DanceMax,
+					PeformanceMax: v.PeformanceMax,
+					ExpectedValue: v.ExpectedValue.String,
+				}
+				scenes = append(scenes, scene)
+			}
 		}
 
 		render(scenes)
