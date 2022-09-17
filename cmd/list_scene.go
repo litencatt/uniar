@@ -70,7 +70,7 @@ var listSceneCmd = &cobra.Command{
 					Pe:         v.PeformanceMax,
 					Expect:     float32(e),
 				}
-				scene.CalcTotal()
+				scene.CalcTotal(v.Bonds, v.Discography)
 				scenes = append(scenes, scene)
 			}
 		} else {
@@ -93,7 +93,7 @@ var listSceneCmd = &cobra.Command{
 					Pe:         v.PeformanceMax,
 					Expect:     float32(e),
 				}
-				scene.CalcTotal()
+				scene.CalcTotal(v.Bonds, v.Discography)
 				scenes = append(scenes, scene)
 			}
 		}
