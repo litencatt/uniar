@@ -25,6 +25,7 @@ import (
 	"context"
 	"log"
 	"sort"
+	"strconv"
 
 	"github.com/litencatt/uniar/entity"
 	"github.com/litencatt/uniar/repository"
@@ -55,6 +56,10 @@ var listSceneCmd = &cobra.Command{
 				log.Print(err)
 			}
 			for _, v := range s {
+				var e float64
+				if v.ExpectedValue.Valid {
+					e, _ = strconv.ParseFloat(v.ExpectedValue.String, 32)
+				}
 				scene := entity.Scene{
 					Photograph: v.Photograph,
 					Member:     v.Member,
@@ -63,7 +68,7 @@ var listSceneCmd = &cobra.Command{
 					Vo:         v.VocalMax,
 					Da:         v.DanceMax,
 					Pe:         v.PeformanceMax,
-					Expect:     v.ExpectedValue.String,
+					Expect:     float32(e),
 				}
 				scene.CalcTotal()
 				scenes = append(scenes, scene)
@@ -74,6 +79,10 @@ var listSceneCmd = &cobra.Command{
 				log.Print(err)
 			}
 			for _, v := range s {
+				var e float64
+				if v.ExpectedValue.Valid {
+					e, _ = strconv.ParseFloat(v.ExpectedValue.String, 32)
+				}
 				scene := entity.Scene{
 					Photograph: v.Photograph,
 					Member:     v.Member,
@@ -82,7 +91,7 @@ var listSceneCmd = &cobra.Command{
 					Vo:         v.VocalMax,
 					Da:         v.DanceMax,
 					Pe:         v.PeformanceMax,
-					Expect:     v.ExpectedValue.String,
+					Expect:     float32(e),
 				}
 				scene.CalcTotal()
 				scenes = append(scenes, scene)
