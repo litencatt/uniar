@@ -8,7 +8,7 @@ type Scene struct {
 	Photograph string
 	Member     string
 	Color      string
-	Expect     string
+	Expect     float32
 	Total      int32
 	All35      int32
 	All35Rank  int32
@@ -75,6 +75,7 @@ func (s *Scene) CalcTotal() {
 	vo := s.Vo
 	da := s.Da
 	pe := s.Pe
+	e := s.Expect
 	t := s.Total
 
 	// フロント共通
@@ -134,7 +135,7 @@ func (s *Scene) CalcTotal() {
 		// メンバーステータス
 		member := bondsBonus + discography
 
-		totals[skill] = t + csb + fsb + ob + member + sceneSkillLvMaxBonus + costumeBonus
+		totals[skill] = int32(e * float32(t+csb+fsb+ob+member+sceneSkillLvMaxBonus+costumeBonus))
 	}
 
 	s.All35 = totals["All35"]
