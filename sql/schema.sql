@@ -126,3 +126,26 @@ CREATE TABLE producer_scenes (
   CONSTRAINT `fk_producer_scenes_photo_id` FOREIGN KEY (`photograph_id`) REFERENCES `photograph` (`id`),
   CONSTRAINT `fk_producer_scenes_member_id` FOREIGN KEY (`member_id`) REFERENCES `members` (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+CREATE TABLE producer_members (
+  `id` int NOT NULL AUTO_INCREMENT,
+  producer_id INT NOT NULL,
+  member_id INT NOT NULL,
+  bond_level_curent INT NOT NULL,
+  bond_level_collection_max INT NOT NULL,
+  bond_level_scene_max INT NOT NULL,
+  discography_disc_total INT NOT NULL,
+  created_at DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  PRIMARY KEY (`id`),
+  CONSTRAINT `fk_producer_members_producer_id` FOREIGN KEY (`producer_id`) REFERENCES `producers` (`id`),
+  CONSTRAINT `fk_producer_members_member_id` FOREIGN KEY (`member_id`) REFERENCES `members` (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+CREATE TABLE producer_offices (
+  `id` int NOT NULL AUTO_INCREMENT,
+  producer_id INT NOT NULL,
+  office_bonus INT DEFAULT 0,
+  created_at DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  PRIMARY KEY (`id`),
+  CONSTRAINT `fk_producer_offices_producer_id` FOREIGN KEY (`producer_id`) REFERENCES `producers` (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;

@@ -24,6 +24,8 @@ package cmd
 import (
 	"context"
 	"log"
+	"sort"
+	"strconv"
 
 	"github.com/litencatt/uniar/entity"
 	"github.com/litencatt/uniar/repository"
@@ -54,33 +56,21 @@ var listSceneCmd = &cobra.Command{
 				log.Print(err)
 			}
 			for _, v := range s {
-				all35 := float32(v.Total) * 1.35
-				all40 := float32(v.Total) * 1.40
-				voda50 := float32(v.VocalMax+v.DanceMax)*1.50 + float32(v.PeformanceMax)
-				dape50 := float32(v.DanceMax+v.PeformanceMax)*1.50 + float32(v.VocalMax)
-				vope50 := float32(v.VocalMax+v.PeformanceMax)*1.50 + float32(v.DanceMax)
-				vo85 := float32(v.VocalMax)*1.85 + float32(v.DanceMax) + float32(v.PeformanceMax)
-				da85 := float32(v.DanceMax)*1.85 + float32(v.VocalMax) + float32(v.PeformanceMax)
-				pe85 := float32(v.PeformanceMax)*1.85 + float32(v.VocalMax) + float32(v.DanceMax)
-
-				scene := entity.Scene{
-					Photograph:    v.Photograph,
-					Member:        v.Member,
-					Color:         v.Color,
-					Total:         v.Total,
-					All35:         int32(all35),
-					All40:         int32(all40),
-					VoDa50:        int32(voda50),
-					DaPe50:        int32(dape50),
-					VoPe50:        int32(vope50),
-					Vo85:          int32(vo85),
-					Da85:          int32(da85),
-					Pe85:          int32(pe85),
-					VocalMax:      v.VocalMax,
-					DanceMax:      v.DanceMax,
-					PeformanceMax: v.PeformanceMax,
-					ExpectedValue: v.ExpectedValue.String,
+				var e float64
+				if v.ExpectedValue.Valid {
+					e, _ = strconv.ParseFloat(v.ExpectedValue.String, 32)
 				}
+				scene := entity.Scene{
+					Photograph: v.Photograph,
+					Member:     v.Member,
+					Color:      v.Color,
+					Total:      v.Total,
+					Vo:         v.VocalMax,
+					Da:         v.DanceMax,
+					Pe:         v.PeformanceMax,
+					Expect:     float32(e),
+				}
+				scene.CalcTotal(v.Bonds, v.Discography)
 				scenes = append(scenes, scene)
 			}
 		} else {
@@ -89,37 +79,54 @@ var listSceneCmd = &cobra.Command{
 				log.Print(err)
 			}
 			for _, v := range s {
-				all35 := float32(v.Total) * 1.35
-				all40 := float32(v.Total) * 1.40
-				voda50 := float32(v.VocalMax+v.DanceMax)*1.50 + float32(v.PeformanceMax)
-				dape50 := float32(v.DanceMax+v.PeformanceMax)*1.50 + float32(v.VocalMax)
-				vope50 := float32(v.VocalMax+v.PeformanceMax)*1.50 + float32(v.DanceMax)
-				vo85 := float32(v.VocalMax)*1.85 + float32(v.DanceMax) + float32(v.PeformanceMax)
-				da85 := float32(v.DanceMax)*1.85 + float32(v.VocalMax) + float32(v.PeformanceMax)
-				pe85 := float32(v.PeformanceMax)*1.85 + float32(v.VocalMax) + float32(v.DanceMax)
-
-				scene := entity.Scene{
-					Photograph:    v.Photograph,
-					Member:        v.Member,
-					Color:         v.Color,
-					Total:         v.Total,
-					All35:         int32(all35),
-					All40:         int32(all40),
-					VoDa50:        int32(voda50),
-					DaPe50:        int32(dape50),
-					VoPe50:        int32(vope50),
-					Vo85:          int32(vo85),
-					Da85:          int32(da85),
-					Pe85:          int32(pe85),
-					VocalMax:      v.VocalMax,
-					DanceMax:      v.DanceMax,
-					PeformanceMax: v.PeformanceMax,
-					ExpectedValue: v.ExpectedValue.String,
+				var e float64
+				if v.ExpectedValue.Valid {
+					e, _ = strconv.ParseFloat(v.ExpectedValue.String, 32)
 				}
+				scene := entity.Scene{
+					Photograph: v.Photograph,
+					Member:     v.Member,
+					Color:      v.Color,
+					Total:      v.Total,
+					Vo:         v.VocalMax,
+					Da:         v.DanceMax,
+					Pe:         v.PeformanceMax,
+					Expect:     float32(e),
+				}
+				scene.CalcTotal(v.Bonds, v.Discography)
 				scenes = append(scenes, scene)
 			}
 		}
 
+		sort.Slice(scenes, func(i, j int) bool { return scenes[i].All35 > scenes[j].All35 })
+		for i, _ := range scenes {
+			scenes[i].All35Rank = int32(i + 1)
+		}
+		sort.Slice(scenes, func(i, j int) bool { return scenes[i].VoDa50 > scenes[j].VoDa50 })
+		for i, _ := range scenes {
+			scenes[i].VoDa50Rank = int32(i + 1)
+		}
+		sort.Slice(scenes, func(i, j int) bool { return scenes[i].DaPe50 > scenes[j].DaPe50 })
+		for i, _ := range scenes {
+			scenes[i].DaPe50Rank = int32(i + 1)
+		}
+		sort.Slice(scenes, func(i, j int) bool { return scenes[i].VoPe50 > scenes[j].VoPe50 })
+		for i, _ := range scenes {
+			scenes[i].VoPe50Rank = int32(i + 1)
+		}
+		sort.Slice(scenes, func(i, j int) bool { return scenes[i].Vo85 > scenes[j].Vo85 })
+		for i, _ := range scenes {
+			scenes[i].Vo85Rank = int32(i + 1)
+		}
+		sort.Slice(scenes, func(i, j int) bool { return scenes[i].Da85 > scenes[j].Da85 })
+		for i, _ := range scenes {
+			scenes[i].Da85Rank = int32(i + 1)
+		}
+		sort.Slice(scenes, func(i, j int) bool { return scenes[i].Pe85 > scenes[j].Pe85 })
+		for i, _ := range scenes {
+			scenes[i].Pe85Rank = int32(i + 1)
+		}
+		sort.Slice(scenes, func(i, j int) bool { return scenes[i].All35 > scenes[j].All35 })
 		render(scenes)
 	},
 }
