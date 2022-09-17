@@ -10,12 +10,13 @@ import (
 
 type Querier interface {
 	GetCollections(ctx context.Context, db DBTX) ([]GetCollectionsRow, error)
+	GetCollectionsWithColor(ctx context.Context, db DBTX, name string) ([]GetCollectionsWithColorRow, error)
 	GetGroup(ctx context.Context, db DBTX) ([]GetGroupRow, error)
 	GetMembers(ctx context.Context, db DBTX) ([]GetMembersRow, error)
 	GetMusicList(ctx context.Context, db DBTX) ([]GetMusicListRow, error)
-	// WHERE
-	// 	p.id = 1
+	GetMusicListWithColor(ctx context.Context, db DBTX, name string) ([]GetMusicListWithColorRow, error)
 	GetScenes(ctx context.Context, db DBTX) ([]GetScenesRow, error)
+	GetScenesWithColor(ctx context.Context, db DBTX, name string) ([]GetScenesWithColorRow, error)
 	SeedCenterSkills(ctx context.Context, db DBTX) error
 	SeedColorTypes(ctx context.Context, db DBTX) error
 	SeedGroups(ctx context.Context, db DBTX) error
@@ -25,7 +26,6 @@ type Querier interface {
 	SeedPhotograph(ctx context.Context, db DBTX) error
 	SeedScenes(ctx context.Context, db DBTX) error
 	SeedSkills(ctx context.Context, db DBTX) error
-	SelectSceneList(ctx context.Context, db DBTX) ([]SelectSceneListRow, error)
 }
 
 var _ Querier = (*Queries)(nil)

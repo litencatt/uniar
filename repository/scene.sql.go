@@ -10,16 +10,16 @@ import (
 	"database/sql"
 )
 
-const selectSceneList = `-- name: SelectSceneList :many
+const getScenes = `-- name: GetScenes :many
 SELECT
-	p.name AS scene,
+	p.name AS photograph,
 	m.name AS member,
 	c.name AS color,
 	s.vocal_max + s.dance_max + s.peformance_max + 430 AS total,
 	s.vocal_max,
 	s.dance_max,
 	s.peformance_max,
-	s.expected_value as 期待値,
+	s.expected_value,
 	s.ssr_plus
 FROM
 	scenes s
@@ -27,39 +27,106 @@ FROM
 	JOIN color_types c ON s.color_type_id = c.id
 	JOIN members m ON s.member_id = m.id
 ORDER BY
-	c.id, s.expected_value desc, total desc
+	s.expected_value desc, total desc
 `
 
-type SelectSceneListRow struct {
-	Scene         string
+type GetScenesRow struct {
+	Photograph    string
 	Member        string
 	Color         string
 	Total         int32
 	VocalMax      int32
 	DanceMax      int32
 	PeformanceMax int32
-	期待値           sql.NullString
+	ExpectedValue sql.NullString
 	SsrPlus       bool
 }
 
-func (q *Queries) SelectSceneList(ctx context.Context, db DBTX) ([]SelectSceneListRow, error) {
-	rows, err := db.QueryContext(ctx, selectSceneList)
+func (q *Queries) GetScenes(ctx context.Context, db DBTX) ([]GetScenesRow, error) {
+	rows, err := db.QueryContext(ctx, getScenes)
 	if err != nil {
 		return nil, err
 	}
 	defer rows.Close()
-	var items []SelectSceneListRow
+	var items []GetScenesRow
 	for rows.Next() {
-		var i SelectSceneListRow
+		var i GetScenesRow
 		if err := rows.Scan(
-			&i.Scene,
+			&i.Photograph,
 			&i.Member,
 			&i.Color,
 			&i.Total,
 			&i.VocalMax,
 			&i.DanceMax,
 			&i.PeformanceMax,
-			&i.期待値,
+			&i.ExpectedValue,
+			&i.SsrPlus,
+		); err != nil {
+			return nil, err
+		}
+		items = append(items, i)
+	}
+	if err := rows.Close(); err != nil {
+		return nil, err
+	}
+	if err := rows.Err(); err != nil {
+		return nil, err
+	}
+	return items, nil
+}
+
+const getScenesWithColor = `-- name: GetScenesWithColor :many
+SELECT
+	p.name AS photograph,
+	m.name AS member,
+	c.name AS color,
+	s.vocal_max + s.dance_max + s.peformance_max + 430 AS total,
+	s.vocal_max,
+	s.dance_max,
+	s.peformance_max,
+	s.expected_value,
+	s.ssr_plus
+FROM
+	scenes s
+	JOIN photograph p ON s.photograph_id = p.id
+	JOIN color_types c ON s.color_type_id = c.id
+	JOIN members m ON s.member_id = m.id
+WHERE
+	c.name = ?
+ORDER BY
+	s.expected_value desc, total desc
+`
+
+type GetScenesWithColorRow struct {
+	Photograph    string
+	Member        string
+	Color         string
+	Total         int32
+	VocalMax      int32
+	DanceMax      int32
+	PeformanceMax int32
+	ExpectedValue sql.NullString
+	SsrPlus       bool
+}
+
+func (q *Queries) GetScenesWithColor(ctx context.Context, db DBTX, name string) ([]GetScenesWithColorRow, error) {
+	rows, err := db.QueryContext(ctx, getScenesWithColor, name)
+	if err != nil {
+		return nil, err
+	}
+	defer rows.Close()
+	var items []GetScenesWithColorRow
+	for rows.Next() {
+		var i GetScenesWithColorRow
+		if err := rows.Scan(
+			&i.Photograph,
+			&i.Member,
+			&i.Color,
+			&i.Total,
+			&i.VocalMax,
+			&i.DanceMax,
+			&i.PeformanceMax,
+			&i.ExpectedValue,
 			&i.SsrPlus,
 		); err != nil {
 			return nil, err

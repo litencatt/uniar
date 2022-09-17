@@ -1,13 +1,13 @@
--- name: SelectSceneList :many
+-- name: GetScenes :many
 SELECT
-	p.name AS scene,
+	p.name AS photograph,
 	m.name AS member,
 	c.name AS color,
 	s.vocal_max + s.dance_max + s.peformance_max + 430 AS total,
 	s.vocal_max,
 	s.dance_max,
 	s.peformance_max,
-	s.expected_value as 期待値,
+	s.expected_value,
 	s.ssr_plus
 FROM
 	scenes s
@@ -15,4 +15,27 @@ FROM
 	JOIN color_types c ON s.color_type_id = c.id
 	JOIN members m ON s.member_id = m.id
 ORDER BY
-	c.id, s.expected_value desc, total desc;
+	s.expected_value desc, total desc
+;
+
+-- name: GetScenesWithColor :many
+SELECT
+	p.name AS photograph,
+	m.name AS member,
+	c.name AS color,
+	s.vocal_max + s.dance_max + s.peformance_max + 430 AS total,
+	s.vocal_max,
+	s.dance_max,
+	s.peformance_max,
+	s.expected_value,
+	s.ssr_plus
+FROM
+	scenes s
+	JOIN photograph p ON s.photograph_id = p.id
+	JOIN color_types c ON s.color_type_id = c.id
+	JOIN members m ON s.member_id = m.id
+WHERE
+	c.name = ?
+ORDER BY
+	s.expected_value desc, total desc
+;
