@@ -34,14 +34,21 @@ var listCollectionCmd = &cobra.Command{
 	Use:   "collection",
 	Short: "List collection",
 	Run: func(cmd *cobra.Command, args []string) {
+		c, _ := cmd.Flags().GetString("color")
+
 		ctx := context.Background()
 		db, err := repository.NewConnection()
 		if err != nil {
 			log.Print(err)
 		}
 
+		var collections any
 		q := repository.New()
-		collections, err := q.GetCollections(ctx, db)
+		if c == "" {
+			collections, err = q.GetCollections(ctx, db)
+		} else {
+			collections, err = q.GetCollectionsWithColor(ctx, db, c)
+		}
 		if err != nil {
 			log.Print(err)
 		}
@@ -52,14 +59,5 @@ var listCollectionCmd = &cobra.Command{
 
 func init() {
 	listCmd.AddCommand(listCollectionCmd)
-
-	// Here you will define your flags and configuration settings.
-
-	// Cobra supports Persistent Flags which will work for this command
-	// and all subcommands, e.g.:
-	// collectionCmd.PersistentFlags().String("foo", "", "A help for foo")
-
-	// Cobra supports local flags which will only run when this command
-	// is called directly, e.g.:
-	// collectionCmd.Flags().BoolP("toggle", "t", false, "Help message for toggle")
+	listCollectionCmd.Flags().StringP("color", "c", "", "Color filter")
 }
