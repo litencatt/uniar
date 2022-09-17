@@ -1,7 +1,8 @@
 version: "3.7"
 services:
   app:
-    image: litencatt/uniar:latest
+    build:
+      context: .
     volumes:
       - .:/app
     environment:
