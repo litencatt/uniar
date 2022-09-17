@@ -34,14 +34,24 @@ var listSceneCmd = &cobra.Command{
 	Use:   "scene",
 	Short: "List scene",
 	Run: func(cmd *cobra.Command, args []string) {
+		c, err := cmd.Flags().GetString("color")
+		if err != nil {
+			log.Fatal(err)
+		}
+
 		ctx := context.Background()
 		db, err := repository.NewConnection()
 		if err != nil {
 			log.Print(err)
 		}
 
+		var scenes any
 		q := repository.New()
-		scenes, err := q.GetScenes(ctx, db)
+		if c == "" {
+			scenes, err = q.GetScenes(ctx, db)
+		} else {
+			scenes, err = q.GetScenesWithColor(ctx, db, c)
+		}
 		if err != nil {
 			log.Print(err)
 		}
@@ -52,14 +62,5 @@ var listSceneCmd = &cobra.Command{
 
 func init() {
 	listCmd.AddCommand(listSceneCmd)
-
-	// Here you will define your flags and configuration settings.
-
-	// Cobra supports Persistent Flags which will work for this command
-	// and all subcommands, e.g.:
-	// sceneCmd.PersistentFlags().String("foo", "", "A help for foo")
-
-	// Cobra supports local flags which will only run when this command
-	// is called directly, e.g.:
-	// sceneCmd.Flags().BoolP("toggle", "t", false, "Help message for toggle")
+	listSceneCmd.Flags().StringP("color", "c", "", "Color filter")
 }

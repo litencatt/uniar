@@ -34,14 +34,22 @@ var listMusicCmd = &cobra.Command{
 	Use:   "music",
 	Short: "List music",
 	Run: func(cmd *cobra.Command, args []string) {
+		c, _ := cmd.Flags().GetString("color")
+
 		ctx := context.Background()
 		db, err := repository.NewConnection()
 		if err != nil {
 			log.Print(err)
 		}
 
+		var music any
 		q := repository.New()
-		music, err := q.GetMusicList(ctx, db)
+		if c == "" {
+			music, err = q.GetMusicList(ctx, db)
+		} else {
+			log.Print("here")
+			music, err = q.GetMusicListWithColor(ctx, db, c)
+		}
 		if err != nil {
 			log.Print(err)
 		}
@@ -52,14 +60,5 @@ var listMusicCmd = &cobra.Command{
 
 func init() {
 	listCmd.AddCommand(listMusicCmd)
-
-	// Here you will define your flags and configuration settings.
-
-	// Cobra supports Persistent Flags which will work for this command
-	// and all subcommands, e.g.:
-	// musicCmd.PersistentFlags().String("foo", "", "A help for foo")
-
-	// Cobra supports local flags which will only run when this command
-	// is called directly, e.g.:
-	// musicCmd.Flags().BoolP("toggle", "t", false, "Help message for toggle")
+	listMusicCmd.Flags().StringP("color", "c", "", "Color filter")
 }
