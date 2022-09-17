@@ -23,8 +23,10 @@ package cmd
 
 import (
 	"fmt"
+	"log"
 	"os"
 	"reflect"
+	"regexp"
 
 	"github.com/olekukonko/tablewriter"
 	"github.com/spf13/cobra"
@@ -44,12 +46,23 @@ func init() {
 	rootCmd.AddCommand(listCmd)
 }
 
+var (
+	scoreReg = regexp.MustCompile(`Score$`)
+)
+
 func render(data any) {
 	// // SetHeaderのためにフィールド名取得
 	var fields []string
+	var scoreIndex []int
 	d := reflect.TypeOf(data).Elem()
 	for i := 0; i < d.NumField(); i++ {
 		field := d.Field(i)
+		// *SCOREはskip
+		log.Print(field.Name)
+		if scoreReg.MatchString(field.Name) {
+			scoreIndex = append(scoreIndex, i)
+			continue
+		}
 		fields = append(fields, field.Name)
 	}
 	//fmt.Printf("%v\n", fields)
@@ -66,12 +79,23 @@ func render(data any) {
 
 		var r []string
 		for i := 0; i < rv.NumField(); i++ {
+			if include(scoreIndex, i) {
+				continue
+			}
 			field := rv.Field(i)
-			// fmt.Printf("%s\n", field)
 			r = append(r, fmt.Sprintf("%v", field))
 		}
 		b = append(b, r)
 	}
 	table.AppendBulk(b)
 	table.Render()
+}
+
+func include(slice []int, target int) bool {
+	for _, num := range slice {
+		if num == target {
+			return true
+		}
+	}
+	return false
 }
