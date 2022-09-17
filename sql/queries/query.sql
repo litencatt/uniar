@@ -1,5 +1,5 @@
 -- name: GetGroup :many
-SELECT * FROM `groups`;
+SELECT id, name FROM `groups`;
 
 -- name: GetMusicList :many
 SELECT

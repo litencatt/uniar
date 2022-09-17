@@ -23,12 +23,9 @@ package cmd
 
 import (
 	"context"
-	"fmt"
 	"log"
-	"os"
 
 	"github.com/litencatt/uniar/repository"
-	"github.com/olekukonko/tablewriter"
 	"github.com/spf13/cobra"
 )
 
@@ -44,25 +41,12 @@ var listMemberCmd = &cobra.Command{
 		}
 
 		q := repository.New()
-		m, err := q.GetMembers(ctx, db)
+		members, err := q.GetMembers(ctx, db)
 		if err != nil {
 			log.Print(err)
 		}
 
-		table := tablewriter.NewWriter(os.Stdout)
-		table.SetHeader([]string{"group", "member_id", "name", "phase", "graduated"})
-
-		for _, v := range m {
-			g := []string{
-				v.Group,
-				fmt.Sprintf("%d", v.MemberID),
-				v.Name,
-				fmt.Sprintf("%d", v.Phase),
-				fmt.Sprintf("%t", v.Graduated),
-			}
-			table.Append(g)
-		}
-		table.Render()
+		render(members)
 	},
 }
 

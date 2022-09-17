@@ -24,11 +24,8 @@ package cmd
 import (
 	"context"
 	"log"
-	"os"
-	"strconv"
 
 	"github.com/litencatt/uniar/repository"
-	"github.com/olekukonko/tablewriter"
 	"github.com/spf13/cobra"
 )
 
@@ -49,14 +46,7 @@ var listGroupCmd = &cobra.Command{
 			log.Print(err)
 		}
 
-		table := tablewriter.NewWriter(os.Stdout)
-		table.SetHeader([]string{"No", "Group"})
-
-		for _, v := range groups {
-			g := []string{strconv.Itoa(int(v.ID)), v.Name}
-			table.Append(g)
-		}
-		table.Render()
+		render(groups)
 	},
 }
 

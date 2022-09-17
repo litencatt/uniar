@@ -23,12 +23,9 @@ package cmd
 
 import (
 	"context"
-	"fmt"
 	"log"
-	"os"
 
 	"github.com/litencatt/uniar/repository"
-	"github.com/olekukonko/tablewriter"
 	"github.com/spf13/cobra"
 )
 
@@ -44,25 +41,12 @@ var listCollectionCmd = &cobra.Command{
 		}
 
 		q := repository.New()
-		m, err := q.GetCollections(ctx, db)
+		collections, err := q.GetCollections(ctx, db)
 		if err != nil {
 			log.Print(err)
 		}
 
-		table := tablewriter.NewWriter(os.Stdout)
-		table.SetHeader([]string{"photograph", "member", "color", "expected_value", "ssr+"})
-
-		for _, v := range m {
-			g := []string{
-				v.Photograph,
-				v.Member,
-				v.Color,
-				v.ExpectedValue.String,
-				fmt.Sprintf("%t", v.SsrPlus),
-			}
-			table.Append(g)
-		}
-		table.Render()
+		render(collections)
 	},
 }
 
