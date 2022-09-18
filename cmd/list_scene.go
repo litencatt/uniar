@@ -40,6 +40,7 @@ var listSceneCmd = &cobra.Command{
 	Run: func(cmd *cobra.Command, args []string) {
 		c, _ := cmd.Flags().GetString("color")
 		s, _ := cmd.Flags().GetString("sort")
+		h, _ := cmd.Flags().GetBool("have")
 
 		ctx := context.Background()
 		db, err := repository.NewConnection()
@@ -55,6 +56,10 @@ var listSceneCmd = &cobra.Command{
 				log.Print(err)
 			}
 			for _, s := range ss {
+				if h && !s.Have.Bool {
+					continue
+				}
+
 				var e float64
 				if s.ExpectedValue.Valid {
 					e, _ = strconv.ParseFloat(s.ExpectedValue.String, 32)
@@ -78,6 +83,10 @@ var listSceneCmd = &cobra.Command{
 				log.Print(err)
 			}
 			for _, s := range ss {
+				if h && !s.Have.Bool {
+					continue
+				}
+
 				var e float64
 				if s.ExpectedValue.Valid {
 					e, _ = strconv.ParseFloat(s.ExpectedValue.String, 32)
@@ -153,6 +162,7 @@ var listSceneCmd = &cobra.Command{
 
 func init() {
 	listCmd.AddCommand(listSceneCmd)
+	listSceneCmd.Flags().BoolP("have", "", false, "Collection filter")
 	listSceneCmd.Flags().StringP("color", "c", "", "Color filter")
 	listSceneCmd.Flags().StringP("sort", "s", "", "Sort target rank.(all35, voda50, ...)")
 	listSceneCmd.Flags().StringP("ignore-columns", "i", "", "Ignore columns to display(VoDa50,DaPe50,...)")

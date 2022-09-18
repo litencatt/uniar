@@ -10,13 +10,15 @@ SELECT
 	s.expected_value,
 	s.ssr_plus,
 	pm.bond_level_curent AS bonds,
-	pm.discography_disc_total AS discography
+	pm.discography_disc_total AS discography,
+	ps.have
 FROM
 	scenes s
 	JOIN photograph p ON s.photograph_id = p.id
 	JOIN color_types c ON s.color_type_id = c.id
 	JOIN members m ON s.member_id = m.id
 	JOIN producer_members pm ON s.member_id = pm.member_id
+	JOIN producer_scenes ps ON s.photograph_id = ps.photograph_id AND s.member_id = ps.member_id
 ORDER BY
 	s.expected_value desc, total desc
 ;
@@ -33,13 +35,15 @@ SELECT
 	s.expected_value,
 	s.ssr_plus,
 	pm.bond_level_curent AS bonds,
-	pm.discography_disc_total AS discography
+	pm.discography_disc_total AS discography,
+	ps.have
 FROM
 	scenes s
 	JOIN photograph p ON s.photograph_id = p.id
 	JOIN color_types c ON s.color_type_id = c.id
 	JOIN members m ON s.member_id = m.id
 	JOIN producer_members pm ON s.member_id = pm.member_id
+	JOIN producer_scenes ps ON s.photograph_id = ps.photograph_id AND s.member_id = ps.member_id
 WHERE
 	c.name = ?
 ORDER BY
