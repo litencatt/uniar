@@ -67,7 +67,7 @@ CREATE TABLE photograph (
   `name` varchar(100) NOT NULL,
   `group_id` int NOT NULL,
   `abbreviation` varchar(10) NOT NULL DEFAULT '',
-  `type` varchar(10) NOT NULL,
+  `photo_type` varchar(10) NOT NULL,
   created_at DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
   PRIMARY KEY (`id`),
   KEY `group_id` (`group_id`),
