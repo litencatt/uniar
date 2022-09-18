@@ -46,13 +46,13 @@ var registPhotographCmd = &cobra.Command{
 		groupId, _ := strconv.Atoi(g)
 
 		pt := (&prompter.Prompter{
-			Message: "Select Photograph Type",
+			Message: "Select Type",
 			Choices: []string{"楽曲", "限定", "Precious"},
 			Default: "楽曲",
 		}).Prompt()
 
 		photoName := (&prompter.Prompter{
-			Message: "Photograph name",
+			Message: "Photograph Name",
 		}).Prompt()
 
 		ctx := context.Background()
@@ -70,7 +70,7 @@ var registPhotographCmd = &cobra.Command{
 			log.Print(err)
 		}
 
-		fmt.Printf("success registration(Photograph Name:%s\n", photoName)
+		fmt.Printf("success registration(Photograph Name: %s)\n", photoName)
 	},
 }
 
