@@ -39,7 +39,7 @@ var listSceneCmd = &cobra.Command{
 	Short: "List scene",
 	Run: func(cmd *cobra.Command, args []string) {
 		c, _ := cmd.Flags().GetString("color")
-		sortRank, _ := cmd.Flags().GetString("sort")
+		s, _ := cmd.Flags().GetString("sort")
 
 		ctx := context.Background()
 		db, err := repository.NewConnection()
@@ -50,49 +50,49 @@ var listSceneCmd = &cobra.Command{
 		var scenes []entity.Scene
 		q := repository.New()
 		if c == "" {
-			s, err := q.GetScenes(ctx, db)
+			ss, err := q.GetScenes(ctx, db)
 			if err != nil {
 				log.Print(err)
 			}
-			for _, v := range s {
+			for _, s := range ss {
 				var e float64
-				if v.ExpectedValue.Valid {
-					e, _ = strconv.ParseFloat(v.ExpectedValue.String, 32)
+				if s.ExpectedValue.Valid {
+					e, _ = strconv.ParseFloat(s.ExpectedValue.String, 32)
 				}
 				scene := entity.Scene{
-					Photograph: v.Photograph,
-					Member:     v.Member,
-					Color:      v.Color,
-					Total:      v.Total,
-					Vo:         v.VocalMax,
-					Da:         v.DanceMax,
-					Pe:         v.PeformanceMax,
+					Photograph: s.Photograph,
+					Member:     s.Member,
+					Color:      s.Color,
+					Total:      s.Total,
+					Vo:         s.VocalMax,
+					Da:         s.DanceMax,
+					Pe:         s.PeformanceMax,
 					Expect:     float32(e),
 				}
-				scene.CalcTotal(v.Bonds, v.Discography)
+				scene.CalcTotal(s.Bonds, s.Discography)
 				scenes = append(scenes, scene)
 			}
 		} else {
-			s, err := q.GetScenesWithColor(ctx, db, c)
+			ss, err := q.GetScenesWithColor(ctx, db, c)
 			if err != nil {
 				log.Print(err)
 			}
-			for _, v := range s {
+			for _, s := range ss {
 				var e float64
-				if v.ExpectedValue.Valid {
-					e, _ = strconv.ParseFloat(v.ExpectedValue.String, 32)
+				if s.ExpectedValue.Valid {
+					e, _ = strconv.ParseFloat(s.ExpectedValue.String, 32)
 				}
 				scene := entity.Scene{
-					Photograph: v.Photograph,
-					Member:     v.Member,
-					Color:      v.Color,
-					Total:      v.Total,
-					Vo:         v.VocalMax,
-					Da:         v.DanceMax,
-					Pe:         v.PeformanceMax,
+					Photograph: s.Photograph,
+					Member:     s.Member,
+					Color:      s.Color,
+					Total:      s.Total,
+					Vo:         s.VocalMax,
+					Da:         s.DanceMax,
+					Pe:         s.PeformanceMax,
 					Expect:     float32(e),
 				}
-				scene.CalcTotal(v.Bonds, v.Discography)
+				scene.CalcTotal(s.Bonds, s.Discography)
 				scenes = append(scenes, scene)
 			}
 		}
@@ -126,7 +126,7 @@ var listSceneCmd = &cobra.Command{
 			scenes[i].Pe85 = int32(i + 1)
 		}
 
-		switch sortRank {
+		switch s {
 		case "all35":
 			sort.Slice(scenes, func(i, j int) bool { return scenes[i].All35Score > scenes[j].All35Score })
 		case "voda50":
