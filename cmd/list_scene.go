@@ -39,6 +39,7 @@ var listSceneCmd = &cobra.Command{
 	Short: "List scene",
 	Run: func(cmd *cobra.Command, args []string) {
 		c, _ := cmd.Flags().GetString("color")
+		c = getColorName(c)
 		s, _ := cmd.Flags().GetString("sort")
 		h, _ := cmd.Flags().GetBool("have")
 
@@ -158,6 +159,23 @@ var listSceneCmd = &cobra.Command{
 		ic := strings.Split(ignoreColumnsStr, ",")
 		render(scenes, ic)
 	},
+}
+
+func getColorName(c string) string {
+	switch c {
+	case "r", "red":
+		return "Red"
+	case "b", "blue":
+		return "Brue"
+	case "g", "green":
+		return "Green"
+	case "y", "yellow":
+		return "Yellow"
+	case "p", "purple":
+		return "Purple"
+	default:
+		return c
+	}
 }
 
 func init() {
