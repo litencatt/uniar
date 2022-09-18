@@ -23,7 +23,6 @@ package cmd
 
 import (
 	"fmt"
-	"log"
 	"os"
 	"reflect"
 	"regexp"
@@ -58,7 +57,6 @@ func render(data any) {
 	for i := 0; i < d.NumField(); i++ {
 		field := d.Field(i)
 		// *SCOREはskip
-		log.Print(field.Name)
 		if scoreReg.MatchString(field.Name) {
 			scoreIndex = append(scoreIndex, i)
 			continue

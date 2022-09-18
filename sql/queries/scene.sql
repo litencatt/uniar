@@ -45,3 +45,17 @@ WHERE
 ORDER BY
 	s.expected_value desc, total desc
 ;
+
+-- name: RegistScene :exec
+INSERT INTO scenes (
+	photograph_id,
+	member_id,
+	color_type_id,
+	vocal_max,
+	dance_max,
+	peformance_max,
+	center_skill_name,
+	expected_value,
+	ssr_plus
+) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)
+;

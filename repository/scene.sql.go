@@ -155,3 +155,44 @@ func (q *Queries) GetScenesWithColor(ctx context.Context, db DBTX, name string) 
 	}
 	return items, nil
 }
+
+const registScene = `-- name: RegistScene :exec
+INSERT INTO scenes (
+	photograph_id,
+	member_id,
+	color_type_id,
+	vocal_max,
+	dance_max,
+	peformance_max,
+	center_skill_name,
+	expected_value,
+	ssr_plus
+) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)
+`
+
+type RegistSceneParams struct {
+	PhotographID    int32
+	MemberID        int32
+	ColorTypeID     int32
+	VocalMax        int32
+	DanceMax        int32
+	PeformanceMax   int32
+	CenterSkillName sql.NullString
+	ExpectedValue   sql.NullString
+	SsrPlus         bool
+}
+
+func (q *Queries) RegistScene(ctx context.Context, db DBTX, arg RegistSceneParams) error {
+	_, err := db.ExecContext(ctx, registScene,
+		arg.PhotographID,
+		arg.MemberID,
+		arg.ColorTypeID,
+		arg.VocalMax,
+		arg.DanceMax,
+		arg.PeformanceMax,
+		arg.CenterSkillName,
+		arg.ExpectedValue,
+		arg.SsrPlus,
+	)
+	return err
+}

@@ -64,7 +64,7 @@ type Photograph struct {
 	Name         string
 	GroupID      int32
 	Abbreviation string
-	Type         string
+	PhotoType    string
 	CreatedAt    time.Time
 }
 
