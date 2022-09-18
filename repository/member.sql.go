@@ -44,18 +44,18 @@ func (q *Queries) GetMemberList(ctx context.Context, db DBTX, groupID int32) ([]
 const getMembers = `-- name: GetMembers :many
 SELECT
 	g. ` + "`" + `name` + "`" + ` AS ` + "`" + `group` + "`" + `,
-	m.id AS member_id,
 	m. ` + "`" + `name` + "`" + `,
 	m.phase,
 	m.graduated
 FROM
 	members m
 	JOIN ` + "`" + `groups` + "`" + ` g ON m.group_id = g.id
+ORDER BY
+	g.id, m.phase, m.first_name asc
 `
 
 type GetMembersRow struct {
 	Group     string
-	MemberID  int32
 	Name      string
 	Phase     int32
 	Graduated bool
@@ -72,7 +72,6 @@ func (q *Queries) GetMembers(ctx context.Context, db DBTX) ([]GetMembersRow, err
 		var i GetMembersRow
 		if err := rows.Scan(
 			&i.Group,
-			&i.MemberID,
 			&i.Name,
 			&i.Phase,
 			&i.Graduated,
