@@ -5,9 +5,10 @@ import (
 )
 
 type Scene struct {
-	Photograph  string
-	Member      string
 	Color       string
+	Photograph  string
+	SsrPlus     bool
+	Member      string
 	Expect      float32
 	Total       int32
 	All35Score  int32
@@ -27,7 +28,6 @@ type Scene struct {
 	Vo          int32
 	Da          int32
 	Pe          int32
-	SsrPlus     bool
 }
 
 type SceneTotal struct {

@@ -89,6 +89,7 @@ var listSceneCmd = &cobra.Command{
 				Da:         s.DanceMax,
 				Pe:         s.PeformanceMax,
 				Expect:     float32(e),
+				SsrPlus:    s.SsrPlus,
 			}
 			scene.CalcTotal(s.Bonds, s.Discography)
 			scenes = append(scenes, scene)
