@@ -135,6 +135,7 @@ CREATE TABLE producer_members (
   bond_level_collection_max INT NOT NULL,
   bond_level_scene_max INT NOT NULL,
   discography_disc_total INT NOT NULL,
+  discography_disc_total_max INT NOT NULL,
   created_at DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
   PRIMARY KEY (`id`),
   CONSTRAINT `fk_producer_members_producer_id` FOREIGN KEY (`producer_id`) REFERENCES `producers` (`id`),

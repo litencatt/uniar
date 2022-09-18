@@ -26,6 +26,7 @@ import (
 	"log"
 	"sort"
 	"strconv"
+	"strings"
 
 	"github.com/litencatt/uniar/entity"
 	"github.com/litencatt/uniar/repository"
@@ -38,62 +39,60 @@ var listSceneCmd = &cobra.Command{
 	Short: "List scene",
 	Run: func(cmd *cobra.Command, args []string) {
 		c, _ := cmd.Flags().GetString("color")
-		sortRank, _ := cmd.Flags().GetString("sort")
+		c = getColorName(c)
+		s, _ := cmd.Flags().GetString("sort")
+		h, _ := cmd.Flags().GetBool("have")
+		n, _ := cmd.Flags().GetBool("not-have")
+		d, _ := cmd.Flags().GetBool("detail")
+		f, _ := cmd.Flags().GetBool("full-name")
 
 		ctx := context.Background()
 		db, err := repository.NewConnection()
 		if err != nil {
 			log.Print(err)
 		}
+		q := repository.New()
 
 		var scenes []entity.Scene
-		q := repository.New()
+		color := c
 		if c == "" {
-			s, err := q.GetScenes(ctx, db)
-			if err != nil {
-				log.Print(err)
+			color = "%"
+		}
+		ss, err := q.GetScenesWithColor(ctx, db, color)
+		if err != nil {
+			log.Print(err)
+		}
+		for _, s := range ss {
+			// Show only scene you have
+			if h && !s.Have.Bool {
+				continue
 			}
-			for _, v := range s {
-				var e float64
-				if v.ExpectedValue.Valid {
-					e, _ = strconv.ParseFloat(v.ExpectedValue.String, 32)
-				}
-				scene := entity.Scene{
-					Photograph: v.Photograph,
-					Member:     v.Member,
-					Color:      v.Color,
-					Total:      v.Total,
-					Vo:         v.VocalMax,
-					Da:         v.DanceMax,
-					Pe:         v.PeformanceMax,
-					Expect:     float32(e),
-				}
-				scene.CalcTotal(v.Bonds, v.Discography)
-				scenes = append(scenes, scene)
+			// Show only scene you not have
+			if n && s.Have.Bool {
+				continue
 			}
-		} else {
-			s, err := q.GetScenesWithColor(ctx, db, c)
-			if err != nil {
-				log.Print(err)
+
+			var e float64
+			if s.ExpectedValue.Valid {
+				e, _ = strconv.ParseFloat(s.ExpectedValue.String, 32)
 			}
-			for _, v := range s {
-				var e float64
-				if v.ExpectedValue.Valid {
-					e, _ = strconv.ParseFloat(v.ExpectedValue.String, 32)
-				}
-				scene := entity.Scene{
-					Photograph: v.Photograph,
-					Member:     v.Member,
-					Color:      v.Color,
-					Total:      v.Total,
-					Vo:         v.VocalMax,
-					Da:         v.DanceMax,
-					Pe:         v.PeformanceMax,
-					Expect:     float32(e),
-				}
-				scene.CalcTotal(v.Bonds, v.Discography)
-				scenes = append(scenes, scene)
+			p := s.Photograph
+			if !f && s.Abbreviation != "" {
+				p = s.Abbreviation
 			}
+			scene := entity.Scene{
+				Photograph: p,
+				Member:     s.Member,
+				Color:      s.Color,
+				Total:      s.Total,
+				Vo:         s.VocalMax,
+				Da:         s.DanceMax,
+				Pe:         s.PeformanceMax,
+				Expect:     float32(e),
+				SsrPlus:    s.SsrPlus,
+			}
+			scene.CalcTotal(s.Bonds, s.Discography)
+			scenes = append(scenes, scene)
 		}
 
 		sort.Slice(scenes, func(i, j int) bool { return scenes[i].All35Score > scenes[j].All35Score })
@@ -125,7 +124,7 @@ var listSceneCmd = &cobra.Command{
 			scenes[i].Pe85 = int32(i + 1)
 		}
 
-		switch sortRank {
+		switch s {
 		case "all35":
 			sort.Slice(scenes, func(i, j int) bool { return scenes[i].All35Score > scenes[j].All35Score })
 		case "voda50":
@@ -143,12 +142,44 @@ var listSceneCmd = &cobra.Command{
 		default:
 			sort.Slice(scenes, func(i, j int) bool { return scenes[i].All35Score > scenes[j].All35Score })
 		}
-		render(scenes)
+
+		ignoreColumnsStr, _ := cmd.Flags().GetString("ignore-columns")
+		if !d && ignoreColumnsStr != "" {
+			ignoreColumnsStr += ",Vo,Da,Pe"
+		}
+		if !d && ignoreColumnsStr == "" {
+			ignoreColumnsStr = "Vo,Da,Pe"
+		}
+		ic := strings.Split(ignoreColumnsStr, ",")
+
+		render(scenes, ic)
 	},
+}
+
+func getColorName(c string) string {
+	switch c {
+	case "r", "red":
+		return "Red"
+	case "b", "blue":
+		return "Blue"
+	case "g", "green":
+		return "Green"
+	case "y", "yellow":
+		return "Yellow"
+	case "p", "purple":
+		return "Purple"
+	default:
+		return c
+	}
 }
 
 func init() {
 	listCmd.AddCommand(listSceneCmd)
-	listSceneCmd.Flags().StringP("color", "c", "", "Color filter")
+	listSceneCmd.Flags().BoolP("have", "", false, "Show only scenes you have")
+	listSceneCmd.Flags().BoolP("not-have", "n", false, "Show only scenes you NOT have")
+	listSceneCmd.Flags().BoolP("detail", "d", false, "Show detail")
+	listSceneCmd.Flags().BoolP("full-name", "f", false, "Show pohtograph full name")
+	listSceneCmd.Flags().StringP("color", "c", "", "Color filter(e.g. -c Red or -c r)")
 	listSceneCmd.Flags().StringP("sort", "s", "", "Sort target rank.(all35, voda50, ...)")
+	listSceneCmd.Flags().StringP("ignore-columns", "i", "", "Ignore columns to display(VoDa50,DaPe50,...)")
 }

@@ -49,16 +49,20 @@ var (
 	scoreReg = regexp.MustCompile(`Score$`)
 )
 
-func render(data any) {
+func render(data any, ignoreColumns []string) {
 	// // SetHeaderのためにフィールド名取得
 	var fields []string
-	var scoreIndex []int
+	var skipIdx []int
 	d := reflect.TypeOf(data).Elem()
 	for i := 0; i < d.NumField(); i++ {
 		field := d.Field(i)
 		// *SCOREはskip
 		if scoreReg.MatchString(field.Name) {
-			scoreIndex = append(scoreIndex, i)
+			skipIdx = append(skipIdx, i)
+			continue
+		}
+		if includeStr(ignoreColumns, field.Name) {
+			skipIdx = append(skipIdx, i)
 			continue
 		}
 		fields = append(fields, field.Name)
@@ -77,7 +81,7 @@ func render(data any) {
 
 		var r []string
 		for i := 0; i < rv.NumField(); i++ {
-			if include(scoreIndex, i) {
+			if include(skipIdx, i) {
 				continue
 			}
 			field := rv.Field(i)
@@ -92,6 +96,15 @@ func render(data any) {
 func include(slice []int, target int) bool {
 	for _, num := range slice {
 		if num == target {
+			return true
+		}
+	}
+	return false
+}
+
+func includeStr(slice []string, target string) bool {
+	for _, s := range slice {
+		if s == target {
 			return true
 		}
 	}

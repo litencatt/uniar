@@ -74,14 +74,15 @@ type Producer struct {
 }
 
 type ProducerMember struct {
-	ID                     int32
-	ProducerID             int32
-	MemberID               int32
-	BondLevelCurent        int32
-	BondLevelCollectionMax int32
-	BondLevelSceneMax      int32
-	DiscographyDiscTotal   int32
-	CreatedAt              time.Time
+	ID                      int32
+	ProducerID              int32
+	MemberID                int32
+	BondLevelCurent         int32
+	BondLevelCollectionMax  int32
+	BondLevelSceneMax       int32
+	DiscographyDiscTotal    int32
+	DiscographyDiscTotalMax int32
+	CreatedAt               time.Time
 }
 
 type ProducerOffice struct {

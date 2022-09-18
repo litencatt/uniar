@@ -9,8 +9,6 @@ import (
 )
 
 type Querier interface {
-	GetCollections(ctx context.Context, db DBTX) ([]GetCollectionsRow, error)
-	GetCollectionsWithColor(ctx context.Context, db DBTX, name string) ([]GetCollectionsWithColorRow, error)
 	GetGroup(ctx context.Context, db DBTX) ([]GetGroupRow, error)
 	GetGroupNameById(ctx context.Context, db DBTX, id int32) (string, error)
 	GetLiveList(ctx context.Context, db DBTX) ([]GetLiveListRow, error)

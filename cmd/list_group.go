@@ -46,7 +46,7 @@ var listGroupCmd = &cobra.Command{
 			log.Print(err)
 		}
 
-		render(groups)
+		render(groups, []string{})
 	},
 }
 

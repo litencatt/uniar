@@ -22,13 +22,15 @@ SELECT
 	s.expected_value,
 	s.ssr_plus,
 	pm.bond_level_curent AS bonds,
-	pm.discography_disc_total AS discography
+	pm.discography_disc_total AS discography,
+	ps.have
 FROM
 	scenes s
 	JOIN photograph p ON s.photograph_id = p.id
 	JOIN color_types c ON s.color_type_id = c.id
 	JOIN members m ON s.member_id = m.id
 	JOIN producer_members pm ON s.member_id = pm.member_id
+	JOIN producer_scenes ps ON s.photograph_id = ps.photograph_id AND s.member_id = ps.member_id
 ORDER BY
 	s.expected_value desc, total desc
 `
@@ -45,6 +47,7 @@ type GetScenesRow struct {
 	SsrPlus       bool
 	Bonds         int32
 	Discography   int32
+	Have          sql.NullBool
 }
 
 func (q *Queries) GetScenes(ctx context.Context, db DBTX) ([]GetScenesRow, error) {
@@ -68,6 +71,7 @@ func (q *Queries) GetScenes(ctx context.Context, db DBTX) ([]GetScenesRow, error
 			&i.SsrPlus,
 			&i.Bonds,
 			&i.Discography,
+			&i.Have,
 		); err != nil {
 			return nil, err
 		}
@@ -85,6 +89,7 @@ func (q *Queries) GetScenes(ctx context.Context, db DBTX) ([]GetScenesRow, error
 const getScenesWithColor = `-- name: GetScenesWithColor :many
 SELECT
 	p.name AS photograph,
+	p.abbreviation,
 	m.name AS member,
 	c.name AS color,
 	s.vocal_max + s.dance_max + s.peformance_max + 430 AS total,
@@ -94,21 +99,24 @@ SELECT
 	s.expected_value,
 	s.ssr_plus,
 	pm.bond_level_curent AS bonds,
-	pm.discography_disc_total AS discography
+	pm.discography_disc_total AS discography,
+	ps.have
 FROM
 	scenes s
 	JOIN photograph p ON s.photograph_id = p.id
 	JOIN color_types c ON s.color_type_id = c.id
 	JOIN members m ON s.member_id = m.id
 	JOIN producer_members pm ON s.member_id = pm.member_id
+	JOIN producer_scenes ps ON s.photograph_id = ps.photograph_id AND s.member_id = ps.member_id
 WHERE
-	c.name = ?
+	c.name LIKE ?
 ORDER BY
 	s.expected_value desc, total desc
 `
 
 type GetScenesWithColorRow struct {
 	Photograph    string
+	Abbreviation  string
 	Member        string
 	Color         string
 	Total         int32
@@ -119,6 +127,7 @@ type GetScenesWithColorRow struct {
 	SsrPlus       bool
 	Bonds         int32
 	Discography   int32
+	Have          sql.NullBool
 }
 
 func (q *Queries) GetScenesWithColor(ctx context.Context, db DBTX, name string) ([]GetScenesWithColorRow, error) {
@@ -132,6 +141,7 @@ func (q *Queries) GetScenesWithColor(ctx context.Context, db DBTX, name string) 
 		var i GetScenesWithColorRow
 		if err := rows.Scan(
 			&i.Photograph,
+			&i.Abbreviation,
 			&i.Member,
 			&i.Color,
 			&i.Total,
@@ -142,6 +152,7 @@ func (q *Queries) GetScenesWithColor(ctx context.Context, db DBTX, name string) 
 			&i.SsrPlus,
 			&i.Bonds,
 			&i.Discography,
+			&i.Have,
 		); err != nil {
 			return nil, err
 		}

@@ -46,7 +46,7 @@ var listMemberCmd = &cobra.Command{
 			log.Print(err)
 		}
 
-		render(members)
+		render(members, []string{})
 	},
 }
 
