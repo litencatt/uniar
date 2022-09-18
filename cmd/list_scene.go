@@ -185,7 +185,7 @@ func getColorName(c string) string {
 	case "r", "red":
 		return "Red"
 	case "b", "blue":
-		return "Brue"
+		return "Blue"
 	case "g", "green":
 		return "Green"
 	case "y", "yellow":
