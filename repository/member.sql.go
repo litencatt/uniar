@@ -9,6 +9,38 @@ import (
 	"context"
 )
 
+const getMemberList = `-- name: GetMemberList :many
+SELECT id, name FROM members WHERE group_id = ?
+`
+
+type GetMemberListRow struct {
+	ID   int32
+	Name string
+}
+
+func (q *Queries) GetMemberList(ctx context.Context, db DBTX, groupID int32) ([]GetMemberListRow, error) {
+	rows, err := db.QueryContext(ctx, getMemberList, groupID)
+	if err != nil {
+		return nil, err
+	}
+	defer rows.Close()
+	var items []GetMemberListRow
+	for rows.Next() {
+		var i GetMemberListRow
+		if err := rows.Scan(&i.ID, &i.Name); err != nil {
+			return nil, err
+		}
+		items = append(items, i)
+	}
+	if err := rows.Close(); err != nil {
+		return nil, err
+	}
+	if err := rows.Err(); err != nil {
+		return nil, err
+	}
+	return items, nil
+}
+
 const getMembers = `-- name: GetMembers :many
 SELECT
 	g. ` + "`" + `name` + "`" + ` AS ` + "`" + `group` + "`" + `,
