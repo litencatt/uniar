@@ -42,6 +42,8 @@ var listSceneCmd = &cobra.Command{
 		c = getColorName(c)
 		s, _ := cmd.Flags().GetString("sort")
 		h, _ := cmd.Flags().GetBool("have")
+		n, _ := cmd.Flags().GetBool("not-have")
+		d, _ := cmd.Flags().GetBool("detail")
 
 		ctx := context.Background()
 		db, err := repository.NewConnection()
@@ -57,7 +59,12 @@ var listSceneCmd = &cobra.Command{
 				log.Print(err)
 			}
 			for _, s := range ss {
+				// Show only scene you have
 				if h && !s.Have.Bool {
+					continue
+				}
+				// Show only scene you not have
+				if n && s.Have.Bool {
 					continue
 				}
 
@@ -84,7 +91,12 @@ var listSceneCmd = &cobra.Command{
 				log.Print(err)
 			}
 			for _, s := range ss {
+				// Show only scene you have
 				if h && !s.Have.Bool {
+					continue
+				}
+				// Show only scene you not have
+				if n && s.Have.Bool {
 					continue
 				}
 
@@ -156,7 +168,14 @@ var listSceneCmd = &cobra.Command{
 		}
 
 		ignoreColumnsStr, _ := cmd.Flags().GetString("ignore-columns")
+		if !d && ignoreColumnsStr != "" {
+			ignoreColumnsStr += ",Vo,Da,Pe"
+		}
+		if !d && ignoreColumnsStr == "" {
+			ignoreColumnsStr = "Vo,Da,Pe"
+		}
 		ic := strings.Split(ignoreColumnsStr, ",")
+
 		render(scenes, ic)
 	},
 }
@@ -180,8 +199,10 @@ func getColorName(c string) string {
 
 func init() {
 	listCmd.AddCommand(listSceneCmd)
-	listSceneCmd.Flags().BoolP("have", "", false, "Collection filter")
-	listSceneCmd.Flags().StringP("color", "c", "", "Color filter")
+	listSceneCmd.Flags().BoolP("have", "", false, "Show only scenes you have")
+	listSceneCmd.Flags().BoolP("not-have", "n", false, "Show only scenes you NOT have")
+	listSceneCmd.Flags().BoolP("detail", "d", false, "Show detail")
+	listSceneCmd.Flags().StringP("color", "c", "", "Color filter(e.g. -c Red or -c r)")
 	listSceneCmd.Flags().StringP("sort", "s", "", "Sort target rank.(all35, voda50, ...)")
 	listSceneCmd.Flags().StringP("ignore-columns", "i", "", "Ignore columns to display(VoDa50,DaPe50,...)")
 }
