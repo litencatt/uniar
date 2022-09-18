@@ -40,3 +40,14 @@ func (q *Queries) GetGroup(ctx context.Context, db DBTX) ([]GetGroupRow, error) 
 	}
 	return items, nil
 }
+
+const getGroupNameById = `-- name: GetGroupNameById :one
+SELECT name FROM ` + "`" + `groups` + "`" + ` WHERE id = ?
+`
+
+func (q *Queries) GetGroupNameById(ctx context.Context, db DBTX, id int32) (string, error) {
+	row := db.QueryRowContext(ctx, getGroupNameById, id)
+	var name string
+	err := row.Scan(&name)
+	return name, err
+}

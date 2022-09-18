@@ -7,6 +7,7 @@ package repository
 
 import (
 	"context"
+	"database/sql"
 )
 
 const getMusicList = `-- name: GetMusicList :many
@@ -30,7 +31,7 @@ type GetMusicListRow struct {
 	Music  string
 	Type   string
 	Length int32
-	Bonus  bool
+	Bonus  sql.NullBool
 	Master int32
 }
 
@@ -87,7 +88,7 @@ type GetMusicListWithColorRow struct {
 	Music  string
 	Type   string
 	Length int32
-	Bonus  bool
+	Bonus  sql.NullBool
 	Master int32
 }
 
@@ -119,4 +120,39 @@ func (q *Queries) GetMusicListWithColor(ctx context.Context, db DBTX, name strin
 		return nil, err
 	}
 	return items, nil
+}
+
+const registMusic = `-- name: RegistMusic :exec
+INSERT INTO music (
+	name,
+	normal,
+	pro,
+	master,
+	length,
+	color_type_id,
+	live_id
+) VALUES (?, ?, ?, ?, ?, ?, ?)
+`
+
+type RegistMusicParams struct {
+	Name        string
+	Normal      int32
+	Pro         int32
+	Master      int32
+	Length      int32
+	ColorTypeID int32
+	LiveID      int32
+}
+
+func (q *Queries) RegistMusic(ctx context.Context, db DBTX, arg RegistMusicParams) error {
+	_, err := db.ExecContext(ctx, registMusic,
+		arg.Name,
+		arg.Normal,
+		arg.Pro,
+		arg.Master,
+		arg.Length,
+		arg.ColorTypeID,
+		arg.LiveID,
+	)
+	return err
 }

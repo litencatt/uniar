@@ -53,9 +53,9 @@ type Music struct {
 	Length      int32
 	ColorTypeID int32
 	LiveID      int32
-	ProPlus     int32
-	MusicBonus  bool
-	SetlistID   int32
+	ProPlus     sql.NullInt32
+	MusicBonus  sql.NullBool
+	SetlistID   sql.NullInt32
 	CreatedAt   time.Time
 }
 
