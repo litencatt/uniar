@@ -5,29 +5,29 @@ import (
 )
 
 type Scene struct {
-	Photograph string
-	Member     string
-	Color      string
-	Expect     float32
-	Total      int32
-	All35      int32
-	All35Rank  int32
-	VoDa50     int32
-	VoDa50Rank int32
-	DaPe50     int32
-	DaPe50Rank int32
-	VoPe50     int32
-	VoPe50Rank int32
-	Vo85       int32
-	Vo85Rank   int32
-	Da85       int32
-	Da85Rank   int32
-	Pe85       int32
-	Pe85Rank   int32
-	Vo         int32
-	Da         int32
-	Pe         int32
-	SsrPlus    bool
+	Photograph  string
+	Member      string
+	Color       string
+	Expect      float32
+	Total       int32
+	All35Score  int32
+	All35       int32
+	VoDa50Score int32
+	VoDa50      int32
+	DaPe50Score int32
+	DaPe50      int32
+	VoPe50Score int32
+	VoPe50      int32
+	Vo85Score   int32
+	Vo85        int32
+	Da85Score   int32
+	Da85        int32
+	Pe85Score   int32
+	Pe85        int32
+	Vo          int32
+	Da          int32
+	Pe          int32
+	SsrPlus     bool
 }
 
 type SceneTotal struct {
@@ -169,11 +169,11 @@ func (s *Scene) CalcTotal(bondLevel int32, discography int32) {
 		totals[skill] = int32(e * float32(t+csb+fsb+ob+member+sceneSkillLvMaxBonus+costumeBonus))
 	}
 
-	s.All35 = totals["All35"]
-	s.VoDa50 = totals["VoDa50"]
-	s.DaPe50 = totals["DaPe50"]
-	s.VoPe50 = totals["VoPe50"]
-	s.Vo85 = totals["Vo85"]
-	s.Da85 = totals["Da85"]
-	s.Pe85 = totals["Pe85"]
+	s.All35Score = totals["All35"]
+	s.VoDa50Score = totals["VoDa50"]
+	s.DaPe50Score = totals["DaPe50"]
+	s.VoPe50Score = totals["VoPe50"]
+	s.Vo85Score = totals["Vo85"]
+	s.Da85Score = totals["Da85"]
+	s.Pe85Score = totals["Pe85"]
 }

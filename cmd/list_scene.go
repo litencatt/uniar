@@ -37,10 +37,8 @@ var listSceneCmd = &cobra.Command{
 	Use:   "scene",
 	Short: "List scene",
 	Run: func(cmd *cobra.Command, args []string) {
-		c, err := cmd.Flags().GetString("color")
-		if err != nil {
-			log.Fatal(err)
-		}
+		c, _ := cmd.Flags().GetString("color")
+		sortRank, _ := cmd.Flags().GetString("sort")
 
 		ctx := context.Background()
 		db, err := repository.NewConnection()
@@ -98,35 +96,53 @@ var listSceneCmd = &cobra.Command{
 			}
 		}
 
-		sort.Slice(scenes, func(i, j int) bool { return scenes[i].All35 > scenes[j].All35 })
+		sort.Slice(scenes, func(i, j int) bool { return scenes[i].All35Score > scenes[j].All35Score })
 		for i, _ := range scenes {
-			scenes[i].All35Rank = int32(i + 1)
+			scenes[i].All35 = int32(i + 1)
 		}
-		sort.Slice(scenes, func(i, j int) bool { return scenes[i].VoDa50 > scenes[j].VoDa50 })
+		sort.Slice(scenes, func(i, j int) bool { return scenes[i].VoDa50Score > scenes[j].VoDa50Score })
 		for i, _ := range scenes {
-			scenes[i].VoDa50Rank = int32(i + 1)
+			scenes[i].VoDa50 = int32(i + 1)
 		}
-		sort.Slice(scenes, func(i, j int) bool { return scenes[i].DaPe50 > scenes[j].DaPe50 })
+		sort.Slice(scenes, func(i, j int) bool { return scenes[i].DaPe50Score > scenes[j].DaPe50Score })
 		for i, _ := range scenes {
-			scenes[i].DaPe50Rank = int32(i + 1)
+			scenes[i].DaPe50 = int32(i + 1)
 		}
-		sort.Slice(scenes, func(i, j int) bool { return scenes[i].VoPe50 > scenes[j].VoPe50 })
+		sort.Slice(scenes, func(i, j int) bool { return scenes[i].VoPe50Score > scenes[j].VoPe50Score })
 		for i, _ := range scenes {
-			scenes[i].VoPe50Rank = int32(i + 1)
+			scenes[i].VoPe50 = int32(i + 1)
 		}
-		sort.Slice(scenes, func(i, j int) bool { return scenes[i].Vo85 > scenes[j].Vo85 })
+		sort.Slice(scenes, func(i, j int) bool { return scenes[i].Vo85Score > scenes[j].Vo85Score })
 		for i, _ := range scenes {
-			scenes[i].Vo85Rank = int32(i + 1)
+			scenes[i].Vo85 = int32(i + 1)
 		}
-		sort.Slice(scenes, func(i, j int) bool { return scenes[i].Da85 > scenes[j].Da85 })
+		sort.Slice(scenes, func(i, j int) bool { return scenes[i].Da85Score > scenes[j].Da85Score })
 		for i, _ := range scenes {
-			scenes[i].Da85Rank = int32(i + 1)
+			scenes[i].Da85 = int32(i + 1)
 		}
-		sort.Slice(scenes, func(i, j int) bool { return scenes[i].Pe85 > scenes[j].Pe85 })
+		sort.Slice(scenes, func(i, j int) bool { return scenes[i].Pe85Score > scenes[j].Pe85Score })
 		for i, _ := range scenes {
-			scenes[i].Pe85Rank = int32(i + 1)
+			scenes[i].Pe85 = int32(i + 1)
 		}
-		sort.Slice(scenes, func(i, j int) bool { return scenes[i].All35 > scenes[j].All35 })
+
+		switch sortRank {
+		case "all35":
+			sort.Slice(scenes, func(i, j int) bool { return scenes[i].All35Score > scenes[j].All35Score })
+		case "voda50":
+			sort.Slice(scenes, func(i, j int) bool { return scenes[i].VoDa50Score > scenes[j].VoDa50Score })
+		case "dape50":
+			sort.Slice(scenes, func(i, j int) bool { return scenes[i].DaPe50Score > scenes[j].DaPe50Score })
+		case "vope50":
+			sort.Slice(scenes, func(i, j int) bool { return scenes[i].VoPe50Score > scenes[j].VoPe50Score })
+		case "vo85":
+			sort.Slice(scenes, func(i, j int) bool { return scenes[i].Vo85Score > scenes[j].Vo85Score })
+		case "da85":
+			sort.Slice(scenes, func(i, j int) bool { return scenes[i].Da85Score > scenes[j].Da85Score })
+		case "pe85":
+			sort.Slice(scenes, func(i, j int) bool { return scenes[i].Pe85Score > scenes[j].Pe85Score })
+		default:
+			sort.Slice(scenes, func(i, j int) bool { return scenes[i].All35Score > scenes[j].All35Score })
+		}
 		render(scenes)
 	},
 }
@@ -134,4 +150,5 @@ var listSceneCmd = &cobra.Command{
 func init() {
 	listCmd.AddCommand(listSceneCmd)
 	listSceneCmd.Flags().StringP("color", "c", "", "Color filter")
+	listSceneCmd.Flags().StringP("sort", "s", "", "Sort target rank.(all35, voda50, ...)")
 }
