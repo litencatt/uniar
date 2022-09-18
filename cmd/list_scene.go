@@ -50,73 +50,43 @@ var listSceneCmd = &cobra.Command{
 		if err != nil {
 			log.Print(err)
 		}
+		q := repository.New()
 
 		var scenes []entity.Scene
-		q := repository.New()
+		color := c
 		if c == "" {
-			ss, err := q.GetScenes(ctx, db)
-			if err != nil {
-				log.Print(err)
+			color = "%"
+		}
+		ss, err := q.GetScenesWithColor(ctx, db, color)
+		if err != nil {
+			log.Print(err)
+		}
+		for _, s := range ss {
+			// Show only scene you have
+			if h && !s.Have.Bool {
+				continue
 			}
-			for _, s := range ss {
-				// Show only scene you have
-				if h && !s.Have.Bool {
-					continue
-				}
-				// Show only scene you not have
-				if n && s.Have.Bool {
-					continue
-				}
+			// Show only scene you not have
+			if n && s.Have.Bool {
+				continue
+			}
 
-				var e float64
-				if s.ExpectedValue.Valid {
-					e, _ = strconv.ParseFloat(s.ExpectedValue.String, 32)
-				}
-				scene := entity.Scene{
-					Photograph: s.Photograph,
-					Member:     s.Member,
-					Color:      s.Color,
-					Total:      s.Total,
-					Vo:         s.VocalMax,
-					Da:         s.DanceMax,
-					Pe:         s.PeformanceMax,
-					Expect:     float32(e),
-				}
-				scene.CalcTotal(s.Bonds, s.Discography)
-				scenes = append(scenes, scene)
+			var e float64
+			if s.ExpectedValue.Valid {
+				e, _ = strconv.ParseFloat(s.ExpectedValue.String, 32)
 			}
-		} else {
-			ss, err := q.GetScenesWithColor(ctx, db, c)
-			if err != nil {
-				log.Print(err)
+			scene := entity.Scene{
+				Photograph: s.Photograph,
+				Member:     s.Member,
+				Color:      s.Color,
+				Total:      s.Total,
+				Vo:         s.VocalMax,
+				Da:         s.DanceMax,
+				Pe:         s.PeformanceMax,
+				Expect:     float32(e),
 			}
-			for _, s := range ss {
-				// Show only scene you have
-				if h && !s.Have.Bool {
-					continue
-				}
-				// Show only scene you not have
-				if n && s.Have.Bool {
-					continue
-				}
-
-				var e float64
-				if s.ExpectedValue.Valid {
-					e, _ = strconv.ParseFloat(s.ExpectedValue.String, 32)
-				}
-				scene := entity.Scene{
-					Photograph: s.Photograph,
-					Member:     s.Member,
-					Color:      s.Color,
-					Total:      s.Total,
-					Vo:         s.VocalMax,
-					Da:         s.DanceMax,
-					Pe:         s.PeformanceMax,
-					Expect:     float32(e),
-				}
-				scene.CalcTotal(s.Bonds, s.Discography)
-				scenes = append(scenes, scene)
-			}
+			scene.CalcTotal(s.Bonds, s.Discography)
+			scenes = append(scenes, scene)
 		}
 
 		sort.Slice(scenes, func(i, j int) bool { return scenes[i].All35Score > scenes[j].All35Score })

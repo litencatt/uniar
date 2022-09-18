@@ -108,7 +108,7 @@ FROM
 	JOIN producer_members pm ON s.member_id = pm.member_id
 	JOIN producer_scenes ps ON s.photograph_id = ps.photograph_id AND s.member_id = ps.member_id
 WHERE
-	c.name = ?
+	c.name LIKE ?
 ORDER BY
 	s.expected_value desc, total desc
 `
