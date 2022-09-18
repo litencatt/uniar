@@ -26,6 +26,7 @@ import (
 	"log"
 	"sort"
 	"strconv"
+	"strings"
 
 	"github.com/litencatt/uniar/entity"
 	"github.com/litencatt/uniar/repository"
@@ -143,7 +144,10 @@ var listSceneCmd = &cobra.Command{
 		default:
 			sort.Slice(scenes, func(i, j int) bool { return scenes[i].All35Score > scenes[j].All35Score })
 		}
-		render(scenes)
+
+		ignoreColumnsStr, _ := cmd.Flags().GetString("ignore-columns")
+		ic := strings.Split(ignoreColumnsStr, ",")
+		render(scenes, ic)
 	},
 }
 
@@ -151,4 +155,5 @@ func init() {
 	listCmd.AddCommand(listSceneCmd)
 	listSceneCmd.Flags().StringP("color", "c", "", "Color filter")
 	listSceneCmd.Flags().StringP("sort", "s", "", "Sort target rank.(all35, voda50, ...)")
+	listSceneCmd.Flags().StringP("ignore-columns", "i", "", "Ignore columns to display(VoDa50,DaPe50,...)")
 }

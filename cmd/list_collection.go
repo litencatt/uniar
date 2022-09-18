@@ -53,7 +53,7 @@ var listCollectionCmd = &cobra.Command{
 			log.Print(err)
 		}
 
-		render(collections)
+		render(collections, []string{})
 	},
 }
 

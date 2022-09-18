@@ -54,7 +54,7 @@ var listMusicCmd = &cobra.Command{
 			log.Print(err)
 		}
 
-		render(music)
+		render(music, []string{})
 	},
 }
 
