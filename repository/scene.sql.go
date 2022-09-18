@@ -89,6 +89,7 @@ func (q *Queries) GetScenes(ctx context.Context, db DBTX) ([]GetScenesRow, error
 const getScenesWithColor = `-- name: GetScenesWithColor :many
 SELECT
 	p.name AS photograph,
+	p.abbreviation,
 	m.name AS member,
 	c.name AS color,
 	s.vocal_max + s.dance_max + s.peformance_max + 430 AS total,
@@ -115,6 +116,7 @@ ORDER BY
 
 type GetScenesWithColorRow struct {
 	Photograph    string
+	Abbreviation  string
 	Member        string
 	Color         string
 	Total         int32
@@ -139,6 +141,7 @@ func (q *Queries) GetScenesWithColor(ctx context.Context, db DBTX, name string) 
 		var i GetScenesWithColorRow
 		if err := rows.Scan(
 			&i.Photograph,
+			&i.Abbreviation,
 			&i.Member,
 			&i.Color,
 			&i.Total,

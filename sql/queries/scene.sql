@@ -26,6 +26,7 @@ ORDER BY
 -- name: GetScenesWithColor :many
 SELECT
 	p.name AS photograph,
+	p.abbreviation,
 	m.name AS member,
 	c.name AS color,
 	s.vocal_max + s.dance_max + s.peformance_max + 430 AS total,

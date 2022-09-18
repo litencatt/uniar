@@ -44,6 +44,7 @@ var listSceneCmd = &cobra.Command{
 		h, _ := cmd.Flags().GetBool("have")
 		n, _ := cmd.Flags().GetBool("not-have")
 		d, _ := cmd.Flags().GetBool("detail")
+		f, _ := cmd.Flags().GetBool("full-name")
 
 		ctx := context.Background()
 		db, err := repository.NewConnection()
@@ -75,8 +76,12 @@ var listSceneCmd = &cobra.Command{
 			if s.ExpectedValue.Valid {
 				e, _ = strconv.ParseFloat(s.ExpectedValue.String, 32)
 			}
+			p := s.Photograph
+			if !f && s.Abbreviation != "" {
+				p = s.Abbreviation
+			}
 			scene := entity.Scene{
-				Photograph: s.Photograph,
+				Photograph: p,
 				Member:     s.Member,
 				Color:      s.Color,
 				Total:      s.Total,
@@ -172,6 +177,7 @@ func init() {
 	listSceneCmd.Flags().BoolP("have", "", false, "Show only scenes you have")
 	listSceneCmd.Flags().BoolP("not-have", "n", false, "Show only scenes you NOT have")
 	listSceneCmd.Flags().BoolP("detail", "d", false, "Show detail")
+	listSceneCmd.Flags().BoolP("full-name", "f", false, "Show pohtograph full name")
 	listSceneCmd.Flags().StringP("color", "c", "", "Color filter(e.g. -c Red or -c r)")
 	listSceneCmd.Flags().StringP("sort", "s", "", "Sort target rank.(all35, voda50, ...)")
 	listSceneCmd.Flags().StringP("ignore-columns", "i", "", "Ignore columns to display(VoDa50,DaPe50,...)")
