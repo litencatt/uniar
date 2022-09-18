@@ -31,3 +31,14 @@ WHERE
 ORDER BY
 	l.id
 ;
+
+-- name: RegistMusic :exec
+INSERT INTO music (
+	name,
+	normal,
+	pro,
+	master,
+	length,
+	color_type_id,
+	live_id
+) VALUES (?, ?, ?, ?, ?, ?, ?);

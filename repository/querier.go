@@ -12,11 +12,15 @@ type Querier interface {
 	GetCollections(ctx context.Context, db DBTX) ([]GetCollectionsRow, error)
 	GetCollectionsWithColor(ctx context.Context, db DBTX, name string) ([]GetCollectionsWithColorRow, error)
 	GetGroup(ctx context.Context, db DBTX) ([]GetGroupRow, error)
+	GetGroupNameById(ctx context.Context, db DBTX, id int32) (string, error)
+	GetLiveList(ctx context.Context, db DBTX) ([]GetLiveListRow, error)
 	GetMembers(ctx context.Context, db DBTX) ([]GetMembersRow, error)
 	GetMusicList(ctx context.Context, db DBTX) ([]GetMusicListRow, error)
 	GetMusicListWithColor(ctx context.Context, db DBTX, name string) ([]GetMusicListWithColorRow, error)
 	GetScenes(ctx context.Context, db DBTX) ([]GetScenesRow, error)
 	GetScenesWithColor(ctx context.Context, db DBTX, name string) ([]GetScenesWithColorRow, error)
+	RegistLive(ctx context.Context, db DBTX, arg RegistLiveParams) error
+	RegistMusic(ctx context.Context, db DBTX, arg RegistMusicParams) error
 	SeedCenterSkills(ctx context.Context, db DBTX) error
 	SeedColorTypes(ctx context.Context, db DBTX) error
 	SeedGroups(ctx context.Context, db DBTX) error
