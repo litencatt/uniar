@@ -11,19 +11,19 @@ type Scene struct {
 	Expect      float32
 	Total       int32
 	All35Score  int32
-	All35Rank   int32
+	All35       int32
 	VoDa50Score int32
-	VoDa50Rank  int32
+	VoDa50      int32
 	DaPe50Score int32
-	DaPe50Rank  int32
+	DaPe50      int32
 	VoPe50Score int32
-	VoPe50Rank  int32
+	VoPe50      int32
 	Vo85Score   int32
-	Vo85Rank    int32
+	Vo85        int32
 	Da85Score   int32
-	Da85Rank    int32
+	Da85        int32
 	Pe85Score   int32
-	Pe85Rank    int32
+	Pe85        int32
 	Vo          int32
 	Da          int32
 	Pe          int32
