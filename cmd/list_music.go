@@ -23,7 +23,7 @@ package cmd
 
 import (
 	"context"
-	"log"
+	"fmt"
 
 	"github.com/litencatt/uniar/repository"
 	"github.com/spf13/cobra"
@@ -39,7 +39,8 @@ var listMusicCmd = &cobra.Command{
 		ctx := context.Background()
 		db, err := repository.NewConnection()
 		if err != nil {
-			log.Print(err)
+			fmt.Println(err)
+			return
 		}
 
 		var music any
@@ -47,11 +48,12 @@ var listMusicCmd = &cobra.Command{
 		if c == "" {
 			music, err = q.GetMusicList(ctx, db)
 		} else {
-			log.Print("here")
 			music, err = q.GetMusicListWithColor(ctx, db, c)
 		}
 		if err != nil {
-			log.Print(err)
+			fmt.Println(err)
+			fmt.Println("please setup first.\n$ uniar setup")
+			return
 		}
 
 		render(music, []string{})

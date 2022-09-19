@@ -24,7 +24,6 @@ package cmd
 import (
 	"context"
 	"fmt"
-	"log"
 	"strconv"
 
 	"github.com/Songmu/prompter"
@@ -53,12 +52,15 @@ var registLiveCmd = &cobra.Command{
 		ctx := context.Background()
 		db, err := repository.NewConnection()
 		if err != nil {
-			log.Print(err)
+			fmt.Println(err)
+			return
 		}
 
 		q := repository.New()
 		if err := q.RegistLive(ctx, db, liveName); err != nil {
-			log.Print(err)
+			fmt.Println(err)
+			fmt.Println("please setup first.\n$ uniar setup")
+			return
 		}
 
 		gn := "櫻坂46"

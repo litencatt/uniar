@@ -62,7 +62,7 @@ var setupCmd = &cobra.Command{
 		}
 
 		if err := dbsetup(dbPath); err != nil {
-			fmt.Print(err)
+			fmt.Println(err)
 		}
 		seed(dbPath)
 	},
