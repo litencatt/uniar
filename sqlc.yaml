@@ -1,9 +1,11 @@
-version: 1
-packages:
-  - engine: "mysql"
-    path: "repository"
-    name: "repository"
-    schema: "sql/schema.sql"
+version: 2
+sql:
+  - engine: "sqlite"
+    schema: "sql/schema.sqlite3.sql"
     queries: "sql/queries/"
-    emit_interface: true
-    emit_methods_with_db_argument: true
+    gen:
+      go:
+        package: "repository"
+        out: "repository"
+        emit_interface: true
+        emit_methods_with_db_argument: true
