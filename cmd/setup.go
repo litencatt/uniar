@@ -22,16 +22,20 @@ THE SOFTWARE.
 package cmd
 
 import (
+	"context"
+	"database/sql"
 	"fmt"
 	"os"
 	"os/user"
+
+	_ "github.com/mattn/go-sqlite3"
 
 	"github.com/k0kubun/sqldef"
 	"github.com/k0kubun/sqldef/database"
 	"github.com/k0kubun/sqldef/database/sqlite3"
 	"github.com/k0kubun/sqldef/parser"
 	"github.com/k0kubun/sqldef/schema"
-	"github.com/litencatt/uniar/sql"
+	mig_sql "github.com/litencatt/uniar/sql"
 	"github.com/spf13/cobra"
 )
 
@@ -42,8 +46,7 @@ var (
 // setupCmd represents the setup command
 var setupCmd = &cobra.Command{
 	Use:   "setup",
-	Short: "A brief description of your command",
-	Long:  `A longer description`,
+	Short: "Setup uniar",
 	Run: func(cmd *cobra.Command, args []string) {
 		user, err := user.Current()
 		if err != nil {
@@ -57,10 +60,26 @@ var setupCmd = &cobra.Command{
 				fmt.Println(err)
 			}
 		}
+
 		if err := dbsetup(dbPath); err != nil {
 			fmt.Print(err)
 		}
+		seed(dbPath)
 	},
+}
+
+func seed(dbPath string) {
+	ctx := context.Background()
+	db, err := sql.Open("sqlite3", dbPath)
+	if err != nil {
+		panic(err)
+	}
+	fmt.Println(string(mig_sql.Seed))
+	result, err := db.ExecContext(ctx, string(mig_sql.Seed))
+	if err != nil {
+		fmt.Println(err)
+	}
+	fmt.Println(result)
 }
 
 func dbsetup(dbPath string) error {
@@ -80,7 +99,7 @@ func dbsetup(dbPath string) error {
 			}
 		}()
 		options.DesiredFile = f.Name()
-		if _, err := f.Write(sql.Schema); err != nil {
+		if _, err := f.Write(mig_sql.Schema); err != nil {
 			return err
 		}
 		if err := f.Close(); err != nil {
