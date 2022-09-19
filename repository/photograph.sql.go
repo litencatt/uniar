@@ -10,12 +10,7 @@ import (
 )
 
 const getPhotographList = `-- name: GetPhotographList :many
-SELECT
-	id, name
-FROM
-	photograph
-WHERE group_id = ? AND photo_type = ?
-ORDER BY group_id, id ASC
+SELECT id, name FROM photograph WHERE group_id = ? AND photo_type = ? ORDER BY group_id, id ASC
 `
 
 type GetPhotographListParams struct {
@@ -52,14 +47,7 @@ func (q *Queries) GetPhotographList(ctx context.Context, db DBTX, arg GetPhotogr
 }
 
 const getPhotographListByPhotoType = `-- name: GetPhotographListByPhotoType :many
-;
-
-SELECT
-	id, name
-FROM
-	photograph
-WHERE photo_type = ?
-ORDER BY group_id, id ASC
+SELECT id, name FROM photograph WHERE photo_type = ? ORDER BY group_id, id ASC
 `
 
 type GetPhotographListByPhotoTypeRow struct {
