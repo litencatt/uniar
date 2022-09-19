@@ -30,7 +30,6 @@ type Group struct {
 type Life struct {
 	ID        int64
 	Name      string
-	GroupID   int64
 	CreatedAt time.Time
 }
 

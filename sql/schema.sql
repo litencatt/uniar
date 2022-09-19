@@ -22,10 +22,8 @@ CREATE TABLE groups (
 CREATE TABLE lives (
   id int NOT NULL ,
   name varchar(100) NOT NULL,
-  group_id int NOT NULL,
   created_at DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
-  PRIMARY KEY (id),
-  CONSTRAINT Live_ibfk_1 FOREIGN KEY (group_id) REFERENCES groups (id) ON DELETE CASCADE ON UPDATE CASCADE
+  PRIMARY KEY (id)
 );
 
 CREATE TABLE members (
