@@ -23,8 +23,8 @@ package cmd
 
 import (
 	"fmt"
-	"log"
 	"os"
+	"os/user"
 
 	"github.com/k0kubun/sqldef"
 	"github.com/k0kubun/sqldef/database"
@@ -39,21 +39,33 @@ var (
 	options = sqldef.Options{}
 )
 
-// migrateCmd represents the migrate command
-var migrateCmd = &cobra.Command{
-	Use:   "migrate",
+// setupCmd represents the setup command
+var setupCmd = &cobra.Command{
+	Use:   "setup",
 	Short: "A brief description of your command",
 	Long:  `A longer description`,
 	Run: func(cmd *cobra.Command, args []string) {
-		if err := execute(); err != nil {
-			log.Print(err)
+		user, err := user.Current()
+		if err != nil {
+			panic(err)
+		}
+		uniarPath := user.HomeDir + "/.uniar"
+		dbPath := uniarPath + "/uniar.db"
+
+		if _, err := os.Stat(uniarPath); err != nil {
+			if err := os.Mkdir(uniarPath, 0755); err != nil {
+				fmt.Println(err)
+			}
+		}
+		if err := dbsetup(dbPath); err != nil {
+			fmt.Print(err)
 		}
 	},
 }
 
-func execute() error {
+func dbsetup(dbPath string) error {
 	config := database.Config{
-		DbName: "uniar.db",
+		DbName: dbPath,
 	}
 
 	if options.DesiredFile == "" {
@@ -93,5 +105,5 @@ func execute() error {
 }
 
 func init() {
-	rootCmd.AddCommand(migrateCmd)
+	rootCmd.AddCommand(setupCmd)
 }
