@@ -10,15 +10,17 @@ import (
 )
 
 const getMemberList = `-- name: GetMemberList :many
+;
+
 SELECT id, name FROM members WHERE group_id = ?
 `
 
 type GetMemberListRow struct {
-	ID   int32
+	ID   int64
 	Name string
 }
 
-func (q *Queries) GetMemberList(ctx context.Context, db DBTX, groupID int32) ([]GetMemberListRow, error) {
+func (q *Queries) GetMemberList(ctx context.Context, db DBTX, groupID int64) ([]GetMemberListRow, error) {
 	rows, err := db.QueryContext(ctx, getMemberList, groupID)
 	if err != nil {
 		return nil, err
@@ -43,22 +45,22 @@ func (q *Queries) GetMemberList(ctx context.Context, db DBTX, groupID int32) ([]
 
 const getMembers = `-- name: GetMembers :many
 SELECT
-	g. ` + "`" + `name` + "`" + ` AS ` + "`" + `group` + "`" + `,
-	m. ` + "`" + `name` + "`" + `,
+	g.name AS group_name,
+	m.name,
 	m.phase,
 	m.graduated
 FROM
 	members m
-	JOIN ` + "`" + `groups` + "`" + ` g ON m.group_id = g.id
+	JOIN groups g ON m.group_id = g.id
 ORDER BY
 	g.id, m.phase, m.first_name asc
 `
 
 type GetMembersRow struct {
-	Group     string
+	GroupName string
 	Name      string
-	Phase     int32
-	Graduated bool
+	Phase     int64
+	Graduated int64
 }
 
 func (q *Queries) GetMembers(ctx context.Context, db DBTX) ([]GetMembersRow, error) {
@@ -71,7 +73,7 @@ func (q *Queries) GetMembers(ctx context.Context, db DBTX) ([]GetMembersRow, err
 	for rows.Next() {
 		var i GetMembersRow
 		if err := rows.Scan(
-			&i.Group,
+			&i.GroupName,
 			&i.Name,
 			&i.Phase,
 			&i.Graduated,

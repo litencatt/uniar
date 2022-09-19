@@ -98,12 +98,12 @@ var registMusicCmd = &cobra.Command{
 		liveId, _ := strconv.Atoi(lid)
 		if err := q.RegistMusic(ctx, db, repository.RegistMusicParams{
 			Name:        name,
-			Normal:      int32(ndi),
-			Pro:         int32(pdi),
-			Master:      int32(mdi),
-			Length:      int32(sec),
-			ColorTypeID: int32(colId),
-			LiveID:      int32(liveId),
+			Normal:      int64(ndi),
+			Pro:         int64(pdi),
+			Master:      int64(mdi),
+			Length:      int64(sec),
+			ColorTypeID: int64(colId),
+			LiveID:      int64(liveId),
 		}); err != nil {
 			log.Print(err)
 		}

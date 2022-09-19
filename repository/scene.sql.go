@@ -39,15 +39,15 @@ type GetScenesRow struct {
 	Photograph    string
 	Member        string
 	Color         string
-	Total         int32
-	VocalMax      int32
-	DanceMax      int32
-	PeformanceMax int32
+	Total         int64
+	VocalMax      int64
+	DanceMax      int64
+	PeformanceMax int64
 	ExpectedValue sql.NullString
-	SsrPlus       bool
-	Bonds         int32
-	Discography   int32
-	Have          sql.NullBool
+	SsrPlus       int64
+	Bonds         int64
+	Discography   int64
+	Have          sql.NullInt64
 }
 
 func (q *Queries) GetScenes(ctx context.Context, db DBTX) ([]GetScenesRow, error) {
@@ -87,6 +87,8 @@ func (q *Queries) GetScenes(ctx context.Context, db DBTX) ([]GetScenesRow, error
 }
 
 const getScenesWithColor = `-- name: GetScenesWithColor :many
+;
+
 SELECT
 	p.name AS photograph,
 	p.abbreviation,
@@ -119,15 +121,15 @@ type GetScenesWithColorRow struct {
 	Abbreviation  string
 	Member        string
 	Color         string
-	Total         int32
-	VocalMax      int32
-	DanceMax      int32
-	PeformanceMax int32
+	Total         int64
+	VocalMax      int64
+	DanceMax      int64
+	PeformanceMax int64
 	ExpectedValue sql.NullString
-	SsrPlus       bool
-	Bonds         int32
-	Discography   int32
-	Have          sql.NullBool
+	SsrPlus       int64
+	Bonds         int64
+	Discography   int64
+	Have          sql.NullInt64
 }
 
 func (q *Queries) GetScenesWithColor(ctx context.Context, db DBTX, name string) ([]GetScenesWithColorRow, error) {
@@ -168,6 +170,8 @@ func (q *Queries) GetScenesWithColor(ctx context.Context, db DBTX, name string) 
 }
 
 const registScene = `-- name: RegistScene :exec
+;
+
 INSERT INTO scenes (
 	photograph_id,
 	member_id,
@@ -182,15 +186,15 @@ INSERT INTO scenes (
 `
 
 type RegistSceneParams struct {
-	PhotographID    int32
-	MemberID        int32
-	ColorTypeID     int32
-	VocalMax        int32
-	DanceMax        int32
-	PeformanceMax   int32
+	PhotographID    int64
+	MemberID        int64
+	ColorTypeID     int64
+	VocalMax        int64
+	DanceMax        int64
+	PeformanceMax   int64
 	CenterSkillName sql.NullString
 	ExpectedValue   sql.NullString
-	SsrPlus         bool
+	SsrPlus         int64
 }
 
 func (q *Queries) RegistScene(ctx context.Context, db DBTX, arg RegistSceneParams) error {

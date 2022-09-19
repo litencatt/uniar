@@ -19,12 +19,12 @@ ORDER BY group_id, id ASC
 `
 
 type GetPhotographListParams struct {
-	GroupID   int32
+	GroupID   int64
 	PhotoType string
 }
 
 type GetPhotographListRow struct {
-	ID   int32
+	ID   int64
 	Name string
 }
 
@@ -57,7 +57,7 @@ INSERT INTO photograph (name, group_id, photo_type) VALUES (?, ?, ?)
 
 type RegistPhotographParams struct {
 	Name      string
-	GroupID   int32
+	GroupID   int64
 	PhotoType string
 }
 

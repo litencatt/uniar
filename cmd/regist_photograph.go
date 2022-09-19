@@ -64,7 +64,7 @@ var registPhotographCmd = &cobra.Command{
 		q := repository.New()
 		if err := q.RegistPhotograph(ctx, db, repository.RegistPhotographParams{
 			Name:      photoName,
-			GroupID:   int32(groupId),
+			GroupID:   int64(groupId),
 			PhotoType: pt,
 		}); err != nil {
 			log.Print(err)

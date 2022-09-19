@@ -59,7 +59,7 @@ var registLiveCmd = &cobra.Command{
 		q := repository.New()
 		if err := q.RegistLive(ctx, db, repository.RegistLiveParams{
 			Name:    liveName,
-			GroupID: int32(groupId),
+			GroupID: int64(groupId),
 		}); err != nil {
 			log.Print(err)
 		}
