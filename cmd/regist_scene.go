@@ -61,7 +61,7 @@ var registSceneCmd = &cobra.Command{
 		groupId, _ := strconv.Atoi(gid)
 		q := repository.New()
 		pl, err := q.GetPhotographList(ctx, db, repository.GetPhotographListParams{
-			GroupID:   int32(groupId),
+			GroupID:   int64(groupId),
 			PhotoType: pt,
 		})
 		if err != nil {
@@ -78,7 +78,7 @@ var registSceneCmd = &cobra.Command{
 			Regexp:  regexp.MustCompile(`\d`),
 		}).Prompt()
 
-		ml, err := q.GetMemberList(ctx, db, int32(groupId))
+		ml, err := q.GetMemberList(ctx, db, int64(groupId))
 		if err != nil {
 			log.Print(err)
 		}
@@ -136,14 +136,14 @@ var registSceneCmd = &cobra.Command{
 		}
 
 		if err := q.RegistScene(ctx, db, repository.RegistSceneParams{
-			PhotographID:  int32(photoId),
-			MemberID:      int32(memberId),
-			ColorTypeID:   int32(colId),
+			PhotographID:  int64(photoId),
+			MemberID:      int64(memberId),
+			ColorTypeID:   int64(colId),
 			ExpectedValue: expVal,
-			VocalMax:      int32(voMax),
-			DanceMax:      int32(daMax),
-			PeformanceMax: int32(peMax),
-			SsrPlus:       ssrPlus == 1,
+			VocalMax:      int64(voMax),
+			DanceMax:      int64(daMax),
+			PeformanceMax: int64(peMax),
+			SsrPlus:       int64(ssrPlus),
 		}); err != nil {
 			log.Print(err)
 		}

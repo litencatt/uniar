@@ -64,11 +64,11 @@ var listSceneCmd = &cobra.Command{
 		}
 		for _, s := range ss {
 			// Show only scene you have
-			if h && !s.Have.Bool {
+			if h && s.Have.Int64 == 0 {
 				continue
 			}
 			// Show only scene you not have
-			if n && s.Have.Bool {
+			if n && s.Have.Int64 == 1 {
 				continue
 			}
 
@@ -89,7 +89,7 @@ var listSceneCmd = &cobra.Command{
 				Da:         s.DanceMax,
 				Pe:         s.PeformanceMax,
 				Expect:     float32(e),
-				SsrPlus:    s.SsrPlus,
+				SsrPlus:    s.SsrPlus == 1,
 			}
 			scene.CalcTotal(s.Bonds, s.Discography)
 			scenes = append(scenes, scene)
@@ -97,31 +97,31 @@ var listSceneCmd = &cobra.Command{
 
 		sort.Slice(scenes, func(i, j int) bool { return scenes[i].All35Score > scenes[j].All35Score })
 		for i, _ := range scenes {
-			scenes[i].All35 = int32(i + 1)
+			scenes[i].All35 = int64(i + 1)
 		}
 		sort.Slice(scenes, func(i, j int) bool { return scenes[i].VoDa50Score > scenes[j].VoDa50Score })
 		for i, _ := range scenes {
-			scenes[i].VoDa50 = int32(i + 1)
+			scenes[i].VoDa50 = int64(i + 1)
 		}
 		sort.Slice(scenes, func(i, j int) bool { return scenes[i].DaPe50Score > scenes[j].DaPe50Score })
 		for i, _ := range scenes {
-			scenes[i].DaPe50 = int32(i + 1)
+			scenes[i].DaPe50 = int64(i + 1)
 		}
 		sort.Slice(scenes, func(i, j int) bool { return scenes[i].VoPe50Score > scenes[j].VoPe50Score })
 		for i, _ := range scenes {
-			scenes[i].VoPe50 = int32(i + 1)
+			scenes[i].VoPe50 = int64(i + 1)
 		}
 		sort.Slice(scenes, func(i, j int) bool { return scenes[i].Vo85Score > scenes[j].Vo85Score })
 		for i, _ := range scenes {
-			scenes[i].Vo85 = int32(i + 1)
+			scenes[i].Vo85 = int64(i + 1)
 		}
 		sort.Slice(scenes, func(i, j int) bool { return scenes[i].Da85Score > scenes[j].Da85Score })
 		for i, _ := range scenes {
-			scenes[i].Da85 = int32(i + 1)
+			scenes[i].Da85 = int64(i + 1)
 		}
 		sort.Slice(scenes, func(i, j int) bool { return scenes[i].Pe85Score > scenes[j].Pe85Score })
 		for i, _ := range scenes {
-			scenes[i].Pe85 = int32(i + 1)
+			scenes[i].Pe85 = int64(i + 1)
 		}
 
 		switch s {

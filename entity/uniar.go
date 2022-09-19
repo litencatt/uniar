@@ -10,42 +10,42 @@ type Scene struct {
 	SsrPlus     bool
 	Member      string
 	Expect      float32
-	Total       int32
-	All35Score  int32
-	All35       int32
-	VoDa50Score int32
-	VoDa50      int32
-	DaPe50Score int32
-	DaPe50      int32
-	VoPe50Score int32
-	VoPe50      int32
-	Vo85Score   int32
-	Vo85        int32
-	Da85Score   int32
-	Da85        int32
-	Pe85Score   int32
-	Pe85        int32
-	Vo          int32
-	Da          int32
-	Pe          int32
+	Total       int64
+	All35Score  int64
+	All35       int64
+	VoDa50Score int64
+	VoDa50      int64
+	DaPe50Score int64
+	DaPe50      int64
+	VoPe50Score int64
+	VoPe50      int64
+	Vo85Score   int64
+	Vo85        int64
+	Da85Score   int64
+	Da85        int64
+	Pe85Score   int64
+	Pe85        int64
+	Vo          int64
+	Da          int64
+	Pe          int64
 }
 
 type SceneTotal struct {
-	Total  int32
-	All35  int32
-	All40  int32
-	VoDa50 int32
-	DaPe50 int32
-	VoPe50 int32
-	Vo85   int32
-	Da85   int32
-	Pe85   int32
+	Total  int64
+	All35  int64
+	All40  int64
+	VoDa50 int64
+	DaPe50 int64
+	VoPe50 int64
+	Vo85   int64
+	Da85   int64
+	Pe85   int64
 }
 
 type OfficeBonus struct {
-	Vocal       int32
-	Dance       int32
-	Performance int32
+	Vocal       int64
+	Dance       int64
+	Performance int64
 }
 
 var (
@@ -65,7 +65,7 @@ var (
 )
 
 var (
-	bonds = []int32{
+	bonds = []int64{
 		0,
 		0, 0, 10, 20, 30, 45, 45, 60, 75, 75, // 1-10
 		95, 95, 115, 135, 155, 175, 175, 195, 220, 245, // 11-20
@@ -101,7 +101,7 @@ type BonusRate struct {
 	Pe float32
 }
 
-func (s *Scene) CalcTotal(bondLevel int32, discography int32) {
+func (s *Scene) CalcTotal(bondLevel int64, discography int64) {
 	centerSkills := []string{"All35", "VoDa50", "DaPe50", "VoPe50", "Vo85", "Da85", "Pe85", "All40"}
 	vo := s.Vo
 	da := s.Da
@@ -123,10 +123,10 @@ func (s *Scene) CalcTotal(bondLevel int32, discography int32) {
 	peOb2 := 0.05
 
 	// Max level
-	sceneSkillLvMaxBonus := int32(430)
+	sceneSkillLvMaxBonus := int64(430)
 
 	// Fixed. because this is tiny score for rank
-	costumeBonus := int32(300)
+	costumeBonus := int64(300)
 
 	cs := map[string]BonusRate{
 		"All35":  {Vo: 0.35, Da: 0.35, Pe: 0.35},
@@ -144,29 +144,29 @@ func (s *Scene) CalcTotal(bondLevel int32, discography int32) {
 		"VoPe8": {Vo: 0.08, Da: 0, Pe: 0.08},
 	}
 	// 対象シーンカードの総合力計算
-	totals := map[string]int32{}
+	totals := map[string]int64{}
 	for _, skill := range centerSkills {
 		csr := cs[skill]
-		voCsb := int32(math.Ceil(float64(vo) * float64(csr.Vo)))
-		daCsb := int32(math.Ceil(float64(da) * float64(csr.Da)))
-		peCsb := int32(math.Ceil(float64(pe) * float64(csr.Pe)))
+		voCsb := int64(math.Ceil(float64(vo) * float64(csr.Vo)))
+		daCsb := int64(math.Ceil(float64(da) * float64(csr.Da)))
+		peCsb := int64(math.Ceil(float64(pe) * float64(csr.Pe)))
 		csb := voCsb + daCsb + peCsb
 
 		fsr := fs[skill]
-		voFsb := int32(math.Ceil(float64(vo) * float64(fsr.Vo)))
-		daFsb := int32(math.Ceil(float64(da) * float64(fsr.Da)))
-		peFsb := int32(math.Ceil(float64(pe) * float64(fsr.Pe)))
+		voFsb := int64(math.Ceil(float64(vo) * float64(fsr.Vo)))
+		daFsb := int64(math.Ceil(float64(da) * float64(fsr.Da)))
+		peFsb := int64(math.Ceil(float64(pe) * float64(fsr.Pe)))
 		fsb := voFsb + daFsb + peFsb
 
-		voOb := int32(math.Ceil(float64(vo) * (voOb1 + voOb2)))
-		daOb := int32(math.Ceil(float64(da) * (daOb1 + daOb2)))
-		peOb := int32(math.Ceil(float64(pe) * (peOb1 + peOb2)))
+		voOb := int64(math.Ceil(float64(vo) * (voOb1 + voOb2)))
+		daOb := int64(math.Ceil(float64(da) * (daOb1 + daOb2)))
+		peOb := int64(math.Ceil(float64(pe) * (peOb1 + peOb2)))
 		ob := voOb + daOb + peOb
 
 		// メンバーステータス
 		member := bonds[bondLevel] + discography
 
-		totals[skill] = int32(e * float32(t+csb+fsb+ob+member+sceneSkillLvMaxBonus+costumeBonus))
+		totals[skill] = int64(e * float32(t+csb+fsb+ob+member+sceneSkillLvMaxBonus+costumeBonus))
 	}
 
 	s.All35Score = totals["All35"]
