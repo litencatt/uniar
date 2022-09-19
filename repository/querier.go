@@ -6,6 +6,7 @@ package repository
 
 import (
 	"context"
+	"database/sql"
 )
 
 type Querier interface {
@@ -17,12 +18,19 @@ type Querier interface {
 	GetMusicList(ctx context.Context, db DBTX) ([]GetMusicListRow, error)
 	GetMusicListWithColor(ctx context.Context, db DBTX, name string) ([]GetMusicListWithColorRow, error)
 	GetPhotographList(ctx context.Context, db DBTX, arg GetPhotographListParams) ([]GetPhotographListRow, error)
+	GetPhotographListByPhotoType(ctx context.Context, db DBTX, photoType string) ([]GetPhotographListByPhotoTypeRow, error)
+	GetProducerMember(ctx context.Context, db DBTX) ([]GetProducerMemberRow, error)
+	GetProducerOffice(ctx context.Context, db DBTX) (sql.NullInt64, error)
+	GetProducerScenes(ctx context.Context, db DBTX) ([]GetProducerScenesRow, error)
 	GetScenes(ctx context.Context, db DBTX) ([]GetScenesRow, error)
 	GetScenesWithColor(ctx context.Context, db DBTX, name string) ([]GetScenesWithColorRow, error)
 	RegistLive(ctx context.Context, db DBTX, name string) error
 	RegistMusic(ctx context.Context, db DBTX, arg RegistMusicParams) error
 	RegistPhotograph(ctx context.Context, db DBTX, arg RegistPhotographParams) error
 	RegistScene(ctx context.Context, db DBTX, arg RegistSceneParams) error
+	UpdateProducerMember(ctx context.Context, db DBTX, arg UpdateProducerMemberParams) error
+	UpdateProducerOffice(ctx context.Context, db DBTX, officeBonus sql.NullInt64) error
+	UpdateProducerScene(ctx context.Context, db DBTX, arg UpdateProducerSceneParams) error
 }
 
 var _ Querier = (*Queries)(nil)

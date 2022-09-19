@@ -9,3 +9,12 @@ FROM
 WHERE group_id = ? AND photo_type = ?
 ORDER BY group_id, id ASC
 ;
+
+-- name: GetPhotographListByPhotoType :many
+SELECT
+	id, name
+FROM
+	photograph
+WHERE photo_type = ?
+ORDER BY group_id, id ASC
+;
