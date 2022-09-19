@@ -74,7 +74,7 @@ func seed(dbPath string) {
 	if err != nil {
 		panic(err)
 	}
-	fmt.Println(string(mig_sql.Seed))
+
 	result, err := db.ExecContext(ctx, string(mig_sql.Seed))
 	if err != nil {
 		fmt.Println(err)
