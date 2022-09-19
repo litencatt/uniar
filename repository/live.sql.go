@@ -14,7 +14,7 @@ SELECT id, name FROM lives
 `
 
 type GetLiveListRow struct {
-	ID   int32
+	ID   int64
 	Name string
 }
 
@@ -47,7 +47,7 @@ INSERT INTO lives (name, group_id) VALUES (?, ?)
 
 type RegistLiveParams struct {
 	Name    string
-	GroupID int32
+	GroupID int64
 }
 
 func (q *Queries) RegistLive(ctx context.Context, db DBTX, arg RegistLiveParams) error {

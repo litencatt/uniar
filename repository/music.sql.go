@@ -12,10 +12,10 @@ import (
 
 const getMusicList = `-- name: GetMusicList :many
 SELECT
-	l.` + "`" + `name` + "`" + ` AS live,
+	l.name AS live,
 	m.name AS music,
 	c.name AS TYPE,
-	m.` + "`" + `length` + "`" + `,
+	m.length,
 	m.music_bonus AS bonus,
 	m.master
 FROM
@@ -29,10 +29,10 @@ ORDER BY
 type GetMusicListRow struct {
 	Live   string
 	Music  string
-	Type   string
-	Length int32
-	Bonus  sql.NullBool
-	Master int32
+	TYPE   string
+	Length int64
+	Bonus  sql.NullInt64
+	Master int64
 }
 
 func (q *Queries) GetMusicList(ctx context.Context, db DBTX) ([]GetMusicListRow, error) {
@@ -47,7 +47,7 @@ func (q *Queries) GetMusicList(ctx context.Context, db DBTX) ([]GetMusicListRow,
 		if err := rows.Scan(
 			&i.Live,
 			&i.Music,
-			&i.Type,
+			&i.TYPE,
 			&i.Length,
 			&i.Bonus,
 			&i.Master,
@@ -66,11 +66,13 @@ func (q *Queries) GetMusicList(ctx context.Context, db DBTX) ([]GetMusicListRow,
 }
 
 const getMusicListWithColor = `-- name: GetMusicListWithColor :many
+;
+
 SELECT
-	l.` + "`" + `name` + "`" + ` AS live,
+	l.name AS live,
 	m.name AS music,
 	c.name AS TYPE,
-	m.` + "`" + `length` + "`" + `,
+	m.length,
 	m.music_bonus AS bonus,
 	m.master
 FROM
@@ -86,10 +88,10 @@ ORDER BY
 type GetMusicListWithColorRow struct {
 	Live   string
 	Music  string
-	Type   string
-	Length int32
-	Bonus  sql.NullBool
-	Master int32
+	TYPE   string
+	Length int64
+	Bonus  sql.NullInt64
+	Master int64
 }
 
 func (q *Queries) GetMusicListWithColor(ctx context.Context, db DBTX, name string) ([]GetMusicListWithColorRow, error) {
@@ -104,7 +106,7 @@ func (q *Queries) GetMusicListWithColor(ctx context.Context, db DBTX, name strin
 		if err := rows.Scan(
 			&i.Live,
 			&i.Music,
-			&i.Type,
+			&i.TYPE,
 			&i.Length,
 			&i.Bonus,
 			&i.Master,
@@ -123,6 +125,8 @@ func (q *Queries) GetMusicListWithColor(ctx context.Context, db DBTX, name strin
 }
 
 const registMusic = `-- name: RegistMusic :exec
+;
+
 INSERT INTO music (
 	name,
 	normal,
@@ -136,12 +140,12 @@ INSERT INTO music (
 
 type RegistMusicParams struct {
 	Name        string
-	Normal      int32
-	Pro         int32
-	Master      int32
-	Length      int32
-	ColorTypeID int32
-	LiveID      int32
+	Normal      int64
+	Pro         int64
+	Master      int64
+	Length      int64
+	ColorTypeID int64
+	LiveID      int64
 }
 
 func (q *Queries) RegistMusic(ctx context.Context, db DBTX, arg RegistMusicParams) error {

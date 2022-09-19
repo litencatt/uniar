@@ -1,9 +1,9 @@
 -- name: GetMusicList :many
 SELECT
-	l.`name` AS live,
+	l.name AS live,
 	m.name AS music,
 	c.name AS TYPE,
-	m.`length`,
+	m.length,
 	m.music_bonus AS bonus,
 	m.master
 FROM
@@ -16,10 +16,10 @@ ORDER BY
 
 -- name: GetMusicListWithColor :many
 SELECT
-	l.`name` AS live,
+	l.name AS live,
 	m.name AS music,
 	c.name AS TYPE,
-	m.`length`,
+	m.length,
 	m.music_bonus AS bonus,
 	m.master
 FROM

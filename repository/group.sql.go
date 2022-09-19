@@ -10,11 +10,11 @@ import (
 )
 
 const getGroup = `-- name: GetGroup :many
-SELECT id, name FROM ` + "`" + `groups` + "`" + `
+SELECT id, name FROM groups
 `
 
 type GetGroupRow struct {
-	ID   int32
+	ID   int64
 	Name string
 }
 
@@ -42,10 +42,10 @@ func (q *Queries) GetGroup(ctx context.Context, db DBTX) ([]GetGroupRow, error) 
 }
 
 const getGroupNameById = `-- name: GetGroupNameById :one
-SELECT name FROM ` + "`" + `groups` + "`" + ` WHERE id = ?
+SELECT name FROM groups WHERE id = ?
 `
 
-func (q *Queries) GetGroupNameById(ctx context.Context, db DBTX, id int32) (string, error) {
+func (q *Queries) GetGroupNameById(ctx context.Context, db DBTX, id int64) (string, error) {
 	row := db.QueryRowContext(ctx, getGroupNameById, id)
 	var name string
 	err := row.Scan(&name)

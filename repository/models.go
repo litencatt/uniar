@@ -10,119 +10,119 @@ import (
 )
 
 type CenterSkill struct {
-	ID        int32
+	ID        int64
 	Name      string
 	CreatedAt time.Time
 }
 
 type ColorType struct {
-	ID        int32
+	ID        int64
 	Name      string
 	CreatedAt time.Time
 }
 
 type Group struct {
-	ID        int32
+	ID        int64
 	Name      string
 	CreatedAt time.Time
 }
 
 type Life struct {
-	ID        int32
+	ID        int64
 	Name      string
-	GroupID   int32
+	GroupID   int64
 	CreatedAt time.Time
 }
 
 type Member struct {
-	ID        int32
+	ID        int64
 	Name      string
 	FirstName sql.NullString
-	GroupID   int32
-	Phase     int32
-	Graduated bool
+	GroupID   int64
+	Phase     int64
+	Graduated int64
 	CreatedAt time.Time
 }
 
 type Music struct {
-	ID          int32
+	ID          int64
 	Name        string
-	Normal      int32
-	Pro         int32
-	Master      int32
-	Length      int32
-	ColorTypeID int32
-	LiveID      int32
-	ProPlus     sql.NullInt32
-	MusicBonus  sql.NullBool
-	SetlistID   sql.NullInt32
+	Normal      int64
+	Pro         int64
+	Master      int64
+	Length      int64
+	ColorTypeID int64
+	LiveID      int64
+	ProPlus     sql.NullInt64
+	MusicBonus  sql.NullInt64
+	SetlistID   sql.NullInt64
 	CreatedAt   time.Time
 }
 
 type Photograph struct {
-	ID           int32
+	ID           int64
 	Name         string
-	GroupID      int32
+	GroupID      int64
 	Abbreviation string
 	PhotoType    string
 	CreatedAt    time.Time
 }
 
 type Producer struct {
-	ID        int32
+	ID        int64
 	CreatedAt time.Time
 }
 
 type ProducerMember struct {
-	ID                      int32
-	ProducerID              int32
-	MemberID                int32
-	BondLevelCurent         int32
-	BondLevelCollectionMax  int32
-	BondLevelSceneMax       int32
-	DiscographyDiscTotal    int32
-	DiscographyDiscTotalMax int32
+	ID                      int64
+	ProducerID              int64
+	MemberID                int64
+	BondLevelCurent         int64
+	BondLevelCollectionMax  int64
+	BondLevelSceneMax       int64
+	DiscographyDiscTotal    int64
+	DiscographyDiscTotalMax int64
 	CreatedAt               time.Time
 }
 
 type ProducerOffice struct {
-	ID          int32
-	ProducerID  int32
-	OfficeBonus sql.NullInt32
+	ID          int64
+	ProducerID  int64
+	OfficeBonus sql.NullInt64
 	CreatedAt   time.Time
 }
 
 type ProducerScene struct {
-	ID           int32
-	ProducerID   int32
-	PhotographID int32
-	MemberID     int32
-	Have         sql.NullBool
+	ID           int64
+	ProducerID   int64
+	PhotographID int64
+	MemberID     int64
+	Have         sql.NullInt64
 	CreatedAt    time.Time
 }
 
 type Scene struct {
-	ID              int32
-	PhotographID    int32
-	MemberID        int32
-	ColorTypeID     int32
-	VocalMax        int32
-	DanceMax        int32
-	PeformanceMax   int32
+	ID              int64
+	PhotographID    int64
+	MemberID        int64
+	ColorTypeID     int64
+	VocalMax        int64
+	DanceMax        int64
+	PeformanceMax   int64
 	CenterSkillName sql.NullString
 	ExpectedValue   sql.NullString
-	SsrPlus         bool
+	SsrPlus         int64
 	CreatedAt       time.Time
 }
 
 type Skill struct {
-	ID                int32
+	ID                int64
 	Name              string
-	ComboUpPercent    sql.NullInt32
-	DurationSec       sql.NullInt32
+	ComboUpPercent    sql.NullInt64
+	DurationSec       sql.NullInt64
 	ExpectedValue     float64
-	IntervalSec       int32
-	OccurrencePercent int32
-	ScoreUpPercent    sql.NullInt32
+	IntervalSec       int64
+	OccurrencePercent int64
+	ScoreUpPercent    sql.NullInt64
 	CreatedAt         time.Time
 }

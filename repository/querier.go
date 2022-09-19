@@ -10,9 +10,9 @@ import (
 
 type Querier interface {
 	GetGroup(ctx context.Context, db DBTX) ([]GetGroupRow, error)
-	GetGroupNameById(ctx context.Context, db DBTX, id int32) (string, error)
+	GetGroupNameById(ctx context.Context, db DBTX, id int64) (string, error)
 	GetLiveList(ctx context.Context, db DBTX) ([]GetLiveListRow, error)
-	GetMemberList(ctx context.Context, db DBTX, groupID int32) ([]GetMemberListRow, error)
+	GetMemberList(ctx context.Context, db DBTX, groupID int64) ([]GetMemberListRow, error)
 	GetMembers(ctx context.Context, db DBTX) ([]GetMembersRow, error)
 	GetMusicList(ctx context.Context, db DBTX) ([]GetMusicListRow, error)
 	GetMusicListWithColor(ctx context.Context, db DBTX, name string) ([]GetMusicListWithColorRow, error)
@@ -23,15 +23,6 @@ type Querier interface {
 	RegistMusic(ctx context.Context, db DBTX, arg RegistMusicParams) error
 	RegistPhotograph(ctx context.Context, db DBTX, arg RegistPhotographParams) error
 	RegistScene(ctx context.Context, db DBTX, arg RegistSceneParams) error
-	SeedCenterSkills(ctx context.Context, db DBTX) error
-	SeedColorTypes(ctx context.Context, db DBTX) error
-	SeedGroups(ctx context.Context, db DBTX) error
-	SeedLives(ctx context.Context, db DBTX) error
-	SeedMembers(ctx context.Context, db DBTX) error
-	SeedMusic(ctx context.Context, db DBTX) error
-	SeedPhotograph(ctx context.Context, db DBTX) error
-	SeedScenes(ctx context.Context, db DBTX) error
-	SeedSkills(ctx context.Context, db DBTX) error
 }
 
 var _ Querier = (*Queries)(nil)
