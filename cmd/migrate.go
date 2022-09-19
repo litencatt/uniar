@@ -25,17 +25,14 @@ import (
 	"fmt"
 	"log"
 	"os"
-	"strconv"
-	"strings"
 
 	"github.com/k0kubun/sqldef"
 	"github.com/k0kubun/sqldef/database"
-	"github.com/k0kubun/sqldef/database/mysql"
+	"github.com/k0kubun/sqldef/database/sqlite3"
 	"github.com/k0kubun/sqldef/parser"
 	"github.com/k0kubun/sqldef/schema"
 	"github.com/litencatt/uniar/sql"
 	"github.com/spf13/cobra"
-	"github.com/xo/dburl"
 )
 
 var (
@@ -55,16 +52,8 @@ var migrateCmd = &cobra.Command{
 }
 
 func execute() error {
-	dsn := os.Getenv("UNIAR_DSN")
-	u, _ := dburl.Parse(dsn)
-	password, _ := u.User.Password()
-	port, _ := strconv.Atoi(u.Port())
 	config := database.Config{
-		DbName:   strings.TrimPrefix(u.Path, "/"),
-		User:     u.User.Username(),
-		Password: password,
-		Host:     u.Hostname(),
-		Port:     port,
+		DbName: "uniar.db",
 	}
 
 	if options.DesiredFile == "" {
@@ -87,7 +76,7 @@ func execute() error {
 		}
 	}
 	options := &options
-	db, err := mysql.NewDatabase(config)
+	db, err := sqlite3.NewDatabase(config)
 	if err != nil {
 		return err
 	}
@@ -97,8 +86,8 @@ func execute() error {
 		}
 	}()
 
-	sqlParser := database.NewParser(parser.ParserModeMysql)
-	sqldef.Run(schema.GeneratorModeMysql, db, sqlParser, options)
+	sqlParser := database.NewParser(parser.ParserModeSQLite3)
+	sqldef.Run(schema.GeneratorModeSQLite3, db, sqlParser, options)
 
 	return nil
 }
