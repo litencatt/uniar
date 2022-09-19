@@ -10,12 +10,7 @@ import (
 )
 
 const getPhotographList = `-- name: GetPhotographList :many
-SELECT
-	id, name
-FROM
-	photograph
-WHERE group_id = ? AND photo_type = ?
-ORDER BY group_id, id ASC
+SELECT id, name FROM photograph WHERE group_id = ? AND photo_type = ? ORDER BY group_id, id ASC
 `
 
 type GetPhotographListParams struct {
@@ -37,6 +32,38 @@ func (q *Queries) GetPhotographList(ctx context.Context, db DBTX, arg GetPhotogr
 	var items []GetPhotographListRow
 	for rows.Next() {
 		var i GetPhotographListRow
+		if err := rows.Scan(&i.ID, &i.Name); err != nil {
+			return nil, err
+		}
+		items = append(items, i)
+	}
+	if err := rows.Close(); err != nil {
+		return nil, err
+	}
+	if err := rows.Err(); err != nil {
+		return nil, err
+	}
+	return items, nil
+}
+
+const getPhotographListByPhotoType = `-- name: GetPhotographListByPhotoType :many
+SELECT id, name FROM photograph WHERE photo_type = ? ORDER BY group_id, id ASC
+`
+
+type GetPhotographListByPhotoTypeRow struct {
+	ID   int64
+	Name string
+}
+
+func (q *Queries) GetPhotographListByPhotoType(ctx context.Context, db DBTX, photoType string) ([]GetPhotographListByPhotoTypeRow, error) {
+	rows, err := db.QueryContext(ctx, getPhotographListByPhotoType, photoType)
+	if err != nil {
+		return nil, err
+	}
+	defer rows.Close()
+	var items []GetPhotographListByPhotoTypeRow
+	for rows.Next() {
+		var i GetPhotographListByPhotoTypeRow
 		if err := rows.Scan(&i.ID, &i.Name); err != nil {
 			return nil, err
 		}
