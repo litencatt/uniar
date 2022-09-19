@@ -3,18 +3,12 @@ package repository
 import (
 	"database/sql"
 	"fmt"
-	"os"
 
-	"github.com/xo/dburl"
+	_ "github.com/mattn/go-sqlite3"
 )
 
 func NewConnection() (*sql.DB, error) {
-	url := os.Getenv("UNIAR_DSN")
-	if url == "" {
-		return nil, fmt.Errorf("UNIAR_DSNが設定されていません")
-	}
-
-	db, err := dburl.Open(url)
+	db, err := sql.Open("sqlite3", "./uniar.db")
 	if err != nil {
 		return nil, fmt.Errorf("データベース接続エラー")
 	}
