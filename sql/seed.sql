@@ -1,4 +1,4 @@
-INSERT  OR IGNORE INTO center_skills (id, name, created_at) VALUES
+INSERT OR IGNORE INTO center_skills (id, name, created_at) VALUES
 ('1', 'Vo70%', '2022-08-20 18:40:15'),
 ('2', 'Da70%', '2022-08-20 18:40:15'),
 ('3', 'Pe70%', '2022-08-20 18:40:15'),
@@ -17,7 +17,7 @@ INSERT  OR IGNORE INTO center_skills (id, name, created_at) VALUES
 ('16', '5色Da/Pe55%', '2022-08-20 18:40:15'),
 ('17', '5色Pe/Vo55%', '2022-08-20 18:40:15');
 
-INSERT  OR IGNORE INTO color_types (id, name, created_at) VALUES
+INSERT OR IGNORE INTO color_types (id, name, created_at) VALUES
 ('1', 'Red', '2022-08-20 18:40:15'),
 ('2', 'Blue', '2022-08-20 18:40:15'),
 ('3', 'Green', '2022-08-20 18:40:15'),
@@ -25,11 +25,11 @@ INSERT  OR IGNORE INTO color_types (id, name, created_at) VALUES
 ('5', 'Purple', '2022-08-20 18:40:15'),
 ('6', 'ALL', '2022-08-20 18:40:15');
 
-INSERT  OR IGNORE INTO groups (id, name, created_at) VALUES
+INSERT OR IGNORE INTO groups (id, name, created_at) VALUES
 ('1', '欅坂46/櫻坂46', '2022-08-20 18:39:22'),
 ('2', 'けやき坂46/日向坂46', '2022-08-20 18:39:22');
 
-INSERT  OR IGNORE INTO lives (id, name, created_at) VALUES
+INSERT OR IGNORE INTO lives (id, name, created_at) VALUES
 ('1', '欅坂46 夏の全国アリーナツアー2018', '2022-08-20 18:40:15'),
 ('2', 'けやき坂46 「走り出す瞬間」ツアー2018', '2022-08-20 18:40:15'),
 ('3', '欅坂46 生中継! デビューカウントダウンライブ!!', '2022-08-20 18:40:15'),
@@ -51,7 +51,7 @@ INSERT  OR IGNORE INTO lives (id, name, created_at) VALUES
 ('19', '1st TOUR 2021', '2022-08-20 18:40:15'),
 ('20', 'W-KEYAKI FES. 2021', '2022-08-20 18:40:15');
 
-INSERT  OR IGNORE INTO members (id, name, first_name, group_id, phase, graduated, created_at) VALUES
+INSERT OR IGNORE INTO members (id, name, first_name, group_id, phase, graduated, created_at) VALUES
 ('1', '井上梨名', 'いのうえ', '1', '2', '0', '2022-08-20 18:40:15'),
 ('2', '遠藤光莉', 'えんどう', '1', '2', '0', '2022-08-20 18:40:15'),
 ('3', '関有美子', 'せき', '1', '2', '0', '2022-08-20 18:40:15'),
@@ -108,7 +108,7 @@ INSERT  OR IGNORE INTO members (id, name, first_name, group_id, phase, graduated
 ('55', '幸阪茉里乃', 'こうさか', '1', '2', '0', '2022-08-20 18:40:15'),
 ('56', '大沼晶保', 'おおぬま', '1', '2', '0', '2022-08-20 18:40:15');
 
-INSERT  OR IGNORE INTO music (id, name, normal, pro, master, length, color_type_id, live_id, pro_plus, music_bonus, setlist_id, created_at) VALUES
+INSERT OR IGNORE INTO music (id, name, normal, pro, master, length, color_type_id, live_id, pro_plus, music_bonus, setlist_id, created_at) VALUES
 ('1', 'Student Dance', '8', '15', '21', '128', '2', '1', '0', '0', '1', '2022-08-20 18:40:15'),
 ('2', 'AM1:27', '9', '15', '21', '127', '4', '1', '20', '0', '2', '2022-08-20 18:40:15'),
 ('3', 'エキセントリック', '11', '17', '23', '197', '5', '1', '0', '0', '3', '2022-08-20 18:40:15'),
@@ -267,7 +267,7 @@ INSERT  OR IGNORE INTO music (id, name, normal, pro, master, length, color_type_
 ('156', 'アザトカワイイ', '1', '1', '22', '160', '1', '20', NULL, '0', '8', '2022-09-18 11:05:02'),
 ('157', '青春の馬', '1', '1', '23', '210', '5', '20', NULL, '0', '9', '2022-09-18 11:05:24');
 
-INSERT  OR IGNORE INTO photograph (id, name, group_id, abbreviation, photo_type, created_at) VALUES
+INSERT OR IGNORE INTO photograph (id, name, group_id, abbreviation, photo_type, created_at) VALUES
 ('1', 'サイレントマジョリティー', '1', 'サイマジョ', '楽曲', '2022-08-20 18:40:15'),
 ('2', 'ガラスを割れ！', '1', 'ガラ割れ', '楽曲', '2022-08-20 18:40:15'),
 ('3', '二人セゾン', '1', 'セゾン', '楽曲', '2022-08-20 18:40:15'),
@@ -350,7 +350,7 @@ INSERT  OR IGNORE INTO photograph (id, name, group_id, abbreviation, photo_type,
 ('80', '流れ弾', '1', '', '楽曲', '2022-09-18 13:00:22'),
 ('81', 'ってか', '2', '', '楽曲', '2022-09-18 13:00:36');
 
-INSERT  OR IGNORE INTO producer_members (id, producer_id, member_id, bond_level_curent, bond_level_collection_max, bond_level_scene_max, discography_disc_total, discography_disc_total_max, created_at) VALUES
+INSERT OR IGNORE INTO producer_members (id, producer_id, member_id, bond_level_curent, bond_level_collection_max, bond_level_scene_max, discography_disc_total, discography_disc_total_max, created_at) VALUES
 ('1', '1', '1', '0', '0', '0', '0', '0', '2022-09-17 12:36:06'),
 ('113', '1', '2', '0', '0', '0', '0', '0', '2022-09-17 12:37:20'),
 ('222', '1', '3', '0', '0', '0', '0', '0', '2022-09-17 12:40:02'),
@@ -407,10 +407,10 @@ INSERT  OR IGNORE INTO producer_members (id, producer_id, member_id, bond_level_
 ('326', '1', '55', '0', '0', '0', '0', '0', '2022-09-17 12:41:24'),
 ('327', '1', '56', '0', '0', '0', '0', '0', '2022-09-17 12:41:24');
 
-INSERT  OR IGNORE INTO producer_offices (id, producer_id, office_bonus, created_at) VALUES
+INSERT OR IGNORE INTO producer_offices (id, producer_id, office_bonus, created_at) VALUES
 ('1', '1', '0', '2022-09-17 13:02:09');
 
-INSERT  OR IGNORE INTO producer_scenes (id, producer_id, photograph_id, member_id, have, created_at) VALUES
+INSERT OR IGNORE INTO producer_scenes (id, producer_id, photograph_id, member_id, have, created_at) VALUES
 ('2', '1', '1', '1', '0', '2022-08-22 18:09:00'),
 ('3', '1', '1', '2', '0', '2022-08-22 18:09:00'),
 ('4', '1', '1', '3', '0', '2022-08-22 18:09:00'),
@@ -1127,10 +1127,10 @@ INSERT  OR IGNORE INTO producer_scenes (id, producer_id, photograph_id, member_i
 ('728', '1', '79', '52', '0', '2022-08-22 18:21:25'),
 ('729', '1', '79', '53', '0', '2022-08-22 18:21:25');
 
-INSERT  OR IGNORE INTO producers (id, created_at) VALUES
+INSERT OR IGNORE INTO producers (id, created_at) VALUES
 ('1', '2022-08-22 17:49:26');
 
-INSERT  OR IGNORE INTO scenes (id, photograph_id, member_id, color_type_id, vocal_max, dance_max, peformance_max, center_skill_name, expected_value, ssr_plus, created_at) VALUES
+INSERT OR IGNORE INTO scenes (id, photograph_id, member_id, color_type_id, vocal_max, dance_max, peformance_max, center_skill_name, expected_value, ssr_plus, created_at) VALUES
 ('1', '45', '42', '1', '5059', '2920', '4565', '', '3.68', '1', '2022-08-22 21:55:15'),
 ('2', '41', '42', '1', '3789', '3811', '4872', '', '2.75', '1', '2022-08-22 21:55:15'),
 ('3', '3', '10', '1', '4006', '4578', '3845', '', '3.68', '1', '2022-08-22 21:55:15'),
@@ -1954,7 +1954,7 @@ INSERT  OR IGNORE INTO scenes (id, photograph_id, member_id, color_type_id, voca
 ('833', '47', '52', '5', '3805', '4859', '3780', '', '1.09', '1', '2022-09-18 14:32:09'),
 ('834', '47', '33', '5', '4556', '4086', '3806', '', '0.00', '1', '2022-09-18 14:32:09');
 
-INSERT  OR IGNORE INTO skills (id, name, combo_up_percent, duration_sec, expected_value, interval_sec, occurrence_percent, score_up_percent, created_at) VALUES
+INSERT OR IGNORE INTO skills (id, name, combo_up_percent, duration_sec, expected_value, interval_sec, occurrence_percent, score_up_percent, created_at) VALUES
 ('1', '7秒おきに28%の確率で6秒間PERFECTのスコア19%アップ', NULL, '6', '3.68', '7', '28', '19', '2022-08-20 18:40:15'),
 ('2', '8秒おきに14%の確率で9秒間PERFECTとGREATのスコア25%アップ', NULL, '9', '3.4', '8', '14', '25', '2022-08-20 18:40:15'),
 ('3', '6秒おきに24%の確率で5秒間 コンボボーナス12%アップ & スコア12%アップ', '12', '5', '2.75', '6', '24', '12', '2022-08-20 18:40:15'),
