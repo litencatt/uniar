@@ -23,7 +23,7 @@ package cmd
 
 import (
 	"context"
-	"log"
+	"fmt"
 	"sort"
 	"strconv"
 	"strings"
@@ -49,7 +49,8 @@ var listSceneCmd = &cobra.Command{
 		ctx := context.Background()
 		db, err := repository.NewConnection()
 		if err != nil {
-			log.Print(err)
+			fmt.Println(err)
+			return
 		}
 		q := repository.New()
 
@@ -60,7 +61,9 @@ var listSceneCmd = &cobra.Command{
 		}
 		ss, err := q.GetScenesWithColor(ctx, db, color)
 		if err != nil {
-			log.Print(err)
+			fmt.Println(err)
+			fmt.Println("please setup first.\n$ uniar setup")
+			return
 		}
 		for _, s := range ss {
 			// Show only scene you have

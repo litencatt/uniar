@@ -24,7 +24,6 @@ package cmd
 import (
 	"context"
 	"fmt"
-	"log"
 	"regexp"
 	"strconv"
 	"strings"
@@ -43,12 +42,15 @@ var registMusicCmd = &cobra.Command{
 		ctx := context.Background()
 		db, err := repository.NewConnection()
 		if err != nil {
-			log.Print(err)
+			fmt.Println(err)
+			return
 		}
 		q := repository.New()
 		ll, err := q.GetLiveList(ctx, db)
 		if err != nil {
-			log.Print(err)
+			fmt.Println(err)
+			fmt.Println("please setup first.\n$ uniar setup")
+			return
 		}
 		var liveList []string
 		for _, v := range ll {
@@ -105,7 +107,8 @@ var registMusicCmd = &cobra.Command{
 			ColorTypeID: int64(colId),
 			LiveID:      int64(liveId),
 		}); err != nil {
-			log.Print(err)
+			fmt.Println(err)
+			return
 		}
 
 		fmt.Printf("success registration(MusicName:%s)\n", name)

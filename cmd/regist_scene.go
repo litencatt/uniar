@@ -44,7 +44,8 @@ var registSceneCmd = &cobra.Command{
 		ctx := context.Background()
 		db, err := repository.NewConnection()
 		if err != nil {
-			log.Print(err)
+			fmt.Println(err)
+			return
 		}
 
 		gid := (&prompter.Prompter{
@@ -80,7 +81,9 @@ var registSceneCmd = &cobra.Command{
 
 		ml, err := q.GetMemberList(ctx, db, int64(groupId))
 		if err != nil {
-			log.Print(err)
+			fmt.Println(err)
+			fmt.Println("please setup first.\n$ uniar setup")
+			return
 		}
 		var mList []string
 		for _, v := range ml {
@@ -145,7 +148,9 @@ var registSceneCmd = &cobra.Command{
 			PeformanceMax: int64(peMax),
 			SsrPlus:       int64(ssrPlus),
 		}); err != nil {
-			log.Print(err)
+			fmt.Println(err)
+			fmt.Println("please setup first.\n$ uniar setup")
+			return
 		}
 
 		fmt.Println("success registration")

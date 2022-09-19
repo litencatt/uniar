@@ -19,7 +19,7 @@ type Querier interface {
 	GetPhotographList(ctx context.Context, db DBTX, arg GetPhotographListParams) ([]GetPhotographListRow, error)
 	GetScenes(ctx context.Context, db DBTX) ([]GetScenesRow, error)
 	GetScenesWithColor(ctx context.Context, db DBTX, name string) ([]GetScenesWithColorRow, error)
-	RegistLive(ctx context.Context, db DBTX, arg RegistLiveParams) error
+	RegistLive(ctx context.Context, db DBTX, name string) error
 	RegistMusic(ctx context.Context, db DBTX, arg RegistMusicParams) error
 	RegistPhotograph(ctx context.Context, db DBTX, arg RegistPhotographParams) error
 	RegistScene(ctx context.Context, db DBTX, arg RegistSceneParams) error

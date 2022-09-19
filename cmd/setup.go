@@ -22,49 +22,69 @@ THE SOFTWARE.
 package cmd
 
 import (
+	"context"
+	"database/sql"
 	"fmt"
-	"log"
 	"os"
-	"strconv"
-	"strings"
+	"os/user"
+
+	_ "github.com/mattn/go-sqlite3"
 
 	"github.com/k0kubun/sqldef"
 	"github.com/k0kubun/sqldef/database"
-	"github.com/k0kubun/sqldef/database/mysql"
+	"github.com/k0kubun/sqldef/database/sqlite3"
 	"github.com/k0kubun/sqldef/parser"
 	"github.com/k0kubun/sqldef/schema"
-	"github.com/litencatt/uniar/sql"
+	mig_sql "github.com/litencatt/uniar/sql"
 	"github.com/spf13/cobra"
-	"github.com/xo/dburl"
 )
 
 var (
 	options = sqldef.Options{}
 )
 
-// migrateCmd represents the migrate command
-var migrateCmd = &cobra.Command{
-	Use:   "migrate",
-	Short: "A brief description of your command",
-	Long:  `A longer description`,
+// setupCmd represents the setup command
+var setupCmd = &cobra.Command{
+	Use:   "setup",
+	Short: "Setup uniar",
 	Run: func(cmd *cobra.Command, args []string) {
-		if err := execute(); err != nil {
-			log.Print(err)
+		user, err := user.Current()
+		if err != nil {
+			panic(err)
 		}
+		uniarPath := user.HomeDir + "/.uniar"
+		dbPath := uniarPath + "/uniar.db"
+
+		if _, err := os.Stat(uniarPath); err != nil {
+			if err := os.Mkdir(uniarPath, 0755); err != nil {
+				fmt.Println(err)
+			}
+		}
+
+		if err := dbsetup(dbPath); err != nil {
+			fmt.Println(err)
+		}
+		seed(dbPath)
 	},
 }
 
-func execute() error {
-	dsn := os.Getenv("UNIAR_DSN")
-	u, _ := dburl.Parse(dsn)
-	password, _ := u.User.Password()
-	port, _ := strconv.Atoi(u.Port())
+func seed(dbPath string) {
+	ctx := context.Background()
+	db, err := sql.Open("sqlite3", dbPath)
+	if err != nil {
+		panic(err)
+	}
+
+	result, err := db.ExecContext(ctx, string(mig_sql.Seed))
+	if err != nil {
+		fmt.Println(err)
+	}
+	fmt.Println(result)
+}
+
+func dbsetup(dbPath string) error {
 	config := database.Config{
-		DbName:   strings.TrimPrefix(u.Path, "/"),
-		User:     u.User.Username(),
-		Password: password,
-		Host:     u.Hostname(),
-		Port:     port,
+		DbName: dbPath,
 	}
 
 	if options.DesiredFile == "" {
@@ -79,7 +99,7 @@ func execute() error {
 			}
 		}()
 		options.DesiredFile = f.Name()
-		if _, err := f.Write(sql.Schema); err != nil {
+		if _, err := f.Write(mig_sql.Schema); err != nil {
 			return err
 		}
 		if err := f.Close(); err != nil {
@@ -87,7 +107,7 @@ func execute() error {
 		}
 	}
 	options := &options
-	db, err := mysql.NewDatabase(config)
+	db, err := sqlite3.NewDatabase(config)
 	if err != nil {
 		return err
 	}
@@ -97,12 +117,12 @@ func execute() error {
 		}
 	}()
 
-	sqlParser := database.NewParser(parser.ParserModeMysql)
-	sqldef.Run(schema.GeneratorModeMysql, db, sqlParser, options)
+	sqlParser := database.NewParser(parser.ParserModeSQLite3)
+	sqldef.Run(schema.GeneratorModeSQLite3, db, sqlParser, options)
 
 	return nil
 }
 
 func init() {
-	rootCmd.AddCommand(migrateCmd)
+	rootCmd.AddCommand(setupCmd)
 }

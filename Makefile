@@ -5,3 +5,6 @@ air-cmd:
 
 build:
 	docker build -t litencatt/uniar:latest  --build-arg GITHUB_COM_TOKEN=$$GITHUB_COM_TOKEN .
+
+migrate:
+	sqlite3def uniar.db -f sql/schema.sql

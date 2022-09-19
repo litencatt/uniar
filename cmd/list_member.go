@@ -23,7 +23,7 @@ package cmd
 
 import (
 	"context"
-	"log"
+	"fmt"
 
 	"github.com/litencatt/uniar/repository"
 	"github.com/spf13/cobra"
@@ -37,13 +37,16 @@ var listMemberCmd = &cobra.Command{
 		ctx := context.Background()
 		db, err := repository.NewConnection()
 		if err != nil {
-			log.Print(err)
+			fmt.Println(err)
+			return
 		}
 
 		q := repository.New()
 		members, err := q.GetMembers(ctx, db)
 		if err != nil {
-			log.Print(err)
+			fmt.Println(err)
+			fmt.Println("please setup first.\n$ uniar setup")
+			return
 		}
 
 		render(members, []string{})

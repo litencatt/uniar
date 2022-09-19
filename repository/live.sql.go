@@ -42,15 +42,10 @@ func (q *Queries) GetLiveList(ctx context.Context, db DBTX) ([]GetLiveListRow, e
 }
 
 const registLive = `-- name: RegistLive :exec
-INSERT INTO lives (name, group_id) VALUES (?, ?)
+INSERT INTO lives (name) VALUES (?)
 `
 
-type RegistLiveParams struct {
-	Name    string
-	GroupID int64
-}
-
-func (q *Queries) RegistLive(ctx context.Context, db DBTX, arg RegistLiveParams) error {
-	_, err := db.ExecContext(ctx, registLive, arg.Name, arg.GroupID)
+func (q *Queries) RegistLive(ctx context.Context, db DBTX, name string) error {
+	_, err := db.ExecContext(ctx, registLive, name)
 	return err
 }
