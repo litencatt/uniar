@@ -18,6 +18,11 @@ $ uniar list music | head
 | 欅坂46                            | ガラスを割れ！                    | Red    |    132 | {1 true} |     24 |
 
 ```
+## Install
+```
+$ brew tap litencatt/tap
+$ brew install litencatt/tap/uniar
+```
 
 ## Commands
 
