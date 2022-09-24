@@ -1,5 +1,5 @@
 /*
-Copyright © 2022 Kosuke Nakamura <ncl0709@gmail.com>
+Copyright © 2022 Kosuke Nakamura <litencatt@gmail.com>
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal
@@ -23,54 +23,61 @@ package cmd
 
 import (
 	"context"
+	"database/sql"
 	"fmt"
-	"os"
-	"os/user"
+	"regexp"
+	"strconv"
 
-	"github.com/k0kubun/sqldef"
+	"github.com/Songmu/prompter"
 	"github.com/litencatt/uniar/repository"
 	"github.com/spf13/cobra"
 )
 
-var (
-	options = sqldef.Options{}
-)
-
-var setupCmd = &cobra.Command{
-	Use:   "setup",
-	Short: "Setup uniar",
-	Long:  "Setup your member status and scene card collections for uniar",
+var setupMemberCmd = &cobra.Command{
+	Use: "member",
 	Run: func(cmd *cobra.Command, args []string) {
-		user, err := user.Current()
-		if err != nil {
-			panic(err)
-		}
-		uniarPath := user.HomeDir + "/.uniar"
-		dbPath := uniarPath + "/uniar.db"
-
-		if _, err := os.Stat(uniarPath); err != nil {
-			if err := os.Mkdir(uniarPath, 0750); err != nil {
-				fmt.Println(err)
-			}
-		}
-
-		setupMigrate(dbPath)
-		setupSeed(dbPath)
-
 		ctx := context.Background()
+
 		db, err := repository.NewConnection()
 		if err != nil {
 			fmt.Println(err)
 			return
 		}
 		q := repository.New()
-
 		setupMember(ctx, db, q)
-		setupOffice(ctx, db, q)
-		setupScene(ctx, db, q)
 	},
 }
 
+func setupMember(ctx context.Context, db *sql.DB, q *repository.Queries) {
+	fmt.Printf("== メンバーステータスセットアップ ==\n")
+	pm, _ := q.GetProducerMember(ctx, db)
+	for _, m := range pm {
+		fmt.Println(m.Name)
+		pmb := (&prompter.Prompter{
+			Message: fmt.Sprintf("絆ランク (現在値:%d)", m.BondLevelCurent),
+			Regexp:  regexp.MustCompile(`^\d*$`),
+			Default: fmt.Sprintf("%d", m.BondLevelCurent),
+		}).Prompt()
+		pmbi, _ := strconv.Atoi(pmb)
+
+		ddt := (&prompter.Prompter{
+			Message: fmt.Sprintf("ディスコグラフィ (現在値:%d)", m.DiscographyDiscTotal),
+			Regexp:  regexp.MustCompile(`^\d*$`),
+			Default: fmt.Sprintf("%d", m.DiscographyDiscTotal),
+		}).Prompt()
+		ddti, _ := strconv.Atoi(ddt)
+
+		if err := q.UpdateProducerMember(ctx, db, repository.UpdateProducerMemberParams{
+			ID:                   m.ID,
+			BondLevelCurent:      int64(pmbi),
+			DiscographyDiscTotal: int64(ddti),
+		}); err != nil {
+			panic(err)
+		}
+		fmt.Println()
+	}
+}
+
 func init() {
-	rootCmd.AddCommand(setupCmd)
+	setupCmd.AddCommand(setupMemberCmd)
 }

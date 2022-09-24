@@ -1,5 +1,5 @@
 /*
-Copyright © 2022 Kosuke Nakamura <ncl0709@gmail.com>
+Copyright © 2022 Kosuke Nakamura <litencatt@gmail.com>
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal
@@ -23,40 +23,19 @@ package cmd
 
 import (
 	"context"
+	"database/sql"
 	"fmt"
-	"os"
-	"os/user"
+	"regexp"
+	"strconv"
 
-	"github.com/k0kubun/sqldef"
+	"github.com/Songmu/prompter"
 	"github.com/litencatt/uniar/repository"
 	"github.com/spf13/cobra"
 )
 
-var (
-	options = sqldef.Options{}
-)
-
-var setupCmd = &cobra.Command{
-	Use:   "setup",
-	Short: "Setup uniar",
-	Long:  "Setup your member status and scene card collections for uniar",
+var setupOfficeCmd = &cobra.Command{
+	Use: "office",
 	Run: func(cmd *cobra.Command, args []string) {
-		user, err := user.Current()
-		if err != nil {
-			panic(err)
-		}
-		uniarPath := user.HomeDir + "/.uniar"
-		dbPath := uniarPath + "/uniar.db"
-
-		if _, err := os.Stat(uniarPath); err != nil {
-			if err := os.Mkdir(uniarPath, 0750); err != nil {
-				fmt.Println(err)
-			}
-		}
-
-		setupMigrate(dbPath)
-		setupSeed(dbPath)
-
 		ctx := context.Background()
 		db, err := repository.NewConnection()
 		if err != nil {
@@ -65,12 +44,24 @@ var setupCmd = &cobra.Command{
 		}
 		q := repository.New()
 
-		setupMember(ctx, db, q)
 		setupOffice(ctx, db, q)
-		setupScene(ctx, db, q)
 	},
 }
 
+func setupOffice(ctx context.Context, db *sql.DB, q *repository.Queries) {
+	fmt.Printf("== 事務所ボーナスセットアップ ==\n")
+	cob, _ := q.GetProducerOffice(ctx, db)
+	ob := (&prompter.Prompter{
+		Message: fmt.Sprintf("事務所ボーナス平均値 (現在値:%d) [1-17]", cob.Int64),
+		Regexp:  regexp.MustCompile(`^([1-9]|1[0-7])$`),
+	}).Prompt()
+	obi, _ := strconv.Atoi(ob)
+	if err := q.UpdateProducerOffice(ctx, db, sql.NullInt64{Int64: int64(obi), Valid: true}); err != nil {
+		panic(err)
+	}
+	fmt.Println()
+}
+
 func init() {
-	rootCmd.AddCommand(setupCmd)
+	setupCmd.AddCommand(setupOfficeCmd)
 }
