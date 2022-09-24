@@ -82,6 +82,7 @@ func setupScene(ctx context.Context, db *sql.DB, q *repository.Queries) error {
 			return err
 		}
 	}
+	return nil
 }
 
 func init() {
