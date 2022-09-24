@@ -27,13 +27,8 @@ import (
 	"os"
 	"os/user"
 
-	"github.com/k0kubun/sqldef"
 	"github.com/litencatt/uniar/repository"
 	"github.com/spf13/cobra"
-)
-
-var (
-	options = sqldef.Options{}
 )
 
 var setupCmd = &cobra.Command{
@@ -41,34 +36,45 @@ var setupCmd = &cobra.Command{
 	Short: "Setup uniar",
 	Long:  "Setup your member status and scene card collections for uniar",
 	Run: func(cmd *cobra.Command, args []string) {
-		user, err := user.Current()
-		if err != nil {
-			panic(err)
-		}
-		uniarPath := user.HomeDir + "/.uniar"
-		dbPath := uniarPath + "/uniar.db"
-
-		if _, err := os.Stat(uniarPath); err != nil {
-			if err := os.Mkdir(uniarPath, 0750); err != nil {
-				fmt.Println(err)
-			}
-		}
-
-		setupMigrate(dbPath)
-		setupSeed(dbPath)
-
 		ctx := context.Background()
-		db, err := repository.NewConnection()
+
+		dbPath := GetDbPath()
+		db, err := repository.NewConnection(dbPath)
 		if err != nil {
 			fmt.Println(err)
 			return
 		}
 		q := repository.New()
 
+		setupMkdir()
+		setupMigrate(dbPath)
+		setupSeed(ctx, db, dbPath)
 		setupMember(ctx, db, q)
 		setupOffice(ctx, db, q)
 		setupScene(ctx, db, q)
 	},
+}
+
+func GetUniarPath() string {
+	user, err := user.Current()
+	if err != nil {
+		panic(err)
+	}
+	return user.HomeDir + "/.uniar"
+}
+
+func GetDbName() string {
+	if p, ok := os.LookupEnv("UNIAR_DB_PATH"); ok {
+		return p
+	}
+	return "uniar.db"
+}
+
+func GetDbPath() string {
+	uniarPath := GetUniarPath()
+	dbName := GetDbName()
+
+	return uniarPath + dbName
 }
 
 func init() {

@@ -26,8 +26,8 @@ import (
 	"database/sql"
 	"fmt"
 	"os"
-	"os/user"
 
+	"github.com/litencatt/uniar/repository"
 	mig_sql "github.com/litencatt/uniar/sql"
 
 	"github.com/k0kubun/sqldef"
@@ -38,25 +38,34 @@ import (
 	"github.com/spf13/cobra"
 )
 
+var (
+	options = sqldef.Options{}
+)
+
 var setupMigrateCmd = &cobra.Command{
 	Use: "migrate",
 	Run: func(cmd *cobra.Command, args []string) {
-		user, err := user.Current()
+		ctx := context.Background()
+		dbPath := GetDbPath()
+		db, err := repository.NewConnection(dbPath)
 		if err != nil {
-			panic(err)
-		}
-		uniarPath := user.HomeDir + "/.uniar"
-		dbPath := uniarPath + "/uniar.db"
-
-		if _, err := os.Stat(uniarPath); err != nil {
-			if err := os.Mkdir(uniarPath, 0750); err != nil {
-				fmt.Println(err)
-			}
+			fmt.Println(err)
+			return
 		}
 
+		setupMkdir()
 		setupMigrate(dbPath)
-		setupSeed(dbPath)
+		setupSeed(ctx, db, dbPath)
 	},
+}
+
+func setupMkdir() {
+	uniarPath := GetUniarPath()
+	if _, err := os.Stat(uniarPath); err != nil {
+		if err := os.Mkdir(uniarPath, 0750); err != nil {
+			fmt.Println(err)
+		}
+	}
 }
 
 func setupMigrate(dbPath string) error {
@@ -101,13 +110,7 @@ func setupMigrate(dbPath string) error {
 	return nil
 }
 
-func setupSeed(dbPath string) {
-	ctx := context.Background()
-	db, err := sql.Open("sqlite3", dbPath)
-	if err != nil {
-		panic(err)
-	}
-
+func setupSeed(ctx context.Context, db *sql.DB, dbPath string) {
 	result, err := db.ExecContext(ctx, string(mig_sql.Seed))
 	if err != nil {
 		fmt.Println(err)

@@ -34,7 +34,8 @@ var listLiveCmd = &cobra.Command{
 	Short: "Show live list",
 	Run: func(cmd *cobra.Command, args []string) {
 		ctx := context.Background()
-		db, err := repository.NewConnection()
+		dbPath := GetDbPath()
+		db, err := repository.NewConnection(dbPath)
 		if err != nil {
 			fmt.Println(err)
 			return

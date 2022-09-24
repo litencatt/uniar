@@ -46,7 +46,8 @@ var listSceneCmd = &cobra.Command{
 		f, _ := cmd.Flags().GetBool("full-name")
 
 		ctx := context.Background()
-		db, err := repository.NewConnection()
+		dbPath := GetDbPath()
+		db, err := repository.NewConnection(dbPath)
 		if err != nil {
 			fmt.Println(err)
 			return
