@@ -7,7 +7,7 @@ builds:
     ldflags:
       - -s -w -X github.com/litencatt/uniar.version={{.Version}} -X github.com/litencatt/uniar.commit={{.FullCommit}} -X github.com/litencatt/uniar.date={{.Date}} -X github.com/litencatt/uniar/version.Version={{.Version}}
     env:
-      - CGO_ENABLED=0
+      - CGO_ENABLED=1
     goos:
       - darwin
     goarch:
