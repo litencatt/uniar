@@ -1,4 +1,4 @@
-package uniar
+package version
 
 const Name string = "uniar"
 
