@@ -22,7 +22,6 @@ archives:
     files:
       - CREDITS
       - README.md
-      - CHANGELOG.md
 checksum:
   name_template: "checksums.txt"
 snapshot:
