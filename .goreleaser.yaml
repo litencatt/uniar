@@ -33,3 +33,14 @@ changelog:
     exclude:
       - "^docs:"
       - "^test:"
+brews:
+  - name: uniar
+    tap:
+      owner: litencatt
+      name: homebrew-tap
+    commit_author:
+      name: litencatt
+      email: litencatt@gmail.com
+    homepage: https://github.com/litencatt/uniar
+    description: uniar is UNI'S ON AIR music and scene cards database and manage your scene cards collection tool.
+    license: MIT
