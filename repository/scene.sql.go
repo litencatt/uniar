@@ -10,85 +10,7 @@ import (
 	"database/sql"
 )
 
-const getScenes = `-- name: GetScenes :many
-SELECT
-	p.name AS photograph,
-	m.name AS member,
-	c.name AS color,
-	s.vocal_max + s.dance_max + s.peformance_max + 430 AS total,
-	s.vocal_max,
-	s.dance_max,
-	s.peformance_max,
-	s.expected_value,
-	s.ssr_plus,
-	pm.bond_level_curent AS bonds,
-	pm.discography_disc_total AS discography,
-	ps.have
-FROM
-	scenes s
-	JOIN photograph p ON s.photograph_id = p.id
-	JOIN color_types c ON s.color_type_id = c.id
-	JOIN members m ON s.member_id = m.id
-	JOIN producer_members pm ON s.member_id = pm.member_id
-	JOIN producer_scenes ps ON s.photograph_id = ps.photograph_id AND s.member_id = ps.member_id
-ORDER BY
-	s.expected_value desc, total desc
-`
-
-type GetScenesRow struct {
-	Photograph    string
-	Member        string
-	Color         string
-	Total         int64
-	VocalMax      int64
-	DanceMax      int64
-	PeformanceMax int64
-	ExpectedValue sql.NullString
-	SsrPlus       int64
-	Bonds         int64
-	Discography   int64
-	Have          sql.NullInt64
-}
-
-func (q *Queries) GetScenes(ctx context.Context, db DBTX) ([]GetScenesRow, error) {
-	rows, err := db.QueryContext(ctx, getScenes)
-	if err != nil {
-		return nil, err
-	}
-	defer rows.Close()
-	var items []GetScenesRow
-	for rows.Next() {
-		var i GetScenesRow
-		if err := rows.Scan(
-			&i.Photograph,
-			&i.Member,
-			&i.Color,
-			&i.Total,
-			&i.VocalMax,
-			&i.DanceMax,
-			&i.PeformanceMax,
-			&i.ExpectedValue,
-			&i.SsrPlus,
-			&i.Bonds,
-			&i.Discography,
-			&i.Have,
-		); err != nil {
-			return nil, err
-		}
-		items = append(items, i)
-	}
-	if err := rows.Close(); err != nil {
-		return nil, err
-	}
-	if err := rows.Err(); err != nil {
-		return nil, err
-	}
-	return items, nil
-}
-
 const getScenesWithColor = `-- name: GetScenesWithColor :many
-;
-
 SELECT
 	p.name AS photograph,
 	p.abbreviation,
@@ -108,8 +30,8 @@ FROM
 	JOIN photograph p ON s.photograph_id = p.id
 	JOIN color_types c ON s.color_type_id = c.id
 	JOIN members m ON s.member_id = m.id
-	JOIN producer_members pm ON s.member_id = pm.member_id
-	JOIN producer_scenes ps ON s.photograph_id = ps.photograph_id AND s.member_id = ps.member_id
+	LEFT OUTER JOIN producer_members pm ON s.member_id = pm.member_id
+	LEFT OUTER JOIN producer_scenes ps ON s.photograph_id = ps.photograph_id AND s.member_id = ps.member_id
 WHERE
 	c.name LIKE ?
 ORDER BY
