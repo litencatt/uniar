@@ -46,12 +46,26 @@ var setupCmd = &cobra.Command{
 		}
 		q := repository.New()
 
-		setupMkdir()
-		setupMigrate(dbPath)
-		setupSeed(ctx, db, dbPath)
-		setupMember(ctx, db, q)
-		setupOffice(ctx, db, q)
-		setupScene(ctx, db, q)
+		if err := setupMkdir(); err != nil {
+			fmt.Fprintln(os.Stderr, err)
+			os.Exit(1)
+		}
+		if err := migrate(ctx, db, dbPath); err != nil {
+			fmt.Fprintln(os.Stderr, err)
+			os.Exit(1)
+		}
+		if err := setupOffice(ctx, db, q); err != nil {
+			fmt.Fprintln(os.Stderr, err)
+			os.Exit(1)
+		}
+		if err := setupMember(ctx, db, q); err != nil {
+			fmt.Fprintln(os.Stderr, err)
+			os.Exit(1)
+		}
+		if err := setupScene(ctx, db, q); err != nil {
+			fmt.Fprintln(os.Stderr, err)
+			os.Exit(1)
+		}
 	},
 }
 

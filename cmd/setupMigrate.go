@@ -27,6 +27,7 @@ import (
 	"fmt"
 	"os"
 
+	"github.com/Songmu/prompter"
 	"github.com/litencatt/uniar/repository"
 	mig_sql "github.com/litencatt/uniar/sql"
 
@@ -49,23 +50,47 @@ var setupMigrateCmd = &cobra.Command{
 		dbPath := GetDbPath()
 		db, err := repository.NewConnection(dbPath)
 		if err != nil {
-			fmt.Println(err)
-			return
+			fmt.Fprintln(os.Stderr, err)
+			os.Exit(1)
 		}
-
-		setupMkdir()
-		setupMigrate(dbPath)
-		setupSeed(ctx, db, dbPath)
+		if err := setupMkdir(); err != nil {
+			fmt.Fprintln(os.Stderr, err)
+			os.Exit(1)
+		}
+		if prompter.YN("do you execute migration and seed?", false) {
+			if err := migrate(ctx, db, dbPath); err != nil {
+				fmt.Fprintln(os.Stderr, err)
+				os.Exit(1)
+			}
+		} else {
+			fmt.Println("skip migration")
+		}
 	},
 }
 
-func setupMkdir() {
+func migrate(ctx context.Context, db *sql.DB, dbPath string) error {
+	fmt.Println("migration")
+	if err := setupMigrate(dbPath); err != nil {
+		return err
+	}
+	fmt.Println("seed")
+	if err := setupSeed(ctx, db, dbPath); err != nil {
+		return err
+	}
+	fmt.Println("finish migration and seed")
+	fmt.Println()
+
+	return nil
+}
+
+func setupMkdir() error {
 	uniarPath := GetUniarPath()
 	if _, err := os.Stat(uniarPath); err != nil {
 		if err := os.Mkdir(uniarPath, 0750); err != nil {
-			fmt.Println(err)
+			return err
 		}
 	}
+	return nil
 }
 
 func setupMigrate(dbPath string) error {
@@ -110,14 +135,15 @@ func setupMigrate(dbPath string) error {
 	return nil
 }
 
-func setupSeed(ctx context.Context, db *sql.DB, dbPath string) {
+func setupSeed(ctx context.Context, db *sql.DB, dbPath string) error {
 	result, err := db.ExecContext(ctx, string(mig_sql.Seed))
 	if err != nil {
-		fmt.Println(err)
+		return err
 	}
 	if _, ok := os.LookupEnv("DEBUG"); ok {
 		fmt.Println(result)
 	}
+	return nil
 }
 
 func init() {
