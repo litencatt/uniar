@@ -7,12 +7,11 @@ builds:
     ldflags:
       - -s -w -X github.com/litencatt/uniar.version={{.Version}} -X github.com/litencatt/uniar.commit={{.FullCommit}} -X github.com/litencatt/uniar.date={{.Date}} -X github.com/litencatt/uniar/version.Version={{.Version}}
     env:
-      - CGO_ENABLED=1
+      - CGO_ENABLED=0
     goos:
       - darwin
     goarch:
       - amd64
-      - arm64
     main: ./cmd/uniar/main.go
 archives:
   - id: uniar-archive
