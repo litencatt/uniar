@@ -47,7 +47,6 @@ var (
 	options = sqldef.Options{}
 )
 
-// setupCmd represents the setup command
 var setupCmd = &cobra.Command{
 	Use:   "setup",
 	Short: "Setup uniar",
@@ -60,7 +59,7 @@ var setupCmd = &cobra.Command{
 		dbPath := uniarPath + "/uniar.db"
 
 		if _, err := os.Stat(uniarPath); err != nil {
-			if err := os.Mkdir(uniarPath, 0755); err != nil {
+			if err := os.Mkdir(uniarPath, 0750); err != nil {
 				fmt.Println(err)
 			}
 		}
