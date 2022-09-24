@@ -36,8 +36,7 @@ import (
 // musicCmd represents the music command
 var registMusicCmd = &cobra.Command{
 	Use:   "music",
-	Short: "A brief description of your command",
-	Long:  `A longer description`,
+	Short: "Regist a music to database",
 	Run: func(cmd *cobra.Command, args []string) {
 		ctx := context.Background()
 		db, err := repository.NewConnection()

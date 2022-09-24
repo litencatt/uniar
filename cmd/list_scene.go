@@ -33,10 +33,9 @@ import (
 	"github.com/spf13/cobra"
 )
 
-// sceneCmd represents the scene command
 var listSceneCmd = &cobra.Command{
 	Use:   "scene",
-	Short: "List scene",
+	Short: "Show scene card list",
 	Run: func(cmd *cobra.Command, args []string) {
 		c, _ := cmd.Flags().GetString("color")
 		c = getColorName(c)

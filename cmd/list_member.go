@@ -29,10 +29,9 @@ import (
 	"github.com/spf13/cobra"
 )
 
-// memberCmd represents the member command
 var listMemberCmd = &cobra.Command{
 	Use:   "member",
-	Short: "List member",
+	Short: "Show member list",
 	Run: func(cmd *cobra.Command, args []string) {
 		ctx := context.Background()
 		db, err := repository.NewConnection()
@@ -55,14 +54,4 @@ var listMemberCmd = &cobra.Command{
 
 func init() {
 	listCmd.AddCommand(listMemberCmd)
-
-	// Here you will define your flags and configuration settings.
-
-	// Cobra supports Persistent Flags which will work for this command
-	// and all subcommands, e.g.:
-	// memberCmd.PersistentFlags().String("foo", "", "A help for foo")
-
-	// Cobra supports local flags which will only run when this command
-	// is called directly, e.g.:
-	// memberCmd.Flags().BoolP("toggle", "t", false, "Help message for toggle")
 }

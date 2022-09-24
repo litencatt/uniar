@@ -34,8 +34,7 @@ import (
 // photographCmd represents the photograph command
 var registPhotographCmd = &cobra.Command{
 	Use:   "photo",
-	Short: "A brief description of your command",
-	Long:  `A longer description`,
+	Short: "Regist a photograph to database",
 	Run: func(cmd *cobra.Command, args []string) {
 		g := (&prompter.Prompter{
 			Choices: []string{"1", "2"},

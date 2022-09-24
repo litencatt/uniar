@@ -35,8 +35,7 @@ import (
 // liveCmd represents the live command
 var registLiveCmd = &cobra.Command{
 	Use:   "live",
-	Short: "A brief description of your command",
-	Long:  `A longer description`,
+	Short: "Regist a live to database",
 	Run: func(cmd *cobra.Command, args []string) {
 		g := (&prompter.Prompter{
 			Choices: []string{"1", "2"},

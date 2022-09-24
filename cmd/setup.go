@@ -51,6 +51,7 @@ var (
 var setupCmd = &cobra.Command{
 	Use:   "setup",
 	Short: "Setup uniar",
+	Long:  "Setup your member status and scene card collections for uniar",
 	Run: func(cmd *cobra.Command, args []string) {
 		user, err := user.Current()
 		if err != nil {
