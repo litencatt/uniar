@@ -63,18 +63,13 @@ func GetUniarPath() string {
 	return user.HomeDir + "/.uniar"
 }
 
-func GetDbName() string {
+func GetDbPath() string {
 	if p, ok := os.LookupEnv("UNIAR_DB_PATH"); ok {
 		return p
 	}
-	return "uniar.db"
-}
-
-func GetDbPath() string {
 	uniarPath := GetUniarPath()
-	dbName := GetDbName()
 
-	return uniarPath + dbName
+	return uniarPath + "/uniar.db"
 }
 
 func init() {
