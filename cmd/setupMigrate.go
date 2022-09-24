@@ -57,27 +57,29 @@ var setupMigrateCmd = &cobra.Command{
 			fmt.Fprintln(os.Stderr, err)
 			os.Exit(1)
 		}
-		if err := migrate(ctx, db, dbPath); err != nil {
-			fmt.Fprintln(os.Stderr, err)
-			os.Exit(1)
+		if prompter.YN("do you execute migration and seed?", false) {
+			if err := migrate(ctx, db, dbPath); err != nil {
+				fmt.Fprintln(os.Stderr, err)
+				os.Exit(1)
+			}
+		} else {
+			fmt.Println("skip migration")
 		}
 	},
 }
 
 func migrate(ctx context.Context, db *sql.DB, dbPath string) error {
-	if prompter.YN("do you execute migration and seed?", false) {
-		fmt.Println("start migration")
-		if err := setupMigrate(dbPath); err != nil {
-			return err
-		}
-		fmt.Println("start seed")
-		if err := setupSeed(ctx, db, dbPath); err != nil {
-			return err
-		}
-		fmt.Println("finish migration and seed")
-	} else {
-		fmt.Println("skip migration")
+	fmt.Println("migration")
+	if err := setupMigrate(dbPath); err != nil {
+		return err
 	}
+	fmt.Println("seed")
+	if err := setupSeed(ctx, db, dbPath); err != nil {
+		return err
+	}
+	fmt.Println("finish migration and seed")
+	fmt.Println()
+
 	return nil
 }
 
