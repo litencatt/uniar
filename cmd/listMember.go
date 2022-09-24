@@ -29,10 +29,9 @@ import (
 	"github.com/spf13/cobra"
 )
 
-// groupCmd represents the listGroup command
-var listGroupCmd = &cobra.Command{
-	Use:   "group",
-	Short: "List group",
+var listMemberCmd = &cobra.Command{
+	Use:   "member",
+	Short: "Show member list",
 	Run: func(cmd *cobra.Command, args []string) {
 		ctx := context.Background()
 		db, err := repository.NewConnection()
@@ -42,27 +41,17 @@ var listGroupCmd = &cobra.Command{
 		}
 
 		q := repository.New()
-		groups, err := q.GetGroup(ctx, db)
+		members, err := q.GetMembers(ctx, db)
 		if err != nil {
 			fmt.Println(err)
 			fmt.Println("please setup first.\n$ uniar setup")
 			return
 		}
 
-		render(groups, []string{})
+		render(members, []string{})
 	},
 }
 
 func init() {
-	listCmd.AddCommand(listGroupCmd)
-
-	// Here you will define your flags and configuration settings.
-
-	// Cobra supports Persistent Flags which will work for this command
-	// and all subcommands, e.g.:
-	// listGroupCmd.PersistentFlags().String("foo", "", "A help for foo")
-
-	// Cobra supports local flags which will only run when this command
-	// is called directly, e.g.:
-	// listGroupCmd.Flags().BoolP("toggle", "t", false, "Help message for toggle")
+	listCmd.AddCommand(listMemberCmd)
 }

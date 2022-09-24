@@ -24,67 +24,34 @@ package cmd
 import (
 	"context"
 	"fmt"
-	"strconv"
 
-	"github.com/Songmu/prompter"
 	"github.com/litencatt/uniar/repository"
 	"github.com/spf13/cobra"
 )
 
-// photographCmd represents the photograph command
-var registPhotographCmd = &cobra.Command{
-	Use:   "photo",
-	Short: "A brief description of your command",
-	Long:  `A longer description`,
+var listGroupCmd = &cobra.Command{
+	Use:   "group",
+	Short: "Show group list",
 	Run: func(cmd *cobra.Command, args []string) {
-		g := (&prompter.Prompter{
-			Choices: []string{"1", "2"},
-			Default: "1",
-			Message: "Select Group(1:櫻坂46 2:日向坂46)",
-		}).Prompt()
-		groupId, _ := strconv.Atoi(g)
-
-		pt := (&prompter.Prompter{
-			Message: "Select Type",
-			Choices: []string{"楽曲", "限定", "Precious"},
-			Default: "楽曲",
-		}).Prompt()
-
-		photoName := (&prompter.Prompter{
-			Message: "Photograph Name",
-		}).Prompt()
-
 		ctx := context.Background()
 		db, err := repository.NewConnection()
 		if err != nil {
 			fmt.Println(err)
+			return
 		}
 
 		q := repository.New()
-		if err := q.RegistPhotograph(ctx, db, repository.RegistPhotographParams{
-			Name:      photoName,
-			GroupID:   int64(groupId),
-			PhotoType: pt,
-		}); err != nil {
+		groups, err := q.GetGroup(ctx, db)
+		if err != nil {
 			fmt.Println(err)
 			fmt.Println("please setup first.\n$ uniar setup")
 			return
 		}
 
-		fmt.Printf("success registration(Photograph Name: %s)\n", photoName)
+		render(groups, []string{})
 	},
 }
 
 func init() {
-	registCmd.AddCommand(registPhotographCmd)
-
-	// Here you will define your flags and configuration settings.
-
-	// Cobra supports Persistent Flags which will work for this command
-	// and all subcommands, e.g.:
-	// photographCmd.PersistentFlags().String("foo", "", "A help for foo")
-
-	// Cobra supports local flags which will only run when this command
-	// is called directly, e.g.:
-	// photographCmd.Flags().BoolP("toggle", "t", false, "Help message for toggle")
+	listCmd.AddCommand(listGroupCmd)
 }

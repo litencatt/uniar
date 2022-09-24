@@ -28,15 +28,13 @@ import (
 
 	"github.com/Songmu/prompter"
 	"github.com/litencatt/uniar/repository"
-
 	"github.com/spf13/cobra"
 )
 
-// liveCmd represents the live command
-var registLiveCmd = &cobra.Command{
-	Use:   "live",
-	Short: "A brief description of your command",
-	Long:  `A longer description`,
+// photographCmd represents the photograph command
+var registPhotographCmd = &cobra.Command{
+	Use:   "photo",
+	Short: "Regist a photograph to database",
 	Run: func(cmd *cobra.Command, args []string) {
 		g := (&prompter.Prompter{
 			Choices: []string{"1", "2"},
@@ -45,42 +43,47 @@ var registLiveCmd = &cobra.Command{
 		}).Prompt()
 		groupId, _ := strconv.Atoi(g)
 
-		liveName := (&prompter.Prompter{
-			Message: "Live name",
+		pt := (&prompter.Prompter{
+			Message: "Select Type",
+			Choices: []string{"楽曲", "限定", "Precious"},
+			Default: "楽曲",
+		}).Prompt()
+
+		photoName := (&prompter.Prompter{
+			Message: "Photograph Name",
 		}).Prompt()
 
 		ctx := context.Background()
 		db, err := repository.NewConnection()
 		if err != nil {
 			fmt.Println(err)
-			return
 		}
 
 		q := repository.New()
-		if err := q.RegistLive(ctx, db, liveName); err != nil {
+		if err := q.RegistPhotograph(ctx, db, repository.RegistPhotographParams{
+			Name:      photoName,
+			GroupID:   int64(groupId),
+			PhotoType: pt,
+		}); err != nil {
 			fmt.Println(err)
 			fmt.Println("please setup first.\n$ uniar setup")
 			return
 		}
 
-		gn := "櫻坂46"
-		if groupId == 2 {
-			gn = "日向坂46"
-		}
-		fmt.Printf("success registration(GroupName:%s LiveName:%s)\n", gn, liveName)
+		fmt.Printf("success registration(Photograph Name: %s)\n", photoName)
 	},
 }
 
 func init() {
-	registCmd.AddCommand(registLiveCmd)
+	registCmd.AddCommand(registPhotographCmd)
 
 	// Here you will define your flags and configuration settings.
 
 	// Cobra supports Persistent Flags which will work for this command
 	// and all subcommands, e.g.:
-	// liveCmd.PersistentFlags().String("foo", "", "A help for foo")
+	// photographCmd.PersistentFlags().String("foo", "", "A help for foo")
 
 	// Cobra supports local flags which will only run when this command
 	// is called directly, e.g.:
-	// liveCmd.Flags().BoolP("toggle", "t", false, "Help message for toggle")
+	// photographCmd.Flags().BoolP("toggle", "t", false, "Help message for toggle")
 }

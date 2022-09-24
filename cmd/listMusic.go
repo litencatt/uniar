@@ -29,10 +29,9 @@ import (
 	"github.com/spf13/cobra"
 )
 
-// musicCmd represents the music command
 var listMusicCmd = &cobra.Command{
 	Use:   "music",
-	Short: "List music",
+	Short: "Show music list",
 	Run: func(cmd *cobra.Command, args []string) {
 		c, _ := cmd.Flags().GetString("color")
 

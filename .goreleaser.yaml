@@ -1,0 +1,37 @@
+before:
+  hooks:
+    - go mod download
+    - go mod tidy
+builds:
+  - id: uniar-darwin
+    ldflags:
+      - -s -w -X github.com/litencatt/uniar.version={{.Version}} -X github.com/litencatt/uniar.commit={{.FullCommit}} -X github.com/litencatt/uniar.date={{.Date}} -X github.com/litencatt/uniar/version.Version={{.Version}}
+    env:
+      - CGO_ENABLED=1
+    goos:
+      - darwin
+    goarch:
+      - amd64
+      - arm64
+    main: ./cmd/uniar/main.go
+archives:
+  - id: uniar-archive
+    name_template: "{{ .ProjectName }}_v{{ .Version }}_{{ .Os }}_{{ .Arch }}{{ if .Arm }}v{{ .Arm }}{{ end }}"
+    format_overrides:
+      - goos: darwin
+        format: zip
+    files:
+      - CREDITS
+      - README.md
+      - CHANGELOG.md
+checksum:
+  name_template: "checksums.txt"
+snapshot:
+  name_template: "{{ .Version }}-next"
+changelog:
+  skip: true
+  sort: asc
+  filters:
+    exclude:
+      - "^docs:"
+      - "^test:"

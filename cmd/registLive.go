@@ -24,16 +24,30 @@ package cmd
 import (
 	"context"
 	"fmt"
+	"strconv"
 
+	"github.com/Songmu/prompter"
 	"github.com/litencatt/uniar/repository"
+
 	"github.com/spf13/cobra"
 )
 
-// memberCmd represents the member command
-var listMemberCmd = &cobra.Command{
-	Use:   "member",
-	Short: "List member",
+// liveCmd represents the live command
+var registLiveCmd = &cobra.Command{
+	Use:   "live",
+	Short: "Regist a live to database",
 	Run: func(cmd *cobra.Command, args []string) {
+		g := (&prompter.Prompter{
+			Choices: []string{"1", "2"},
+			Default: "1",
+			Message: "Select Group(1:櫻坂46 2:日向坂46)",
+		}).Prompt()
+		groupId, _ := strconv.Atoi(g)
+
+		liveName := (&prompter.Prompter{
+			Message: "Live name",
+		}).Prompt()
+
 		ctx := context.Background()
 		db, err := repository.NewConnection()
 		if err != nil {
@@ -42,27 +56,30 @@ var listMemberCmd = &cobra.Command{
 		}
 
 		q := repository.New()
-		members, err := q.GetMembers(ctx, db)
-		if err != nil {
+		if err := q.RegistLive(ctx, db, liveName); err != nil {
 			fmt.Println(err)
 			fmt.Println("please setup first.\n$ uniar setup")
 			return
 		}
 
-		render(members, []string{})
+		gn := "櫻坂46"
+		if groupId == 2 {
+			gn = "日向坂46"
+		}
+		fmt.Printf("success registration(GroupName:%s LiveName:%s)\n", gn, liveName)
 	},
 }
 
 func init() {
-	listCmd.AddCommand(listMemberCmd)
+	registCmd.AddCommand(registLiveCmd)
 
 	// Here you will define your flags and configuration settings.
 
 	// Cobra supports Persistent Flags which will work for this command
 	// and all subcommands, e.g.:
-	// memberCmd.PersistentFlags().String("foo", "", "A help for foo")
+	// liveCmd.PersistentFlags().String("foo", "", "A help for foo")
 
 	// Cobra supports local flags which will only run when this command
 	// is called directly, e.g.:
-	// memberCmd.Flags().BoolP("toggle", "t", false, "Help message for toggle")
+	// liveCmd.Flags().BoolP("toggle", "t", false, "Help message for toggle")
 }

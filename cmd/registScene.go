@@ -38,8 +38,7 @@ import (
 // sceneCmd represents the scene command
 var registSceneCmd = &cobra.Command{
 	Use:   "scene",
-	Short: "A brief description of your command",
-	Long:  `A longer description`,
+	Short: "Regist a scene to database",
 	Run: func(cmd *cobra.Command, args []string) {
 		ctx := context.Background()
 		db, err := repository.NewConnection()
