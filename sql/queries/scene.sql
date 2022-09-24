@@ -43,8 +43,8 @@ FROM
 	JOIN photograph p ON s.photograph_id = p.id
 	JOIN color_types c ON s.color_type_id = c.id
 	JOIN members m ON s.member_id = m.id
-	JOIN producer_members pm ON s.member_id = pm.member_id
-	JOIN producer_scenes ps ON s.photograph_id = ps.photograph_id AND s.member_id = ps.member_id
+	LEFT OUTER JOIN producer_members pm ON s.member_id = pm.member_id
+	LEFT OUTER JOIN producer_scenes ps ON s.photograph_id = ps.photograph_id AND s.member_id = ps.member_id
 WHERE
 	c.name LIKE ?
 ORDER BY
