@@ -25,3 +25,7 @@ docker-build:
 
 db-migrate:
 	sqlite3def uniar.db -f sql/schema.sql
+
+release:
+	git push origin main --tag
+	goreleaser --rm-dist
