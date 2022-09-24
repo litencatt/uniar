@@ -25,6 +25,7 @@ import (
 	"context"
 	"database/sql"
 	"fmt"
+	"os"
 	"regexp"
 	"strconv"
 
@@ -45,11 +46,14 @@ var setupOfficeCmd = &cobra.Command{
 		}
 		q := repository.New()
 
-		setupOffice(ctx, db, q)
+		if err := setupOffice(ctx, db, q); err != nil {
+			fmt.Fprintln(os.Stderr, err)
+			os.Exit(1)
+		}
 	},
 }
 
-func setupOffice(ctx context.Context, db *sql.DB, q *repository.Queries) {
+func setupOffice(ctx context.Context, db *sql.DB, q *repository.Queries) error {
 	fmt.Printf("== 事務所ボーナスセットアップ ==\n")
 	cob, _ := q.GetProducerOffice(ctx, db)
 	ob := (&prompter.Prompter{
@@ -58,9 +62,10 @@ func setupOffice(ctx context.Context, db *sql.DB, q *repository.Queries) {
 	}).Prompt()
 	obi, _ := strconv.Atoi(ob)
 	if err := q.UpdateProducerOffice(ctx, db, sql.NullInt64{Int64: int64(obi), Valid: true}); err != nil {
-		panic(err)
+		return err
 	}
 	fmt.Println()
+	return nil
 }
 
 func init() {

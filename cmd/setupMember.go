@@ -25,6 +25,7 @@ import (
 	"context"
 	"database/sql"
 	"fmt"
+	"os"
 	"regexp"
 	"strconv"
 
@@ -45,11 +46,15 @@ var setupMemberCmd = &cobra.Command{
 			return
 		}
 		q := repository.New()
-		setupMember(ctx, db, q)
+
+		if err := setupMember(ctx, db, q); err != nil {
+			fmt.Fprintln(os.Stderr, err)
+			os.Exit(1)
+		}
 	},
 }
 
-func setupMember(ctx context.Context, db *sql.DB, q *repository.Queries) {
+func setupMember(ctx context.Context, db *sql.DB, q *repository.Queries) error {
 	fmt.Printf("== メンバーステータスセットアップ ==\n")
 	pm, _ := q.GetProducerMember(ctx, db)
 	for _, m := range pm {
@@ -73,10 +78,11 @@ func setupMember(ctx context.Context, db *sql.DB, q *repository.Queries) {
 			BondLevelCurent:      int64(pmbi),
 			DiscographyDiscTotal: int64(ddti),
 		}); err != nil {
-			panic(err)
+			return err
 		}
 		fmt.Println()
 	}
+	return nil
 }
 
 func init() {
