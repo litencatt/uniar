@@ -5,7 +5,7 @@ before:
 builds:
   - id: uniar-darwin
     ldflags:
-      - -s -w -X github.com/litencatt/uniar.version={{.Version}} -X github.com/litencatt/uniar.commit={{.FullCommit}} -X github.com/litencatt/uniar.date={{.Date}} -X github.com/litencatt/uniar/version.Version={{.Version}}
+      - -s -w -X github.com/litencatt/uniar.Version={{.Version}} -X github.com/litencatt/uniar.commit={{.FullCommit}} -X github.com/litencatt/uniar.date={{.Date}} -X github.com/litencatt/uniar/version.Version={{.Version}}
     env:
       - CGO_ENABLED=1
     goos:
