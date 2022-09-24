@@ -21,7 +21,10 @@ THE SOFTWARE.
 */
 package main
 
-import "github.com/litencatt/uniar/cmd"
+import (
+	"github.com/litencatt/uniar/cmd"
+	_ "github.com/mattn/go-sqlite3"
+)
 
 func main() {
 	cmd.Execute()

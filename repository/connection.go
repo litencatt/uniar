@@ -5,8 +5,6 @@ import (
 	"fmt"
 	"os"
 	"os/user"
-
-	_ "github.com/mattn/go-sqlite3"
 )
 
 func NewConnection() (*sql.DB, error) {

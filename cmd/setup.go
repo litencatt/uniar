@@ -31,7 +31,6 @@ import (
 	"strconv"
 
 	"github.com/Songmu/prompter"
-	_ "github.com/mattn/go-sqlite3"
 
 	"github.com/k0kubun/sqldef"
 	"github.com/k0kubun/sqldef/database"
