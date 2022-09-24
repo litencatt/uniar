@@ -1,5 +1,5 @@
 /*
-Copyright © 2022 Kosuke Nakamura <ncl0709@gmail.com>
+Copyright © 2022 Kosuke Nakamura <litencatt@gmail.com>
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal
@@ -23,15 +23,17 @@ package cmd
 
 import (
 	"context"
+	"database/sql"
 	"fmt"
+	"strconv"
 
+	"github.com/Songmu/prompter"
 	"github.com/litencatt/uniar/repository"
 	"github.com/spf13/cobra"
 )
 
-var listGroupCmd = &cobra.Command{
-	Use:   "group",
-	Short: "Show group list",
+var setupSceneCmd = &cobra.Command{
+	Use: "scene",
 	Run: func(cmd *cobra.Command, args []string) {
 		ctx := context.Background()
 		dbPath := GetDbPath()
@@ -40,19 +42,44 @@ var listGroupCmd = &cobra.Command{
 			fmt.Println(err)
 			return
 		}
-
 		q := repository.New()
-		groups, err := q.GetGroup(ctx, db)
-		if err != nil {
-			fmt.Println(err)
-			fmt.Println("please setup first.\n$ uniar setup")
-			return
-		}
 
-		render(groups, []string{})
+		setupScene(ctx, db, q)
 	},
 }
 
+func setupScene(ctx context.Context, db *sql.DB, q *repository.Queries) {
+	ps, err := q.GetProducerScenes(ctx, db)
+	if err != nil {
+		fmt.Println(err)
+	}
+
+	fmt.Printf("== 所持シーンカードセットアップ ==\n0:未所持\n1:所持\nデフォルト値:0(未所持)\n\n")
+	for _, s := range ps {
+		ssrp := ""
+		if s.SsrPlus == 1 {
+			ssrp = "(SSR+)"
+		}
+		h := "未所持"
+		if s.Have.Int64 == 1 {
+			h = "1(所持)"
+		}
+		str := fmt.Sprintf("%s %s %s%s\n(現在: %s)", s.Photograph, s.Color, s.Member, ssrp, h)
+		have := (&prompter.Prompter{
+			Message: str,
+			Choices: []string{"0", "1"},
+			Default: fmt.Sprintf("%d", s.Have.Int64),
+		}).Prompt()
+		hi, _ := strconv.Atoi(have)
+		if err := q.UpdateProducerScene(ctx, db, repository.UpdateProducerSceneParams{
+			Have: sql.NullInt64{Int64: int64(hi), Valid: true},
+			ID:   s.ID,
+		}); err != nil {
+			panic(err)
+		}
+	}
+}
+
 func init() {
-	listCmd.AddCommand(listGroupCmd)
+	setupCmd.AddCommand(setupSceneCmd)
 }

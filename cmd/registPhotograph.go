@@ -54,7 +54,8 @@ var registPhotographCmd = &cobra.Command{
 		}).Prompt()
 
 		ctx := context.Background()
-		db, err := repository.NewConnection()
+		dbPath := GetDbPath()
+		db, err := repository.NewConnection(dbPath)
 		if err != nil {
 			fmt.Println(err)
 		}

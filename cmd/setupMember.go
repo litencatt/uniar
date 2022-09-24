@@ -1,5 +1,5 @@
 /*
-Copyright © 2022 Kosuke Nakamura <ncl0709@gmail.com>
+Copyright © 2022 Kosuke Nakamura <litencatt@gmail.com>
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal
@@ -23,36 +23,62 @@ package cmd
 
 import (
 	"context"
+	"database/sql"
 	"fmt"
+	"regexp"
+	"strconv"
 
+	"github.com/Songmu/prompter"
 	"github.com/litencatt/uniar/repository"
 	"github.com/spf13/cobra"
 )
 
-var listGroupCmd = &cobra.Command{
-	Use:   "group",
-	Short: "Show group list",
+var setupMemberCmd = &cobra.Command{
+	Use: "member",
 	Run: func(cmd *cobra.Command, args []string) {
 		ctx := context.Background()
+
 		dbPath := GetDbPath()
 		db, err := repository.NewConnection(dbPath)
 		if err != nil {
 			fmt.Println(err)
 			return
 		}
-
 		q := repository.New()
-		groups, err := q.GetGroup(ctx, db)
-		if err != nil {
-			fmt.Println(err)
-			fmt.Println("please setup first.\n$ uniar setup")
-			return
-		}
-
-		render(groups, []string{})
+		setupMember(ctx, db, q)
 	},
 }
 
+func setupMember(ctx context.Context, db *sql.DB, q *repository.Queries) {
+	fmt.Printf("== メンバーステータスセットアップ ==\n")
+	pm, _ := q.GetProducerMember(ctx, db)
+	for _, m := range pm {
+		fmt.Println(m.Name)
+		pmb := (&prompter.Prompter{
+			Message: fmt.Sprintf("絆ランク (現在値:%d)", m.BondLevelCurent),
+			Regexp:  regexp.MustCompile(`^\d*$`),
+			Default: fmt.Sprintf("%d", m.BondLevelCurent),
+		}).Prompt()
+		pmbi, _ := strconv.Atoi(pmb)
+
+		ddt := (&prompter.Prompter{
+			Message: fmt.Sprintf("ディスコグラフィ (現在値:%d)", m.DiscographyDiscTotal),
+			Regexp:  regexp.MustCompile(`^\d*$`),
+			Default: fmt.Sprintf("%d", m.DiscographyDiscTotal),
+		}).Prompt()
+		ddti, _ := strconv.Atoi(ddt)
+
+		if err := q.UpdateProducerMember(ctx, db, repository.UpdateProducerMemberParams{
+			ID:                   m.ID,
+			BondLevelCurent:      int64(pmbi),
+			DiscographyDiscTotal: int64(ddti),
+		}); err != nil {
+			panic(err)
+		}
+		fmt.Println()
+	}
+}
+
 func init() {
-	listCmd.AddCommand(listGroupCmd)
+	setupCmd.AddCommand(setupMemberCmd)
 }
