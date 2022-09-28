@@ -12,6 +12,7 @@ builds:
       - darwin
     goarch:
       - amd64
+      - arm64
     main: ./cmd/uniar/main.go
 archives:
   - id: uniar-archive
