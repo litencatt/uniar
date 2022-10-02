@@ -24,7 +24,6 @@ package cmd
 import (
 	"context"
 	"fmt"
-	"strconv"
 
 	"github.com/Songmu/prompter"
 	"github.com/litencatt/uniar/repository"
@@ -37,13 +36,6 @@ var registLiveCmd = &cobra.Command{
 	Use:   "live",
 	Short: "Regist a live to database",
 	Run: func(cmd *cobra.Command, args []string) {
-		g := (&prompter.Prompter{
-			Choices: []string{"1", "2"},
-			Default: "1",
-			Message: "Select Group(1:櫻坂46 2:日向坂46)",
-		}).Prompt()
-		groupId, _ := strconv.Atoi(g)
-
 		liveName := (&prompter.Prompter{
 			Message: "Live name",
 		}).Prompt()
@@ -63,11 +55,7 @@ var registLiveCmd = &cobra.Command{
 			return
 		}
 
-		gn := "櫻坂46"
-		if groupId == 2 {
-			gn = "日向坂46"
-		}
-		fmt.Printf("success registration(GroupName:%s LiveName:%s)\n", gn, liveName)
+		fmt.Printf("success registration(LiveName:%s)\n", liveName)
 	},
 }
 
