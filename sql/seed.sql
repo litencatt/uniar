@@ -1131,6 +1131,7 @@ INSERT OR REPLACE INTO "producer_scenes" ("id", "producer_id", "photograph_id", 
 
 INSERT OR REPLACE INTO "producers" ("id", "created_at") VALUES
 ('1', '2022-08-22 17:49:26');
+
 INSERT OR REPLACE INTO "scenes" ("id", "photograph_id", "member_id", "color_type_id", "vocal_max", "dance_max", "peformance_max", "center_skill_name", "expected_value", "ssr_plus", "created_at") VALUES
 ('1', '45', '42', '1', '5059', '2920', '4565', '', '3.68', '1', '2022-08-22 21:55:15'),
 ('2', '41', '42', '1', '3789', '3811', '4872', '', '2.75', '1', '2022-08-22 21:55:15'),
