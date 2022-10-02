@@ -12,4 +12,13 @@ ORDER BY
 ;
 
 -- name: GetMemberList :many
-SELECT id, name FROM members WHERE group_id = ?;
+SELECT
+	m.id,
+	m.name
+FROM
+	members m
+WHERE
+	group_id = ?
+ORDER BY
+	m.phase, m.first_name asc
+;
