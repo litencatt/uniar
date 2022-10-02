@@ -64,6 +64,7 @@ type Photograph struct {
 	GroupID      int64
 	Abbreviation string
 	PhotoType    string
+	ReleaseAt    interface{}
 	CreatedAt    time.Time
 }
 
