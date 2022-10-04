@@ -7,12 +7,12 @@ package repository
 
 import (
 	"context"
-	"database/sql"
 )
 
 const getProducerScenes = `-- name: GetProducerScenes :many
 SELECT
-    ps.id,
+    ps.producer_id,
+    ps.scene_id,
     c.name AS color,
     p.name AS photograph,
     m.name AS member,
@@ -20,24 +20,24 @@ SELECT
     ps.have
 FROM
     producer_scenes ps
-    JOIN photograph p ON ps.photograph_id = p.id
-    JOIN members m ON ps.member_id = m.id
-    JOIN scenes s ON ps.photograph_id = s.photograph_id
-        AND ps.member_id = s.member_id
+    JOIN scenes s ON ps.scene_id = s.id
+    JOIN photograph p on s.photograph_id = p.id
+    JOIN members m on s.member_id = m.id
     JOIN color_types c ON s.color_type_id = c.id
 ORDER BY
-    ps.photograph_id,
+    p.id,
     m.phase,
     m.first_name
 `
 
 type GetProducerScenesRow struct {
-	ID         int64
+	ProducerID int64
+	SceneID    int64
 	Color      string
 	Photograph string
 	Member     string
 	SsrPlus    int64
-	Have       sql.NullInt64
+	Have       int64
 }
 
 func (q *Queries) GetProducerScenes(ctx context.Context, db DBTX) ([]GetProducerScenesRow, error) {
@@ -50,7 +50,8 @@ func (q *Queries) GetProducerScenes(ctx context.Context, db DBTX) ([]GetProducer
 	for rows.Next() {
 		var i GetProducerScenesRow
 		if err := rows.Scan(
-			&i.ID,
+			&i.ProducerID,
+			&i.SceneID,
 			&i.Color,
 			&i.Photograph,
 			&i.Member,
@@ -70,18 +71,42 @@ func (q *Queries) GetProducerScenes(ctx context.Context, db DBTX) ([]GetProducer
 	return items, nil
 }
 
-const updateProducerScene = `-- name: UpdateProducerScene :exec
+const insertOrUpdateProducerScene = `-- name: InsertOrUpdateProducerScene :exec
 ;
 
-UPDATE producer_scenes SET have = ? WHERE id = ?
+INSERT OR REPLACE INTO producer_scenes (
+	producer_id,
+	scene_id,
+    have
+) VALUES (?, ?, ?)
 `
 
-type UpdateProducerSceneParams struct {
-	Have sql.NullInt64
-	ID   int64
+type InsertOrUpdateProducerSceneParams struct {
+	ProducerID int64
+	SceneID    int64
+	Have       int64
 }
 
-func (q *Queries) UpdateProducerScene(ctx context.Context, db DBTX, arg UpdateProducerSceneParams) error {
-	_, err := db.ExecContext(ctx, updateProducerScene, arg.Have, arg.ID)
+func (q *Queries) InsertOrUpdateProducerScene(ctx context.Context, db DBTX, arg InsertOrUpdateProducerSceneParams) error {
+	_, err := db.ExecContext(ctx, insertOrUpdateProducerScene, arg.ProducerID, arg.SceneID, arg.Have)
+	return err
+}
+
+const registProducerScene = `-- name: RegistProducerScene :exec
+;
+
+INSERT OR IGNORE INTO producer_scenes (
+	producer_id,
+	scene_id
+) VALUES (?, ?)
+`
+
+type RegistProducerSceneParams struct {
+	ProducerID int64
+	SceneID    int64
+}
+
+func (q *Queries) RegistProducerScene(ctx context.Context, db DBTX, arg RegistProducerSceneParams) error {
+	_, err := db.ExecContext(ctx, registProducerScene, arg.ProducerID, arg.SceneID)
 	return err
 }

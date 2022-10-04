@@ -93,12 +93,10 @@ type ProducerOffice struct {
 }
 
 type ProducerScene struct {
-	ID           int64
-	ProducerID   int64
-	PhotographID int64
-	MemberID     int64
-	Have         sql.NullInt64
-	CreatedAt    time.Time
+	ProducerID int64
+	SceneID    int64
+	Have       int64
+	CreatedAt  time.Time
 }
 
 type Scene struct {
@@ -108,7 +106,7 @@ type Scene struct {
 	ColorTypeID     int64
 	VocalMax        int64
 	DanceMax        int64
-	PeformanceMax   int64
+	PerformanceMax  int64
 	CenterSkillName sql.NullString
 	ExpectedValue   sql.NullString
 	SsrPlus         int64

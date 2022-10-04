@@ -53,31 +53,45 @@ var setupSceneCmd = &cobra.Command{
 }
 
 func setupScene(ctx context.Context, db *sql.DB, q *repository.Queries) error {
-	ps, err := q.GetProducerScenes(ctx, db)
+	// producer_scenesレコード作成
+	asIDs, err := q.GetAllScenes(ctx, db)
 	if err != nil {
-		fmt.Println(err)
+		return err
+	}
+	for _, sid := range asIDs {
+		if err := q.RegistProducerScene(ctx, db, repository.RegistProducerSceneParams{
+			ProducerID: 1,
+			SceneID:    sid,
+		}); err != nil {
+			return err
+		}
 	}
 
 	fmt.Printf("== 所持シーンカードセットアップ ==\n0:未所持\n1:所持\nデフォルト値:0(未所持)\n\n")
+	ps, err := q.GetProducerScenes(ctx, db)
+	if err != nil {
+		return err
+	}
 	for _, s := range ps {
 		ssrp := ""
 		if s.SsrPlus == 1 {
 			ssrp = "(SSR+)"
 		}
 		h := "未所持"
-		if s.Have.Int64 == 1 {
+		if s.Have != 0 {
 			h = "1(所持)"
 		}
 		str := fmt.Sprintf("%s %s %s%s\n(現在: %s)", s.Photograph, s.Color, s.Member, ssrp, h)
 		have := (&prompter.Prompter{
 			Message: str,
 			Choices: []string{"0", "1"},
-			Default: fmt.Sprintf("%d", s.Have.Int64),
+			Default: fmt.Sprintf("%d", s.Have),
 		}).Prompt()
 		hi, _ := strconv.Atoi(have)
-		if err := q.UpdateProducerScene(ctx, db, repository.UpdateProducerSceneParams{
-			Have: sql.NullInt64{Int64: int64(hi), Valid: true},
-			ID:   s.ID,
+		if err := q.InsertOrUpdateProducerScene(ctx, db, repository.InsertOrUpdateProducerSceneParams{
+			ProducerID: s.ProducerID,
+			SceneID:    s.SceneID,
+			Have:       int64(hi),
 		}); err != nil {
 			return err
 		}
