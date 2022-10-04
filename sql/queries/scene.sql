@@ -4,7 +4,7 @@ SELECT
 	p.abbreviation,
 	m.name AS member,
 	c.name AS color,
-	s.vocal_max + s.dance_max + s.peformance_max + 430 AS total,
+	s.vocal_max + s.dance_max + s.performance_max + 430 AS total,
 	s.vocal_max,
 	s.dance_max,
 	s.performance_max,
