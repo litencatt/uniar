@@ -268,7 +268,7 @@ INSERT OR REPLACE INTO "music" ("id", "name", "normal", "pro", "master", "length
 ('156', 'アザトカワイイ', '1', '1', '22', '160', '1', '20', NULL, '0', '8', '2022-09-18 11:05:02'),
 ('157', '青春の馬', '1', '1', '23', '210', '5', '20', NULL, '0', '9', '2022-09-18 11:05:24');
 
-INSERT OR REPLACE INTO "photograph" ("id", "name", "group_id", "abbreviation", "photo_type", "created_at", "release_at") VALUES
+INSERT OR REPLACE INTO "photograph" ("id", "name", "group_id", "abbreviation", "photo_type", "released_at", "created_at") VALUES
 ('1', 'サイレントマジョリティー', '1', 'サイマジョ', '楽曲', '2019-09-24', '2022-08-20 18:40:15'),
 ('2', 'ガラスを割れ！', '1', 'ガラ割れ', '楽曲', '2019-11-11', '2022-08-20 18:40:15'),
 ('3', '二人セゾン', '1', 'セゾン', '楽曲', '2019-11-16', '2022-08-20 18:40:15'),

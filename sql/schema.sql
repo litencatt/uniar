@@ -56,7 +56,7 @@ CREATE TABLE photograph (
   group_id integer NOT NULL,
   abbreviation varchar(10) NOT NULL DEFAULT '',
   photo_type varchar(10) NOT NULL,
-  release_at DATETIME NULL,
+  released_at DATETIME NULL,
   created_at DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
   CONSTRAINT Photograph_ibfk_1 FOREIGN KEY (group_id) REFERENCES groups (id) ON DELETE CASCADE ON UPDATE CASCADE
 );
