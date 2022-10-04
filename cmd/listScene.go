@@ -67,11 +67,11 @@ var listSceneCmd = &cobra.Command{
 		}
 		for _, s := range ss {
 			// Show only scene you have
-			if h && s.Have.Int64 == 0 {
+			if h && s.Have == 0 {
 				continue
 			}
 			// Show only scene you not have
-			if n && s.Have.Int64 == 1 {
+			if n && s.Have != 0 {
 				continue
 			}
 

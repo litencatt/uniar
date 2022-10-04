@@ -1,5 +1,9 @@
+-- name: GetAllScenes :many
+SELECT s.id FROM scenes s;
+
 -- name: GetScenesWithColor :many
 SELECT
+	s.id,
 	p.name AS photograph,
 	p.abbreviation,
 	m.name AS member,
@@ -19,7 +23,7 @@ FROM
 	JOIN color_types c ON s.color_type_id = c.id
 	JOIN members m ON s.member_id = m.id
 	LEFT OUTER JOIN producer_members pm ON s.member_id = pm.member_id
-	LEFT OUTER JOIN producer_scenes ps ON s.photograph_id = ps.photograph_id AND s.member_id = ps.member_id
+	LEFT OUTER JOIN producer_scenes ps ON s.id = ps.scene_id
 WHERE
 	c.name LIKE ?
 ORDER BY
