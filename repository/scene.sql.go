@@ -19,7 +19,7 @@ SELECT
 	s.vocal_max + s.dance_max + s.peformance_max + 430 AS total,
 	s.vocal_max,
 	s.dance_max,
-	s.peformance_max,
+	s.performance_max,
 	s.expected_value,
 	s.ssr_plus,
 	pm.bond_level_curent AS bonds,
@@ -39,19 +39,19 @@ ORDER BY
 `
 
 type GetScenesWithColorRow struct {
-	Photograph    string
-	Abbreviation  string
-	Member        string
-	Color         string
-	Total         int64
-	VocalMax      int64
-	DanceMax      int64
-	PeformanceMax int64
-	ExpectedValue sql.NullString
-	SsrPlus       int64
-	Bonds         int64
-	Discography   int64
-	Have          sql.NullInt64
+	Photograph     string
+	Abbreviation   string
+	Member         string
+	Color          string
+	Total          int64
+	VocalMax       int64
+	DanceMax       int64
+	PerformanceMax int64
+	ExpectedValue  sql.NullString
+	SsrPlus        int64
+	Bonds          int64
+	Discography    int64
+	Have           sql.NullInt64
 }
 
 func (q *Queries) GetScenesWithColor(ctx context.Context, db DBTX, name string) ([]GetScenesWithColorRow, error) {
@@ -71,7 +71,7 @@ func (q *Queries) GetScenesWithColor(ctx context.Context, db DBTX, name string) 
 			&i.Total,
 			&i.VocalMax,
 			&i.DanceMax,
-			&i.PeformanceMax,
+			&i.PerformanceMax,
 			&i.ExpectedValue,
 			&i.SsrPlus,
 			&i.Bonds,
@@ -100,7 +100,7 @@ INSERT INTO scenes (
 	color_type_id,
 	vocal_max,
 	dance_max,
-	peformance_max,
+	performance_max,
 	center_skill_name,
 	expected_value,
 	ssr_plus
@@ -113,7 +113,7 @@ type RegistSceneParams struct {
 	ColorTypeID     int64
 	VocalMax        int64
 	DanceMax        int64
-	PeformanceMax   int64
+	PerformanceMax  int64
 	CenterSkillName sql.NullString
 	ExpectedValue   sql.NullString
 	SsrPlus         int64
@@ -126,7 +126,7 @@ func (q *Queries) RegistScene(ctx context.Context, db DBTX, arg RegistSceneParam
 		arg.ColorTypeID,
 		arg.VocalMax,
 		arg.DanceMax,
-		arg.PeformanceMax,
+		arg.PerformanceMax,
 		arg.CenterSkillName,
 		arg.ExpectedValue,
 		arg.SsrPlus,

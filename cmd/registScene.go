@@ -139,14 +139,14 @@ var registSceneCmd = &cobra.Command{
 		}
 
 		if err := q.RegistScene(ctx, db, repository.RegistSceneParams{
-			PhotographID:  int64(photoId),
-			MemberID:      int64(memberId),
-			ColorTypeID:   int64(colId),
-			ExpectedValue: expVal,
-			VocalMax:      int64(voMax),
-			DanceMax:      int64(daMax),
-			PeformanceMax: int64(peMax),
-			SsrPlus:       int64(ssrPlus),
+			PhotographID:   int64(photoId),
+			MemberID:       int64(memberId),
+			ColorTypeID:    int64(colId),
+			ExpectedValue:  expVal,
+			VocalMax:       int64(voMax),
+			DanceMax:       int64(daMax),
+			PerformanceMax: int64(peMax),
+			SsrPlus:        int64(ssrPlus),
 		}); err != nil {
 			fmt.Println(err)
 			fmt.Println("please setup first.\n$ uniar setup")

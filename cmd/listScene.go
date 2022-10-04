@@ -90,7 +90,7 @@ var listSceneCmd = &cobra.Command{
 				Total:      s.Total,
 				Vo:         s.VocalMax,
 				Da:         s.DanceMax,
-				Pe:         s.PeformanceMax,
+				Pe:         s.PerformanceMax,
 				Expect:     float32(e),
 				SsrPlus:    s.SsrPlus == 1,
 			}

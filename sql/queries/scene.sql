@@ -7,7 +7,7 @@ SELECT
 	s.vocal_max + s.dance_max + s.peformance_max + 430 AS total,
 	s.vocal_max,
 	s.dance_max,
-	s.peformance_max,
+	s.performance_max,
 	s.expected_value,
 	s.ssr_plus,
 	pm.bond_level_curent AS bonds,
@@ -33,7 +33,7 @@ INSERT INTO scenes (
 	color_type_id,
 	vocal_max,
 	dance_max,
-	peformance_max,
+	performance_max,
 	center_skill_name,
 	expected_value,
 	ssr_plus

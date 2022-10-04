@@ -108,7 +108,7 @@ type Scene struct {
 	ColorTypeID     int64
 	VocalMax        int64
 	DanceMax        int64
-	PeformanceMax   int64
+	PerformanceMax  int64
 	CenterSkillName sql.NullString
 	ExpectedValue   sql.NullString
 	SsrPlus         int64
