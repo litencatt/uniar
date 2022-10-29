@@ -66,6 +66,9 @@ func initProducerScene(ctx context.Context, db *sql.DB, q *repository.Queries) e
 			return err
 		}
 	}
+	fmt.Println("finish initialize producer scenes")
+	fmt.Println()
+
 	return nil
 }
 
