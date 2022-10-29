@@ -54,15 +54,7 @@ var setupCmd = &cobra.Command{
 			fmt.Fprintln(os.Stderr, err)
 			os.Exit(1)
 		}
-		if err := setupOffice(ctx, db, q); err != nil {
-			fmt.Fprintln(os.Stderr, err)
-			os.Exit(1)
-		}
-		if err := setupMember(ctx, db, q); err != nil {
-			fmt.Fprintln(os.Stderr, err)
-			os.Exit(1)
-		}
-		if err := setupScene(ctx, db, q); err != nil {
+		if err := initProducerScene(ctx, db, q); err != nil {
 			fmt.Fprintln(os.Stderr, err)
 			os.Exit(1)
 		}

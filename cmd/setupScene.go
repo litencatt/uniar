@@ -52,7 +52,7 @@ var setupSceneCmd = &cobra.Command{
 	},
 }
 
-func setupScene(ctx context.Context, db *sql.DB, q *repository.Queries) error {
+func initProducerScene(ctx context.Context, db *sql.DB, q *repository.Queries) error {
 	// producer_scenesレコード作成
 	asIDs, err := q.GetAllScenes(ctx, db)
 	if err != nil {
@@ -66,7 +66,13 @@ func setupScene(ctx context.Context, db *sql.DB, q *repository.Queries) error {
 			return err
 		}
 	}
+	fmt.Println("finish initialize producer scenes")
+	fmt.Println()
 
+	return nil
+}
+
+func setupScene(ctx context.Context, db *sql.DB, q *repository.Queries) error {
 	fmt.Printf("== 所持シーンカードセットアップ ==\n0:未所持\n1:所持\nデフォルト値:0(未所持)\n\n")
 	ps, err := q.GetProducerScenes(ctx, db)
 	if err != nil {
