@@ -12,6 +12,18 @@ export GO111MODULE=on
 BUILD_LDFLAGS = -X $(PKG).commit=$(COMMIT) -X $(PKG).date=$(DATE)
 UNIAR_BINARY ?= ./uniar
 
+dump:
+	sqlite3 ~/.uniar/uniar.db '.dump "center_skills"' | grep ^INSERT  > sql/seed.sql
+	sqlite3 ~/.uniar/uniar.db '.dump "color_types"'   | grep ^INSERT >> sql/seed.sql
+	sqlite3 ~/.uniar/uniar.db '.dump "groups"'        | grep ^INSERT >> sql/seed.sql
+	sqlite3 ~/.uniar/uniar.db '.dump "lives"'         | grep ^INSERT >> sql/seed.sql
+	sqlite3 ~/.uniar/uniar.db '.dump "members"'       | grep ^INSERT >> sql/seed.sql
+	sqlite3 ~/.uniar/uniar.db '.dump "music"'         | grep ^INSERT >> sql/seed.sql
+	sqlite3 ~/.uniar/uniar.db '.dump "photograph"'    | grep ^INSERT >> sql/seed.sql
+	sqlite3 ~/.uniar/uniar.db '.dump "scenes"'        | grep ^INSERT >> sql/seed.sql
+	sqlite3 ~/.uniar/uniar.db '.dump "skills"'        | grep ^INSERT >> sql/seed.sql
+	sed -i '' -e "s/INSERT INTO/INSERT OR REPLACE INTO/g" sql/seed.sql
+
 build:
 	go build -ldflags="$(BUILD_LDFLAGS)" -o $(UNIAR_BINARY) cmd/uniar/main.go
 
