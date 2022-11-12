@@ -4,6 +4,7 @@ go 1.19
 
 require (
 	github.com/Songmu/prompter v0.5.1
+	github.com/fatih/color v1.13.0
 	github.com/k0kubun/sqldef v0.13.8
 	github.com/mattn/go-sqlite3 v1.14.15
 	github.com/olekukonko/tablewriter v0.0.5
