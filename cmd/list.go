@@ -27,6 +27,7 @@ import (
 	"reflect"
 	"regexp"
 
+	"github.com/fatih/color"
 	"github.com/olekukonko/tablewriter"
 	"github.com/spf13/cobra"
 )
@@ -81,7 +82,20 @@ func render(data any, ignoreColumns []string) {
 				continue
 			}
 			field := rv.Field(i)
-			r = append(r, fmt.Sprintf("%v", field))
+			switch fmt.Sprintf("%v", field) {
+			case "Red":
+				r = append(r, color.RedString(fmt.Sprintf("%v", field)))
+			case "Blue":
+				r = append(r, color.BlueString(fmt.Sprintf("%v", field)))
+			case "Green":
+				r = append(r, color.GreenString(fmt.Sprintf("%v", field)))
+			case "Yellow":
+				r = append(r, color.YellowString(fmt.Sprintf("%v", field)))
+			case "Purple":
+				r = append(r, color.MagentaString(fmt.Sprintf("%v", field)))
+			default:
+				r = append(r, fmt.Sprintf("%v", field))
+			}
 		}
 		b = append(b, r)
 	}
