@@ -26,6 +26,8 @@ FROM
 	LEFT OUTER JOIN producer_scenes ps ON s.id = ps.scene_id
 WHERE
 	c.name LIKE ?
+	AND m.name LIKE ?
+	AND p.name LIKE ?
 ORDER BY
 	s.expected_value desc, total desc
 ;

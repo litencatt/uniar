@@ -23,7 +23,7 @@ type Querier interface {
 	GetProducerMember(ctx context.Context, db DBTX) ([]GetProducerMemberRow, error)
 	GetProducerOffice(ctx context.Context, db DBTX) (sql.NullInt64, error)
 	GetProducerScenes(ctx context.Context, db DBTX) ([]GetProducerScenesRow, error)
-	GetScenesWithColor(ctx context.Context, db DBTX, name string) ([]GetScenesWithColorRow, error)
+	GetScenesWithColor(ctx context.Context, db DBTX, arg GetScenesWithColorParams) ([]GetScenesWithColorRow, error)
 	InsertOrUpdateProducerScene(ctx context.Context, db DBTX, arg InsertOrUpdateProducerSceneParams) error
 	RegistLive(ctx context.Context, db DBTX, name string) error
 	RegistMusic(ctx context.Context, db DBTX, arg RegistMusicParams) error

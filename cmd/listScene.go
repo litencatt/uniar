@@ -39,6 +39,8 @@ var listSceneCmd = &cobra.Command{
 	Run: func(cmd *cobra.Command, args []string) {
 		c, _ := cmd.Flags().GetString("color")
 		c = getColorName(c)
+		m, _ := cmd.Flags().GetString("member")
+		p, _ := cmd.Flags().GetString("photograph")
 		s, _ := cmd.Flags().GetString("sort")
 		h, _ := cmd.Flags().GetBool("have")
 		n, _ := cmd.Flags().GetBool("not-have")
@@ -59,7 +61,23 @@ var listSceneCmd = &cobra.Command{
 		if c == "" {
 			color = "%"
 		}
-		ss, err := q.GetScenesWithColor(ctx, db, color)
+		member := m
+		if m == "" {
+			member = "%"
+		} else {
+			member = "%" + m + "%"
+		}
+		photo := p
+		if p == "" {
+			photo = "%"
+		} else {
+			photo = "%" + p + "%"
+		}
+		ss, err := q.GetScenesWithColor(ctx, db, repository.GetScenesWithColorParams{
+			Name:   color,
+			Name_2: member,
+			Name_3: photo,
+		})
 		if err != nil {
 			fmt.Println(err)
 			fmt.Println("please setup first.\n$ uniar setup")
@@ -183,6 +201,8 @@ func init() {
 	listSceneCmd.Flags().BoolP("detail", "d", false, "Show detail")
 	listSceneCmd.Flags().BoolP("full-name", "f", false, "Show pohtograph full name")
 	listSceneCmd.Flags().StringP("color", "c", "", "Color filter(e.g. -c Red or -c r)")
+	listSceneCmd.Flags().StringP("member", "m", "", "Member filter(e.g. -m 加藤史帆)")
+	listSceneCmd.Flags().StringP("photograph", "p", "", "Photograph filter(e.g. -p JOYFULLOVE)")
 	listSceneCmd.Flags().StringP("sort", "s", "", "Sort target rank.(all35, voda50, ...)")
 	listSceneCmd.Flags().StringP("ignore-columns", "i", "", "Ignore columns to display(VoDa50,DaPe50,...)")
 }

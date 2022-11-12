@@ -62,9 +62,17 @@ FROM
 	LEFT OUTER JOIN producer_scenes ps ON s.id = ps.scene_id
 WHERE
 	c.name LIKE ?
+	AND m.name LIKE ?
+	AND p.name LIKE ?
 ORDER BY
 	s.expected_value desc, total desc
 `
+
+type GetScenesWithColorParams struct {
+	Name   string
+	Name_2 string
+	Name_3 string
+}
 
 type GetScenesWithColorRow struct {
 	ID             int64
@@ -83,8 +91,8 @@ type GetScenesWithColorRow struct {
 	Have           int64
 }
 
-func (q *Queries) GetScenesWithColor(ctx context.Context, db DBTX, name string) ([]GetScenesWithColorRow, error) {
-	rows, err := db.QueryContext(ctx, getScenesWithColor, name)
+func (q *Queries) GetScenesWithColor(ctx context.Context, db DBTX, arg GetScenesWithColorParams) ([]GetScenesWithColorRow, error) {
+	rows, err := db.QueryContext(ctx, getScenesWithColor, arg.Name, arg.Name_2, arg.Name_3)
 	if err != nil {
 		return nil, err
 	}
