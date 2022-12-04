@@ -9,6 +9,48 @@ import (
 	"context"
 )
 
+const getAllMembers = `-- name: GetAllMembers :many
+;
+
+SELECT
+	id, name, first_name, group_id, phase, graduated, created_at
+FROM
+	members m
+ORDER BY
+	m.group_id, m.phase, m.first_name asc
+`
+
+func (q *Queries) GetAllMembers(ctx context.Context, db DBTX) ([]Member, error) {
+	rows, err := db.QueryContext(ctx, getAllMembers)
+	if err != nil {
+		return nil, err
+	}
+	defer rows.Close()
+	var items []Member
+	for rows.Next() {
+		var i Member
+		if err := rows.Scan(
+			&i.ID,
+			&i.Name,
+			&i.FirstName,
+			&i.GroupID,
+			&i.Phase,
+			&i.Graduated,
+			&i.CreatedAt,
+		); err != nil {
+			return nil, err
+		}
+		items = append(items, i)
+	}
+	if err := rows.Close(); err != nil {
+		return nil, err
+	}
+	if err := rows.Err(); err != nil {
+		return nil, err
+	}
+	return items, nil
+}
+
 const getMemberList = `-- name: GetMemberList :many
 ;
 

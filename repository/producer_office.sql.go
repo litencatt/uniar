@@ -11,21 +11,44 @@ import (
 )
 
 const getProducerOffice = `-- name: GetProducerOffice :one
-SELECT office_bonus FROM producer_offices WHERE id = 1
+SELECT id, producer_id, office_bonus, created_at FROM producer_offices WHERE producer_id = ?
 `
 
-func (q *Queries) GetProducerOffice(ctx context.Context, db DBTX) (sql.NullInt64, error) {
-	row := db.QueryRowContext(ctx, getProducerOffice)
-	var office_bonus sql.NullInt64
-	err := row.Scan(&office_bonus)
-	return office_bonus, err
+func (q *Queries) GetProducerOffice(ctx context.Context, db DBTX, producerID int64) (ProducerOffice, error) {
+	row := db.QueryRowContext(ctx, getProducerOffice, producerID)
+	var i ProducerOffice
+	err := row.Scan(
+		&i.ID,
+		&i.ProducerID,
+		&i.OfficeBonus,
+		&i.CreatedAt,
+	)
+	return i, err
+}
+
+const registProducerOffice = `-- name: RegistProducerOffice :exec
+INSERT INTO producer_offices (
+    producer_id,
+    office_bonus
+)
+VALUES (?, 0)
+`
+
+func (q *Queries) RegistProducerOffice(ctx context.Context, db DBTX, producerID int64) error {
+	_, err := db.ExecContext(ctx, registProducerOffice, producerID)
+	return err
 }
 
 const updateProducerOffice = `-- name: UpdateProducerOffice :exec
-UPDATE producer_offices SET office_bonus = ? WHERE id = 1
+UPDATE producer_offices SET office_bonus = ? WHERE producer_id = ?
 `
 
-func (q *Queries) UpdateProducerOffice(ctx context.Context, db DBTX, officeBonus sql.NullInt64) error {
-	_, err := db.ExecContext(ctx, updateProducerOffice, officeBonus)
+type UpdateProducerOfficeParams struct {
+	OfficeBonus sql.NullInt64
+	ProducerID  int64
+}
+
+func (q *Queries) UpdateProducerOffice(ctx context.Context, db DBTX, arg UpdateProducerOfficeParams) error {
+	_, err := db.ExecContext(ctx, updateProducerOffice, arg.OfficeBonus, arg.ProducerID)
 	return err
 }
