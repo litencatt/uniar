@@ -22,3 +22,12 @@ WHERE
 ORDER BY
 	m.phase, m.first_name asc
 ;
+
+-- name: GetAllMembers :many
+SELECT
+	*
+FROM
+	members m
+ORDER BY
+	m.group_id, m.phase, m.first_name asc
+;

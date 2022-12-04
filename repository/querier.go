@@ -6,10 +6,10 @@ package repository
 
 import (
 	"context"
-	"database/sql"
 )
 
 type Querier interface {
+	GetAllMembers(ctx context.Context, db DBTX) ([]Member, error)
 	GetAllScenes(ctx context.Context, db DBTX) ([]int64, error)
 	GetGroup(ctx context.Context, db DBTX) ([]GetGroupRow, error)
 	GetGroupNameById(ctx context.Context, db DBTX, id int64) (string, error)
@@ -22,17 +22,19 @@ type Querier interface {
 	GetPhotographListAll(ctx context.Context, db DBTX) ([]GetPhotographListAllRow, error)
 	GetPhotographListByPhotoType(ctx context.Context, db DBTX, photoType string) ([]GetPhotographListByPhotoTypeRow, error)
 	GetProducerMember(ctx context.Context, db DBTX) ([]GetProducerMemberRow, error)
-	GetProducerOffice(ctx context.Context, db DBTX) (sql.NullInt64, error)
+	GetProducerOffice(ctx context.Context, db DBTX, producerID int64) (ProducerOffice, error)
 	GetProducerScenes(ctx context.Context, db DBTX) ([]GetProducerScenesRow, error)
 	GetScenesWithColor(ctx context.Context, db DBTX, arg GetScenesWithColorParams) ([]GetScenesWithColorRow, error)
 	InsertOrUpdateProducerScene(ctx context.Context, db DBTX, arg InsertOrUpdateProducerSceneParams) error
 	RegistLive(ctx context.Context, db DBTX, name string) error
 	RegistMusic(ctx context.Context, db DBTX, arg RegistMusicParams) error
 	RegistPhotograph(ctx context.Context, db DBTX, arg RegistPhotographParams) error
+	RegistProducerMember(ctx context.Context, db DBTX, arg RegistProducerMemberParams) error
+	RegistProducerOffice(ctx context.Context, db DBTX, producerID int64) error
 	RegistProducerScene(ctx context.Context, db DBTX, arg RegistProducerSceneParams) error
 	RegistScene(ctx context.Context, db DBTX, arg RegistSceneParams) error
 	UpdateProducerMember(ctx context.Context, db DBTX, arg UpdateProducerMemberParams) error
-	UpdateProducerOffice(ctx context.Context, db DBTX, officeBonus sql.NullInt64) error
+	UpdateProducerOffice(ctx context.Context, db DBTX, arg UpdateProducerOfficeParams) error
 }
 
 var _ Querier = (*Queries)(nil)

@@ -57,9 +57,32 @@ func (q *Queries) GetProducerMember(ctx context.Context, db DBTX) ([]GetProducer
 	return items, nil
 }
 
-const updateProducerMember = `-- name: UpdateProducerMember :exec
+const registProducerMember = `-- name: RegistProducerMember :exec
 ;
 
+INSERT INTO producer_members (
+    producer_id,
+    member_id,
+    bond_level_curent,
+    bond_level_collection_max,
+    bond_level_scene_max,
+    discography_disc_total,
+    discography_disc_total_max
+)
+VALUES (?, ?, 0 ,0 ,0 ,0 ,0)
+`
+
+type RegistProducerMemberParams struct {
+	ProducerID int64
+	MemberID   int64
+}
+
+func (q *Queries) RegistProducerMember(ctx context.Context, db DBTX, arg RegistProducerMemberParams) error {
+	_, err := db.ExecContext(ctx, registProducerMember, arg.ProducerID, arg.MemberID)
+	return err
+}
+
+const updateProducerMember = `-- name: UpdateProducerMember :exec
 UPDATE
     producer_members
 SET

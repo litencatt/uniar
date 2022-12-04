@@ -55,13 +55,31 @@ var setupOfficeCmd = &cobra.Command{
 
 func setupOffice(ctx context.Context, db *sql.DB, q *repository.Queries) error {
 	fmt.Printf("== 事務所ボーナスセットアップ ==\n")
-	cob, _ := q.GetProducerOffice(ctx, db)
+	po, err := q.GetProducerOffice(ctx, db, 1)
+	if err != nil {
+		if err = q.RegistProducerOffice(ctx, db, 1); err != nil {
+			return err
+		}
+		fmt.Printf("== 事務所ボーナス初期化完了 ==\n")
+		po, err = q.GetProducerOffice(ctx, db, 1)
+		if err != nil {
+			return err
+		}
+	}
+
 	ob := (&prompter.Prompter{
-		Message: fmt.Sprintf("事務所ボーナス平均値 (現在値:%d) [1-17]", cob.Int64),
+		Message: fmt.Sprintf("事務所ボーナス平均値 (現在値:%d) [1-17]", po.OfficeBonus.Int64),
 		Regexp:  regexp.MustCompile(`^([1-9]|1[0-7])$`),
 	}).Prompt()
 	obi, _ := strconv.Atoi(ob)
-	if err := q.UpdateProducerOffice(ctx, db, sql.NullInt64{Int64: int64(obi), Valid: true}); err != nil {
+	uop := repository.UpdateProducerOfficeParams{
+		ProducerID: 1,
+		OfficeBonus: sql.NullInt64{
+			Int64: int64(obi),
+			Valid: true,
+		},
+	}
+	if err := q.UpdateProducerOffice(ctx, db, uop); err != nil {
 		return err
 	}
 	fmt.Println()
