@@ -1,5 +1,12 @@
 -- name: GetProducerOffice :one
-SELECT office_bonus FROM producer_offices WHERE id = 1;
+SELECT * FROM producer_offices WHERE producer_id = ?;
 
 -- name: UpdateProducerOffice :exec
-UPDATE producer_offices SET office_bonus = ? WHERE id = 1;
+UPDATE producer_offices SET office_bonus = ? WHERE producer_id = ?;
+
+-- name: RegistProducerOffice :exec
+INSERT INTO producer_offices (
+    producer_id,
+    office_bonus
+)
+VALUES (?, 0);
