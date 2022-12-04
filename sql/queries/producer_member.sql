@@ -11,6 +11,19 @@ ORDER BY
     m.group_id, m.phase, m.first_name
 ;
 
+-- name: RegistProducerMember :exec
+INSERT INTO producer_members (
+    producer_id,
+    member_id,
+    bond_level_curent,
+    bond_level_collection_max,
+    bond_level_scene_max,
+    discography_disc_total,
+    discography_disc_total_max
+)
+VALUES (?, ?, 0 ,0 ,0 ,0 ,0);
+
+
 -- name: UpdateProducerMember :exec
 UPDATE
     producer_members

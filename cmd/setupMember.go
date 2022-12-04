@@ -55,8 +55,30 @@ var setupMemberCmd = &cobra.Command{
 }
 
 func setupMember(ctx context.Context, db *sql.DB, q *repository.Queries) error {
-	fmt.Printf("== メンバーステータスセットアップ ==\n")
-	pm, _ := q.GetProducerMember(ctx, db)
+	fmt.Printf("== プロデューサーメンバーセットアップ ==\n")
+	pm, err := q.GetProducerMember(ctx, db)
+	if err != nil {
+		return err
+	}
+	if len(pm) == 0 {
+		members, err := q.GetAllMembers(ctx, db)
+		if err != nil {
+			return err
+		}
+		for _, m := range members {
+			q.RegistProducerMember(ctx, db, repository.RegistProducerMemberParams{
+				ProducerID: 1,
+				MemberID:   m.ID,
+			})
+		}
+		fmt.Printf("== プロデューサーメンバー初期化完了 ==\n")
+
+		pm, err = q.GetProducerMember(ctx, db)
+		if err != nil {
+			return err
+		}
+	}
+
 	for _, m := range pm {
 		fmt.Println(m.Name)
 		pmb := (&prompter.Prompter{
