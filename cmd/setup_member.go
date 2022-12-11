@@ -65,7 +65,6 @@ func initProducerMember(ctx context.Context, db *sql.DB, q *repository.Queries) 
 			MemberID:   m.ID,
 		})
 	}
-	// fmt.Printf("== プロデューサーメンバー初期化完了 ==\n")
 	return nil
 }
 
@@ -77,6 +76,7 @@ func setupMember(ctx context.Context, db *sql.DB, q *repository.Queries) error {
 	}
 	if len(pm) == 0 {
 		initProducerMember(ctx, db, q)
+		fmt.Printf("== プロデューサーメンバー初期化完了 ==\n")
 		pm, err = q.GetProducerMember(ctx, db)
 		if err != nil {
 			return err

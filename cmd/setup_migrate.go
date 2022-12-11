@@ -69,16 +69,12 @@ var setupMigrateCmd = &cobra.Command{
 }
 
 func migrate(ctx context.Context, db *sql.DB, dbPath string) error {
-	// fmt.Println("migration")
 	if err := setupMigrate(dbPath); err != nil {
 		return err
 	}
-	// fmt.Println("seed")
 	if err := setupSeed(ctx, db, dbPath); err != nil {
 		return err
 	}
-	// fmt.Println("finish migration and seed")
-	// fmt.Println()
 
 	return nil
 }
@@ -94,6 +90,7 @@ func setupMkdir() error {
 }
 
 func setupMigrate(dbPath string) error {
+	fmt.Println("start migration")
 	config := database.Config{
 		DbName: dbPath,
 	}
@@ -136,10 +133,12 @@ func setupMigrate(dbPath string) error {
 	sqldef.Run(schema.GeneratorModeSQLite3, db, sqlParser, options)
 	os.Stdout = tmp
 
+	fmt.Println("end migration")
 	return nil
 }
 
 func setupSeed(ctx context.Context, db *sql.DB, dbPath string) error {
+	fmt.Println("start seed")
 	result, err := db.ExecContext(ctx, string(mig_sql.Seed))
 	if err != nil {
 		return err
@@ -147,6 +146,7 @@ func setupSeed(ctx context.Context, db *sql.DB, dbPath string) error {
 	if _, ok := os.LookupEnv("DEBUG"); ok {
 		fmt.Println(result)
 	}
+	fmt.Println("end seed")
 	return nil
 }
 

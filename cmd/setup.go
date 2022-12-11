@@ -80,6 +80,7 @@ func setupIfNotSetup() {
 		return
 	}
 
+	// Check db migration
 	result, err := db.Exec("SELECT id FROM groups limit 1;")
 	if result == nil {
 		setup()
