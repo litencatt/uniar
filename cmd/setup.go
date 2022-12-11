@@ -51,24 +51,26 @@ func setup() error {
 	fmt.Println(dbPath)
 	db, err := repository.NewConnection(dbPath)
 	if err != nil {
-		fmt.Println("setup error 1")
-		fmt.Println(err)
 		return err
 	}
 	q := repository.New()
 
 	if err := setupMkdir(); err != nil {
-		fmt.Println("setup error 2")
 		return err
 	}
 	if err := migrate(ctx, db, dbPath); err != nil {
-		fmt.Println("setup error 3")
 		return err
 	}
 	if err := initProducerScene(ctx, db, q); err != nil {
-		fmt.Println("setup error 4")
 		return err
 	}
+	if err := initProducerMember(ctx, db, q); err != nil {
+		return err
+	}
+	if err := initProducerOffice(ctx, db, q); err != nil {
+		return err
+	}
+
 	fmt.Println("End setup")
 	return nil
 }
