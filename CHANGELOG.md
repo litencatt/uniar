@@ -1,7 +1,21 @@
 # Changelog
 
-## [](https://github.com/litencatt/uniar/compare/v0.8.0...) (2022-12-04)
+## [v0.9.0](https://github.com/litencatt/uniar/compare/v0.8.3...v0.9.0) (2022-12-11)
 
+* Setup command less run [#43](https://github.com/litencatt/uniar/pull/43) ([litencatt](https://github.com/litencatt))
+* Add doc gen cmd [#42](https://github.com/litencatt/uniar/pull/42) ([litencatt](https://github.com/litencatt))
+
+## [v0.8.3](https://github.com/litencatt/uniar/compare/v0.8.2...v0.8.3) (2022-12-04)
+
+* Rename file [#41](https://github.com/litencatt/uniar/pull/41) ([litencatt](https://github.com/litencatt))
+
+## [v0.8.2](https://github.com/litencatt/uniar/compare/v0.8.1...v0.8.2) (2022-12-04)
+
+* Add music [#40](https://github.com/litencatt/uniar/pull/40) ([litencatt](https://github.com/litencatt))
+
+## [v0.8.1](https://github.com/litencatt/uniar/compare/v0.8.0...v0.8.1) (2022-12-04)
+
+* Fix setup producer tables [#39](https://github.com/litencatt/uniar/pull/39) ([litencatt](https://github.com/litencatt))
 
 ## [v0.8.0](https://github.com/litencatt/uniar/compare/v0.7.0...v0.8.0) (2022-12-04)
 

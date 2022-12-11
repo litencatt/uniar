@@ -38,6 +38,15 @@ docker-build:
 db-migrate:
 	sqlite3def uniar.db -f sql/schema.sql
 
+echo:
+	echo $(NEXT_VER)
+
+prelerease:
+	@$(MAKE) dump
+	go mod tidy
+	ghch -w -A --format=markdown -N $(NEXT_VER)
+	gocredits -skip-missing -w .
+
 release:
 	git push origin main --tag
 	goreleaser --rm-dist
