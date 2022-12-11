@@ -35,38 +35,42 @@ var setupCmd = &cobra.Command{
 	Use:   "setup",
 	Short: "Setup uniar",
 	Long:  "Setup your member status and scene card collections for uniar",
-	Run: func(cmd *cobra.Command, args []string) {
-		ctx := context.Background()
-
-		dbPath := GetDbPath()
-		db, err := repository.NewConnection(dbPath)
-		if err != nil {
-			fmt.Println(err)
-			return
+	RunE: func(cmd *cobra.Command, args []string) error {
+		if err := setup(); err != nil {
+			return err
 		}
-		q := repository.New()
-
-		if err := setupMkdir(); err != nil {
-			fmt.Fprintln(os.Stderr, err)
-			os.Exit(1)
-		}
-		if err := migrate(ctx, db, dbPath); err != nil {
-			fmt.Fprintln(os.Stderr, err)
-			os.Exit(1)
-		}
-		if err := initProducerScene(ctx, db, q); err != nil {
-			fmt.Fprintln(os.Stderr, err)
-			os.Exit(1)
-		}
+		return nil
 	},
 }
 
-func GetUniarPath() string {
-	user, err := user.Current()
+func setup() error {
+	fmt.Println("Start setup")
+	ctx := context.Background()
+
+	dbPath := GetDbPath()
+	fmt.Println(dbPath)
+	db, err := repository.NewConnection(dbPath)
 	if err != nil {
-		panic(err)
+		fmt.Println("setup error 1")
+		fmt.Println(err)
+		return err
 	}
-	return user.HomeDir + "/.uniar"
+	q := repository.New()
+
+	if err := setupMkdir(); err != nil {
+		fmt.Println("setup error 2")
+		return err
+	}
+	if err := migrate(ctx, db, dbPath); err != nil {
+		fmt.Println("setup error 3")
+		return err
+	}
+	if err := initProducerScene(ctx, db, q); err != nil {
+		fmt.Println("setup error 4")
+		return err
+	}
+	fmt.Println("End setup")
+	return nil
 }
 
 func GetDbPath() string {
@@ -76,6 +80,14 @@ func GetDbPath() string {
 	uniarPath := GetUniarPath()
 
 	return uniarPath + "/uniar.db"
+}
+
+func GetUniarPath() string {
+	user, err := user.Current()
+	if err != nil {
+		panic(err)
+	}
+	return user.HomeDir + "/.uniar"
 }
 
 func init() {
