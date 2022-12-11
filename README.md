@@ -1,24 +1,35 @@
+
 # uniar
 
 `uniar` is database and management your scene collections CLI tool for [UNI'S ON AIR](https://keyahina-unisonair.com/).
 
-## Usage
+## Usage		
 
 ```
-$ uniar list music | head
-+-----------------------------------+-----------------------------------+--------+--------+----------+--------+
-|               LIVE                |               MUSIC               |  TYPE  | LENGTH |  BONUS   | MASTER |
-+-----------------------------------+-----------------------------------+--------+--------+----------+--------+
-| 欅坂46                            | Student Dance                     | Blue   |    128 | {0 true} |     21 |
-| 夏の全国アリーナツアー2018        |                                   |        |        |          |        |
-| 欅坂46                            | AM1:27                            | Yellow |    127 | {0 true} |     21 |
-| 夏の全国アリーナツアー2018        |                                   |        |        |          |        |
-| 欅坂46                            | エキセントリック                  | Purple |    197 | {0 true} |     23 |
-| 夏の全国アリーナツアー2018        |                                   |        |        |          |        |
-| 欅坂46                            | ガラスを割れ！                    | Red    |    132 | {1 true} |     24 |
+uniar is UNI'S ON AIR music and scene cards database and manage your scene cards collection tool.
+
+Usage:
+  uniar [command]
+
+Available Commands:
+  completion  Generate the autocompletion script for the specified shell
+  help        Help about any command
+  list        Show data
+  regist      Regist data
+  setup       Setup uniar
+
+Flags:
+      --config string   config file (default is $HOME/.uniar.yaml)
+  -h, --help            help for uniar
+  -t, --toggle          Help message for toggle
+  -v, --version         version for uniar
+
+Use "uniar [command] --help" for more information about a command.
 
 ```
+
 ## Install
+
 ```
 $ brew tap litencatt/tap
 $ brew install litencatt/tap/uniar
@@ -26,34 +37,165 @@ $ brew install litencatt/tap/uniar
 
 ## Commands
 
-### Setup
-
-Setup your member status, office bonus status, scene card collections.
-
-```
-$ uniar setup
-== メンバーステータスセットアップ ==
-石森虹花
-絆ランク (現在値:100) [100]:
-```
-
 ### List
 
-Show database data
+```
+$ uniar list
+Show data
 
-- group
-- member
-- live
-- music
-- scene
+Usage:
+  uniar list [command]
 
-### Regist
+Available Commands:
+  group       Show group list
+  live        Show live list
+  member      Show member list
+  music       Show music list
+  photo       Show Photograph list
+  scene       Show scene card list
 
-- live
-- music
-- photograph
-- scene
+Flags:
+  -h, --help   help for list
 
-### Update
+Global Flags:
+      --config string   config file (default is $HOME/.uniar.yaml)
 
-TBD
+Use "uniar list [command] --help" for more information about a command.
+
+```
+
+### Usage
+
+```
+$ uniar list scene -h
+Show scene card list
+
+Usage:
+  uniar list scene [flags]
+
+Flags:
+  -c, --color string            Color filter(e.g. -c Red or -c r)
+  -d, --detail                  Show detail
+  -f, --full-name               Show pohtograph full name
+      --have                    Show only scenes you have
+  -h, --help                    help for scene
+  -i, --ignore-columns string   Ignore columns to display(VoDa50,DaPe50,...)
+  -m, --member string           Member filter(e.g. -m 加藤史帆)
+  -n, --not-have                Show only scenes you NOT have
+  -p, --photograph string       Photograph filter(e.g. -p JOYFULLOVE)
+  -s, --sort string             Sort target rank.(all35, voda50, ...)
+
+Global Flags:
+      --config string   config file (default is $HOME/.uniar.yaml)
+
+```
+
+```
+$ uniar list scene -f | head
+Show scene card list
+
+Usage:
+  uniar list scene [flags]
+
+Flags:
+  -c, --color string            Color filter(e.g. -c Red or -c r)
+  -d, --detail                  Show detail
+  -f, --full-name               Show pohtograph full name
+      --have                    Show only scenes you have
+  -h, --help                    help for scene
+  -i, --ignore-columns string   Ignore columns to display(VoDa50,DaPe50,...)
+  -m, --member string           Member filter(e.g. -m 加藤史帆)
+  -n, --not-have                Show only scenes you NOT have
+  -p, --photograph string       Photograph filter(e.g. -p JOYFULLOVE)
+  -s, --sort string             Sort target rank.(all35, voda50, ...)
+
+Global Flags:
+      --config string   config file (default is $HOME/.uniar.yaml)
+
+```
+
+```
+$ uniar list scene -f -c Blue
++-------+------------------------------------+---------+------------+--------+-------+-------+--------+--------+--------+------+------+------+
+| COLOR |             PHOTOGRAPH             | SSRPLUS |   MEMBER   | EXPECT | TOTAL | ALL35 | VODA50 | DAPE50 | VOPE50 | VO85 | DA85 | PE85 |
++-------+------------------------------------+---------+------------+--------+-------+-------+--------+--------+--------+------+------+------+
+| Blue  | 青春の馬                           | true    | 濱岸ひより |   3.72 | 13077 |     1 |      6 |      1 |      1 |    4 |    7 |    1 |
+| Blue  | Nobody’s fault                    | true    | 渡邉理佐   |   3.68 | 13065 |     2 |      1 |      2 |      6 |    5 |    1 |    8 |
+| Blue  | アンビバレント                     | true    | 田村保乃   |   3.68 | 12976 |     3 |      5 |      3 |      4 |    6 |    3 |    2 |
+| Blue  | ドレミソラシド                     | true    | 森本茉莉   |   3.68 | 12974 |     4 |      2 |      5 |      2 |    1 |    4 |    3 |
+| Blue  | 風に吹かれても                     | true    | 上村莉菜   |   3.68 | 12931 |     5 |      3 |      6 |      3 |    2 |    5 |    4 |
+| Blue  | ガラスを割れ！                     | true    | 土生瑞穂   |   3.68 | 12819 |     6 |      4 |      4 |      5 |    3 |    2 |    7 |
+| Blue  | UNI'S ON AIR 3rd ANNIVERSARY       | false   | 潮紗理菜   |   3.68 | 11435 |     7 |      7 |     14 |     11 |    7 |   10 |   27 |
+
+```
+
+```
+$ uniar list scene -f -m 加藤史帆
++--------+------------------------------------+---------+----------+--------+-------+-------+--------+--------+--------+------+------+------+
+| COLOR  |             PHOTOGRAPH             | SSRPLUS |  MEMBER  | EXPECT | TOTAL | ALL35 | VODA50 | DAPE50 | VOPE50 | VO85 | DA85 | PE85 |
++--------+------------------------------------+---------+----------+--------+-------+-------+--------+--------+--------+------+------+------+
+| Green  | こんなに好きになっちゃっていいの？ | true    | 加藤史帆 |   3.68 | 13067 |     1 |      1 |      1 |      1 |    1 |    1 |    1 |
+| Yellow | 君しか勝たん                       | false   | 加藤史帆 |   3.68 | 11083 |     2 |      2 |      2 |      3 |    3 |    2 |    4 |
+| Green  | こんなに好きになっちゃっていいの？ | false   | 加藤史帆 |   3.68 | 10817 |     3 |      3 |      4 |      2 |    2 |    4 |    3 |
+| Purple | 清夏彩る涼の装                     | false   | 加藤史帆 |    3.4 | 11357 |     4 |      4 |      3 |      4 |    4 |    3 |    2 |
+| Red    | ハッピーオーラ                     | true    | 加藤史帆 |   2.46 | 12932 |     5 |      5 |      5 |      5 |    5 |    6 |    5 |
+| Blue   | キュン                             | true    | 加藤史帆 |   2.46 | 12560 |     6 |      6 |      6 |      6 |    6 |    7 |    8 |
+| Red    | Precious -pair-                    | false   | 加藤史帆 |   2.52 | 11477 |     7 |      7 |      7 |     12 |   10 |    5 |   12 |
+
+```
+
+```
+$ uniar list scene -f -p キュン
++--------+------------+---------+------------+--------+-------+-------+--------+--------+--------+------+------+------+
+| COLOR  | PHOTOGRAPH | SSRPLUS |   MEMBER   | EXPECT | TOTAL | ALL35 | VODA50 | DAPE50 | VOPE50 | VO85 | DA85 | PE85 |
++--------+------------+---------+------------+--------+-------+-------+--------+--------+--------+------+------+------+
+| Green  | キュン     | true    | 小坂菜緒   |   3.68 | 12582 |     1 |      1 |      1 |      1 |    1 |    1 |    1 |
+| Green  | キュン     | false   | 小坂菜緒   |   3.68 | 10332 |     2 |      2 |      2 |      2 |    2 |    2 |    2 |
+| Red    | キュン     | true    | 松田好花   |   2.75 | 12902 |     3 |      3 |      3 |      3 |    3 |    3 |    3 |
+| Purple | キュン     | true    | 上村ひなの |   2.52 | 12768 |     4 |      4 |      4 |      5 |    5 |    4 |    4 |
+| Green  | キュン     | true    | 佐々木美玲 |   2.52 | 12599 |     5 |      5 |      5 |      4 |    4 |    6 |    5 |
+| Blue   | キュン     | true    | 加藤史帆   |   2.46 | 12560 |     6 |      6 |      6 |      6 |    6 |    5 |    6 |
+| Purple | キュン     | true    | 潮紗理菜   |   2.32 | 12647 |     7 |      7 |      7 |      7 |    7 |    7 |    7 |
+
+```
+
+```
+$ uniar list scene -f -c Blue -m 加藤史帆 -p キュン
++-------+------------+---------+----------+--------+-------+-------+--------+--------+--------+------+------+------+
+| COLOR | PHOTOGRAPH | SSRPLUS |  MEMBER  | EXPECT | TOTAL | ALL35 | VODA50 | DAPE50 | VOPE50 | VO85 | DA85 | PE85 |
++-------+------------+---------+----------+--------+-------+-------+--------+--------+--------+------+------+------+
+| Blue  | キュン     | true    | 加藤史帆 |   2.46 | 12560 |     1 |      1 |      1 |      1 |    1 |    1 |    1 |
+| Blue  | キュン     | false   | 加藤史帆 |   2.46 | 10310 |     2 |      2 |      2 |      2 |    2 |    2 |    2 |
++-------+------------+---------+----------+--------+-------+-------+--------+--------+--------+------+------+------+
+
+```
+
+```
+$ uniar list scene --ignore-columns All35,VoDa50,DaPe50,VoPe50 | head
++--------+--------------------------------+---------+------------+--------+-------+------+------+------+
+| COLOR  |           PHOTOGRAPH           | SSRPLUS |   MEMBER   | EXPECT | TOTAL | VO85 | DA85 | PE85 |
++--------+--------------------------------+---------+------------+--------+-------+------+------+------+
+| Blue   | 馬                             | true    | 濱岸ひより |   3.72 | 13077 |   33 |   44 |    2 |
+| Purple | なぜ恋                         | true    | 藤吉夏鈴   |   3.72 | 13076 |   34 |   45 |    1 |
+| Yellow | 誰鐘                           | true    | 山﨑天     |   3.68 | 13076 |    1 |   19 |   15 |
+| Green  | こん好き                       | true    | 加藤史帆   |   3.68 | 13067 |    2 |   18 |   17 |
+| Blue   | ノバフォ                       | true    | 渡邉理佐   |   3.68 | 13065 |   37 |    1 |   44 |
+| Red    | 誰鐘                           | true    | 菅井友香   |   3.68 | 13064 |   11 |   17 |    7 |
+| Purple | こん好き                       | true    | 東村芽依   |   3.68 | 13059 |   12 |    2 |   16 |
+
+```
+
+```
+$ uniar list scene -d --ignore-columns All35,VoDa50,DaPe50,VoPe50 | head
++--------+--------------------------------+---------+------------+--------+-------+------+------+------+------+------+------+
+| COLOR  |           PHOTOGRAPH           | SSRPLUS |   MEMBER   | EXPECT | TOTAL | VO85 | DA85 | PE85 |  VO  |  DA  |  PE  |
++--------+--------------------------------+---------+------------+--------+-------+------+------+------+------+------+------+
+| Blue   | 馬                             | true    | 濱岸ひより |   3.72 | 13077 |   33 |   44 |    2 | 2989 | 3015 | 6643 |
+| Purple | なぜ恋                         | true    | 藤吉夏鈴   |   3.72 | 13076 |   34 |   45 |    1 | 2971 | 2974 | 6701 |
+| Yellow | 誰鐘                           | true    | 山﨑天     |   3.68 | 13076 |    1 |   19 |   15 | 5092 | 3756 | 3798 |
+| Green  | こん好き                       | true    | 加藤史帆   |   3.68 | 13067 |    2 |   18 |   17 | 5102 | 3780 | 3755 |
+| Blue   | ノバフォ                       | true    | 渡邉理佐   |   3.68 | 13065 |   37 |    1 |   44 | 3020 | 6614 | 3001 |
+| Red    | 誰鐘                           | true    | 菅井友香   |   3.68 | 13064 |   11 |   17 |    7 | 3779 | 3888 | 4967 |
+| Purple | こん好き                       | true    | 東村芽依   |   3.68 | 13059 |   12 |    2 |   16 | 3745 | 5066 | 3818 |
+
+```
