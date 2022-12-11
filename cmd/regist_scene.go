@@ -39,13 +39,12 @@ import (
 var registSceneCmd = &cobra.Command{
 	Use:   "scene",
 	Short: "Regist a scene to database",
-	Run: func(cmd *cobra.Command, args []string) {
+	RunE: func(cmd *cobra.Command, args []string) error {
 		ctx := context.Background()
 		dbPath := GetDbPath()
 		db, err := repository.NewConnection(dbPath)
 		if err != nil {
-			fmt.Println(err)
-			return
+			return err
 		}
 
 		gid := (&prompter.Prompter{
@@ -81,9 +80,7 @@ var registSceneCmd = &cobra.Command{
 
 		ml, err := q.GetMemberList(ctx, db, int64(groupId))
 		if err != nil {
-			fmt.Println(err)
-			fmt.Println("please setup first.\n$ uniar setup")
-			return
+			return err
 		}
 		var mList []string
 		for _, v := range ml {
@@ -148,12 +145,11 @@ var registSceneCmd = &cobra.Command{
 			PerformanceMax: int64(peMax),
 			SsrPlus:        int64(ssrPlus),
 		}); err != nil {
-			fmt.Println(err)
-			fmt.Println("please setup first.\n$ uniar setup")
-			return
+			return err
 		}
 
 		fmt.Println("success registration")
+		return nil
 	},
 }
 

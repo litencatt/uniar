@@ -35,7 +35,7 @@ import (
 var registPhotographCmd = &cobra.Command{
 	Use:   "photo",
 	Short: "Regist a photograph to database",
-	Run: func(cmd *cobra.Command, args []string) {
+	RunE: func(cmd *cobra.Command, args []string) error {
 		g := (&prompter.Prompter{
 			Choices: []string{"1", "2"},
 			Default: "1",
@@ -66,12 +66,11 @@ var registPhotographCmd = &cobra.Command{
 			GroupID:   int64(groupId),
 			PhotoType: pt,
 		}); err != nil {
-			fmt.Println(err)
-			fmt.Println("please setup first.\n$ uniar setup")
-			return
+			return err
 		}
 
 		fmt.Printf("success registration(Photograph Name: %s)\n", photoName)
+		return nil
 	},
 }
 

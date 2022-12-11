@@ -36,13 +36,12 @@ import (
 
 var setupOfficeCmd = &cobra.Command{
 	Use: "office",
-	Run: func(cmd *cobra.Command, args []string) {
+	RunE: func(cmd *cobra.Command, args []string) error {
 		ctx := context.Background()
 		dbPath := GetDbPath()
 		db, err := repository.NewConnection(dbPath)
 		if err != nil {
-			fmt.Println(err)
-			return
+			return err
 		}
 		q := repository.New()
 
@@ -50,6 +49,7 @@ var setupOfficeCmd = &cobra.Command{
 			fmt.Fprintln(os.Stderr, err)
 			os.Exit(1)
 		}
+		return nil
 	},
 }
 
