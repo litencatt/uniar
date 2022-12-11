@@ -92,25 +92,16 @@ Global Flags:
 
 ```
 $ uniar list scene -f | head
-Show scene card list
-
-Usage:
-  uniar list scene [flags]
-
-Flags:
-  -c, --color string            Color filter(e.g. -c Red or -c r)
-  -d, --detail                  Show detail
-  -f, --full-name               Show pohtograph full name
-      --have                    Show only scenes you have
-  -h, --help                    help for scene
-  -i, --ignore-columns string   Ignore columns to display(VoDa50,DaPe50,...)
-  -m, --member string           Member filter(e.g. -m 加藤史帆)
-  -n, --not-have                Show only scenes you NOT have
-  -p, --photograph string       Photograph filter(e.g. -p JOYFULLOVE)
-  -s, --sort string             Sort target rank.(all35, voda50, ...)
-
-Global Flags:
-      --config string   config file (default is $HOME/.uniar.yaml)
++--------+------------------------------------+---------+------------+--------+-------+-------+--------+--------+--------+------+------+------+
+| COLOR  |             PHOTOGRAPH             | SSRPLUS |   MEMBER   | EXPECT | TOTAL | ALL35 | VODA50 | DAPE50 | VOPE50 | VO85 | DA85 | PE85 |
++--------+------------------------------------+---------+------------+--------+-------+-------+--------+--------+--------+------+------+------+
+| Blue   | 青春の馬                           | true    | 濱岸ひより |   3.72 | 13077 |     1 |     31 |      2 |      2 |   33 |   44 |    2 |
+| Purple | なぜ　恋をして来なかったんだろう？ | true    | 藤吉夏鈴   |   3.72 | 13076 |     2 |     32 |      1 |      1 |   34 |   45 |    1 |
+| Yellow | 誰がその鐘を鳴らすのか？           | true    | 山﨑天     |   3.68 | 13076 |     3 |      3 |     22 |      4 |    1 |   19 |   15 |
+| Green  | こんなに好きになっちゃっていいの？ | true    | 加藤史帆   |   3.68 | 13067 |     4 |      2 |     23 |      5 |    2 |   18 |   17 |
+| Blue   | Nobody’s fault                    | true    | 渡邉理佐   |   3.68 | 13065 |     5 |      1 |      3 |     37 |   37 |    1 |   44 |
+| Red    | 誰がその鐘を鳴らすのか？           | true    | 菅井友香   |   3.68 | 13064 |     6 |     20 |      6 |      6 |   11 |   17 |    7 |
+| Purple | こんなに好きになっちゃっていいの？ | true    | 東村芽依   |   3.68 | 13059 |     7 |      5 |      5 |     19 |   12 |    2 |   16 |
 
 ```
 

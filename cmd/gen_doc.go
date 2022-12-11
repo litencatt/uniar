@@ -69,7 +69,7 @@ $ uniar list scene -h
 
 {{ .bt3 }}
 $ uniar list scene -f | head
-{{ .uniarListScene }}
+{{ .uniarListSceneEg }}
 {{ .bt3 }}
 
 {{ .bt3 }}
