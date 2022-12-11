@@ -69,16 +69,16 @@ var setupMigrateCmd = &cobra.Command{
 }
 
 func migrate(ctx context.Context, db *sql.DB, dbPath string) error {
-	fmt.Println("migration")
+	// fmt.Println("migration")
 	if err := setupMigrate(dbPath); err != nil {
 		return err
 	}
-	fmt.Println("seed")
+	// fmt.Println("seed")
 	if err := setupSeed(ctx, db, dbPath); err != nil {
 		return err
 	}
-	fmt.Println("finish migration and seed")
-	fmt.Println()
+	// fmt.Println("finish migration and seed")
+	// fmt.Println()
 
 	return nil
 }

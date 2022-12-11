@@ -65,7 +65,7 @@ func initProducerMember(ctx context.Context, db *sql.DB, q *repository.Queries) 
 			MemberID:   m.ID,
 		})
 	}
-	fmt.Printf("== プロデューサーメンバー初期化完了 ==\n")
+	// fmt.Printf("== プロデューサーメンバー初期化完了 ==\n")
 	return nil
 }
 

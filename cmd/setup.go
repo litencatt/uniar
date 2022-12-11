@@ -23,7 +23,6 @@ package cmd
 
 import (
 	"context"
-	"fmt"
 	"os"
 	"os/user"
 
@@ -44,11 +43,9 @@ var setupCmd = &cobra.Command{
 }
 
 func setup() error {
-	fmt.Println("Start setup")
 	ctx := context.Background()
 
 	dbPath := GetDbPath()
-	fmt.Println(dbPath)
 	db, err := repository.NewConnection(dbPath)
 	if err != nil {
 		return err
@@ -71,7 +68,6 @@ func setup() error {
 		return err
 	}
 
-	fmt.Println("End setup")
 	return nil
 }
 
