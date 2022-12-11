@@ -25,7 +25,6 @@ import (
 	"context"
 	"database/sql"
 	"fmt"
-	"os"
 	"regexp"
 	"strconv"
 
@@ -36,22 +35,35 @@ import (
 
 var setupMemberCmd = &cobra.Command{
 	Use: "member",
-	Run: func(cmd *cobra.Command, args []string) {
+	RunE: func(cmd *cobra.Command, args []string) error {
 		ctx := context.Background()
 
 		dbPath := GetDbPath()
 		db, err := repository.NewConnection(dbPath)
 		if err != nil {
-			fmt.Println(err)
-			return
+			return err
 		}
 		q := repository.New()
 
 		if err := setupMember(ctx, db, q); err != nil {
-			fmt.Fprintln(os.Stderr, err)
-			os.Exit(1)
+			return err
 		}
+		return nil
 	},
+}
+
+func initProducerMember(ctx context.Context, db *sql.DB, q *repository.Queries) error {
+	members, err := q.GetAllMembers(ctx, db)
+	if err != nil {
+		return err
+	}
+	for _, m := range members {
+		q.RegistProducerMember(ctx, db, repository.RegistProducerMemberParams{
+			ProducerID: 1,
+			MemberID:   m.ID,
+		})
+	}
+	return nil
 }
 
 func setupMember(ctx context.Context, db *sql.DB, q *repository.Queries) error {
@@ -61,18 +73,8 @@ func setupMember(ctx context.Context, db *sql.DB, q *repository.Queries) error {
 		return err
 	}
 	if len(pm) == 0 {
-		members, err := q.GetAllMembers(ctx, db)
-		if err != nil {
-			return err
-		}
-		for _, m := range members {
-			q.RegistProducerMember(ctx, db, repository.RegistProducerMemberParams{
-				ProducerID: 1,
-				MemberID:   m.ID,
-			})
-		}
+		initProducerMember(ctx, db, q)
 		fmt.Printf("== プロデューサーメンバー初期化完了 ==\n")
-
 		pm, err = q.GetProducerMember(ctx, db)
 		if err != nil {
 			return err

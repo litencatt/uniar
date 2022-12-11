@@ -36,13 +36,12 @@ import (
 
 var setupOfficeCmd = &cobra.Command{
 	Use: "office",
-	Run: func(cmd *cobra.Command, args []string) {
+	RunE: func(cmd *cobra.Command, args []string) error {
 		ctx := context.Background()
 		dbPath := GetDbPath()
 		db, err := repository.NewConnection(dbPath)
 		if err != nil {
-			fmt.Println(err)
-			return
+			return err
 		}
 		q := repository.New()
 
@@ -50,14 +49,23 @@ var setupOfficeCmd = &cobra.Command{
 			fmt.Fprintln(os.Stderr, err)
 			os.Exit(1)
 		}
+		return nil
 	},
+}
+
+func initProducerOffice(ctx context.Context, db *sql.DB, q *repository.Queries) error {
+	producerId := 1
+	if err := q.RegistProducerOffice(ctx, db, int64(producerId)); err != nil {
+		return err
+	}
+	return nil
 }
 
 func setupOffice(ctx context.Context, db *sql.DB, q *repository.Queries) error {
 	fmt.Printf("== 事務所ボーナスセットアップ ==\n")
 	po, err := q.GetProducerOffice(ctx, db, 1)
 	if err != nil {
-		if err = q.RegistProducerOffice(ctx, db, 1); err != nil {
+		if err = initProducerOffice(ctx, db, q); err != nil {
 			return err
 		}
 		fmt.Printf("== 事務所ボーナス初期化完了 ==\n")

@@ -8,7 +8,7 @@ import (
 func NewConnection(dbPath string) (*sql.DB, error) {
 	db, err := sql.Open("sqlite3", dbPath)
 	if err != nil {
-		return nil, fmt.Errorf("データベース接続エラー")
+		return nil, fmt.Errorf("データベース接続エラー:", err.Error())
 	}
 
 	return db, nil

@@ -35,38 +35,61 @@ var setupCmd = &cobra.Command{
 	Use:   "setup",
 	Short: "Setup uniar",
 	Long:  "Setup your member status and scene card collections for uniar",
-	Run: func(cmd *cobra.Command, args []string) {
-		ctx := context.Background()
-
-		dbPath := GetDbPath()
-		db, err := repository.NewConnection(dbPath)
-		if err != nil {
-			fmt.Println(err)
-			return
+	RunE: func(cmd *cobra.Command, args []string) error {
+		if err := setup(); err != nil {
+			return err
 		}
-		q := repository.New()
-
-		if err := setupMkdir(); err != nil {
-			fmt.Fprintln(os.Stderr, err)
-			os.Exit(1)
-		}
-		if err := migrate(ctx, db, dbPath); err != nil {
-			fmt.Fprintln(os.Stderr, err)
-			os.Exit(1)
-		}
-		if err := initProducerScene(ctx, db, q); err != nil {
-			fmt.Fprintln(os.Stderr, err)
-			os.Exit(1)
-		}
+		return nil
 	},
 }
 
-func GetUniarPath() string {
-	user, err := user.Current()
+func setup() error {
+	ctx := context.Background()
+
+	dbPath := GetDbPath()
+	db, err := repository.NewConnection(dbPath)
 	if err != nil {
-		panic(err)
+		return err
 	}
-	return user.HomeDir + "/.uniar"
+	q := repository.New()
+
+	if err := setupMkdir(); err != nil {
+		return err
+	}
+	if err := migrate(ctx, db, dbPath); err != nil {
+		return err
+	}
+	if err := initProducerScene(ctx, db, q); err != nil {
+		return err
+	}
+	if err := initProducerMember(ctx, db, q); err != nil {
+		return err
+	}
+	if err := initProducerOffice(ctx, db, q); err != nil {
+		return err
+	}
+
+	return nil
+}
+
+func setupIfNotSetup() {
+	dbPath := GetDbPath()
+	db, err := repository.NewConnection(dbPath)
+	if err != nil {
+		fmt.Println(err)
+		return
+	}
+
+	// Check db migration
+	result, err := db.Exec("SELECT id FROM groups limit 1;")
+	if result == nil {
+		setup()
+		return
+	}
+	if err != nil {
+		fmt.Println(err)
+		return
+	}
 }
 
 func GetDbPath() string {
@@ -76,6 +99,14 @@ func GetDbPath() string {
 	uniarPath := GetUniarPath()
 
 	return uniarPath + "/uniar.db"
+}
+
+func GetUniarPath() string {
+	user, err := user.Current()
+	if err != nil {
+		panic(err)
+	}
+	return user.HomeDir + "/.uniar"
 }
 
 func init() {

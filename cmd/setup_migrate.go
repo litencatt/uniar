@@ -45,40 +45,42 @@ var (
 
 var setupMigrateCmd = &cobra.Command{
 	Use: "migrate",
-	Run: func(cmd *cobra.Command, args []string) {
+	RunE: func(cmd *cobra.Command, args []string) error {
 		ctx := context.Background()
 		dbPath := GetDbPath()
 		db, err := repository.NewConnection(dbPath)
 		if err != nil {
-			fmt.Fprintln(os.Stderr, err)
-			os.Exit(1)
+			return err
 		}
 		if err := setupMkdir(); err != nil {
-			fmt.Fprintln(os.Stderr, err)
-			os.Exit(1)
+			return err
 		}
 		if prompter.YN("do you execute migration and seed?", false) {
-			if err := migrate(ctx, db, dbPath); err != nil {
-				fmt.Fprintln(os.Stderr, err)
-				os.Exit(1)
+			fmt.Println("start migration")
+			if err := setupMigrate(dbPath); err != nil {
+				return err
 			}
+			fmt.Println("end migration")
+			fmt.Println("start seed")
+			if err := setupSeed(ctx, db, dbPath); err != nil {
+				return err
+			}
+			fmt.Println("end seed")
+
 		} else {
 			fmt.Println("skip migration")
 		}
+		return nil
 	},
 }
 
 func migrate(ctx context.Context, db *sql.DB, dbPath string) error {
-	fmt.Println("migration")
 	if err := setupMigrate(dbPath); err != nil {
 		return err
 	}
-	fmt.Println("seed")
 	if err := setupSeed(ctx, db, dbPath); err != nil {
 		return err
 	}
-	fmt.Println("finish migration and seed")
-	fmt.Println()
 
 	return nil
 }
@@ -130,7 +132,11 @@ func setupMigrate(dbPath string) error {
 	}()
 
 	sqlParser := database.NewParser(parser.ParserModeSQLite3)
+	// Run with hide schema migration diff temporary
+	tmp := os.Stdout
+	os.Stdout, _ = os.Open(os.DevNull)
 	sqldef.Run(schema.GeneratorModeSQLite3, db, sqlParser, options)
+	os.Stdout = tmp
 
 	return nil
 }

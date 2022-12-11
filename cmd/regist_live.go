@@ -35,7 +35,7 @@ import (
 var registLiveCmd = &cobra.Command{
 	Use:   "live",
 	Short: "Regist a live to database",
-	Run: func(cmd *cobra.Command, args []string) {
+	RunE: func(cmd *cobra.Command, args []string) error {
 		liveName := (&prompter.Prompter{
 			Message: "Live name",
 		}).Prompt()
@@ -44,18 +44,16 @@ var registLiveCmd = &cobra.Command{
 		dbPath := GetDbPath()
 		db, err := repository.NewConnection(dbPath)
 		if err != nil {
-			fmt.Println(err)
-			return
+			return err
 		}
 
 		q := repository.New()
 		if err := q.RegistLive(ctx, db, liveName); err != nil {
-			fmt.Println(err)
-			fmt.Println("please setup first.\n$ uniar setup")
-			return
+			return err
 		}
 
 		fmt.Printf("success registration(LiveName:%s)\n", liveName)
+		return nil
 	},
 }
 

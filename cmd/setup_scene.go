@@ -25,7 +25,6 @@ import (
 	"context"
 	"database/sql"
 	"fmt"
-	"os"
 	"strconv"
 
 	"github.com/Songmu/prompter"
@@ -35,20 +34,19 @@ import (
 
 var setupSceneCmd = &cobra.Command{
 	Use: "scene",
-	Run: func(cmd *cobra.Command, args []string) {
+	RunE: func(cmd *cobra.Command, args []string) error {
 		ctx := context.Background()
 		dbPath := GetDbPath()
 		db, err := repository.NewConnection(dbPath)
 		if err != nil {
-			fmt.Println(err)
-			return
+			return err
 		}
 		q := repository.New()
 
 		if err := setupScene(ctx, db, q); err != nil {
-			fmt.Fprintln(os.Stderr, err)
-			os.Exit(1)
+			return err
 		}
+		return nil
 	},
 }
 
@@ -66,8 +64,6 @@ func initProducerScene(ctx context.Context, db *sql.DB, q *repository.Queries) e
 			return err
 		}
 	}
-	fmt.Println("finish initialize producer scenes")
-	fmt.Println()
 
 	return nil
 }

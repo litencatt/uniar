@@ -23,7 +23,6 @@ package cmd
 
 import (
 	"context"
-	"fmt"
 	"sort"
 	"strconv"
 	"strings"
@@ -36,7 +35,7 @@ import (
 var listSceneCmd = &cobra.Command{
 	Use:   "scene",
 	Short: "Show scene card list",
-	Run: func(cmd *cobra.Command, args []string) {
+	RunE: func(cmd *cobra.Command, args []string) error {
 		c, _ := cmd.Flags().GetString("color")
 		c = getColorName(c)
 		m, _ := cmd.Flags().GetString("member")
@@ -51,8 +50,7 @@ var listSceneCmd = &cobra.Command{
 		dbPath := GetDbPath()
 		db, err := repository.NewConnection(dbPath)
 		if err != nil {
-			fmt.Println(err)
-			return
+			return err
 		}
 		q := repository.New()
 
@@ -79,9 +77,7 @@ var listSceneCmd = &cobra.Command{
 			Name_3: photo,
 		})
 		if err != nil {
-			fmt.Println(err)
-			fmt.Println("please setup first.\n$ uniar setup")
-			return
+			return err
 		}
 		for _, s := range ss {
 			// Show only scene you have
@@ -174,6 +170,7 @@ var listSceneCmd = &cobra.Command{
 		ic := strings.Split(ignoreColumnsStr, ",")
 
 		render(scenes, ic)
+		return nil
 	},
 }
 

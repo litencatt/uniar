@@ -23,7 +23,6 @@ package cmd
 
 import (
 	"context"
-	"fmt"
 
 	"github.com/litencatt/uniar/repository"
 	"github.com/spf13/cobra"
@@ -32,24 +31,21 @@ import (
 var listLiveCmd = &cobra.Command{
 	Use:   "live",
 	Short: "Show live list",
-	Run: func(cmd *cobra.Command, args []string) {
+	RunE: func(cmd *cobra.Command, args []string) error {
 		ctx := context.Background()
 		dbPath := GetDbPath()
 		db, err := repository.NewConnection(dbPath)
 		if err != nil {
-			fmt.Println(err)
-			return
+			return err
 		}
 
 		q := repository.New()
 		l, err := q.GetLiveList(ctx, db)
 		if err != nil {
-			fmt.Println(err)
-			fmt.Println("please setup first.\n$ uniar setup")
-			return
+			return err
 		}
-
 		render(l, []string{})
+		return nil
 	},
 }
 

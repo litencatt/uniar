@@ -37,20 +37,17 @@ import (
 var registMusicCmd = &cobra.Command{
 	Use:   "music",
 	Short: "Regist a music to database",
-	Run: func(cmd *cobra.Command, args []string) {
+	RunE: func(cmd *cobra.Command, args []string) error {
 		ctx := context.Background()
 		dbPath := GetDbPath()
 		db, err := repository.NewConnection(dbPath)
 		if err != nil {
-			fmt.Println(err)
-			return
+			return err
 		}
 		q := repository.New()
 		ll, err := q.GetLiveList(ctx, db)
 		if err != nil {
-			fmt.Println(err)
-			fmt.Println("please setup first.\n$ uniar setup")
-			return
+			return err
 		}
 		var liveList []string
 		for _, v := range ll {
@@ -107,11 +104,11 @@ var registMusicCmd = &cobra.Command{
 			ColorTypeID: int64(colId),
 			LiveID:      int64(liveId),
 		}); err != nil {
-			fmt.Println(err)
-			return
+			return err
 		}
 
 		fmt.Printf("success registration(MusicName:%s)\n", name)
+		return nil
 	},
 }
 

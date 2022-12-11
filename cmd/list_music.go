@@ -23,7 +23,6 @@ package cmd
 
 import (
 	"context"
-	"fmt"
 
 	"github.com/litencatt/uniar/repository"
 	"github.com/spf13/cobra"
@@ -32,15 +31,14 @@ import (
 var listMusicCmd = &cobra.Command{
 	Use:   "music",
 	Short: "Show music list",
-	Run: func(cmd *cobra.Command, args []string) {
+	RunE: func(cmd *cobra.Command, args []string) error {
 		c, _ := cmd.Flags().GetString("color")
 
 		ctx := context.Background()
 		dbPath := GetDbPath()
 		db, err := repository.NewConnection(dbPath)
 		if err != nil {
-			fmt.Println(err)
-			return
+			return err
 		}
 
 		var music any
@@ -51,12 +49,11 @@ var listMusicCmd = &cobra.Command{
 			music, err = q.GetMusicListWithColor(ctx, db, c)
 		}
 		if err != nil {
-			fmt.Println(err)
-			fmt.Println("please setup first.\n$ uniar setup")
-			return
+			return err
 		}
 
 		render(music, []string{})
+		return nil
 	},
 }
 
