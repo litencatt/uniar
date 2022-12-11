@@ -53,7 +53,7 @@ func init() {
 	rootCmd.PersistentFlags().StringVar(&cfgFile, "config", "", "config file (default is $HOME/.uniar.yaml)")
 	rootCmd.Flags().BoolP("toggle", "t", false, "Help message for toggle")
 
-	setup()
+	setupIfNotSetup()
 }
 
 func initConfig() {

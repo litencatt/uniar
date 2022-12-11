@@ -23,6 +23,7 @@ package cmd
 
 import (
 	"context"
+	"fmt"
 	"os"
 	"os/user"
 
@@ -69,6 +70,25 @@ func setup() error {
 	}
 
 	return nil
+}
+
+func setupIfNotSetup() {
+	dbPath := GetDbPath()
+	db, err := repository.NewConnection(dbPath)
+	if err != nil {
+		fmt.Println(err)
+		return
+	}
+
+	result, err := db.Exec("SELECT id FROM groups limit 1;")
+	if result == nil {
+		setup()
+		return
+	}
+	if err != nil {
+		fmt.Println(err)
+		return
+	}
 }
 
 func GetDbPath() string {

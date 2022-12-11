@@ -130,7 +130,11 @@ func setupMigrate(dbPath string) error {
 	}()
 
 	sqlParser := database.NewParser(parser.ParserModeSQLite3)
+	// Run with hide schema migration diff temporary
+	tmp := os.Stdout
+	os.Stdout, _ = os.Open(os.DevNull)
 	sqldef.Run(schema.GeneratorModeSQLite3, db, sqlParser, options)
+	os.Stdout = tmp
 
 	return nil
 }
