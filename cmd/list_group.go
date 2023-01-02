@@ -29,8 +29,9 @@ import (
 )
 
 var listGroupCmd = &cobra.Command{
-	Use:   "group",
-	Short: "Show group list",
+	Use:     "group",
+	Short:   "Show group list",
+	Aliases: []string{"g"},
 	RunE: func(cmd *cobra.Command, args []string) error {
 		ctx := context.Background()
 		dbPath := GetDbPath()

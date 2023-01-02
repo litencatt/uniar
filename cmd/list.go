@@ -34,8 +34,9 @@ import (
 
 // listCmd represents the list command
 var listCmd = &cobra.Command{
-	Use:   "list",
-	Short: "Show data",
+	Use:     "list",
+	Short:   "Show data",
+	Aliases: []string{"l"},
 }
 
 func init() {

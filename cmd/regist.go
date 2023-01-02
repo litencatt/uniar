@@ -26,8 +26,9 @@ import (
 )
 
 var registCmd = &cobra.Command{
-	Use:   "regist",
-	Short: "Regist data",
+	Use:     "regist",
+	Short:   "Regist data",
+	Aliases: []string{"r"},
 }
 
 func init() {

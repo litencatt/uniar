@@ -33,8 +33,9 @@ import (
 
 // liveCmd represents the live command
 var registLiveCmd = &cobra.Command{
-	Use:   "live",
-	Short: "Regist a live to database",
+	Use:     "live",
+	Short:   "Regist a live to database",
+	Aliases: []string{"l"},
 	RunE: func(cmd *cobra.Command, args []string) error {
 		liveName := (&prompter.Prompter{
 			Message: "Live name",

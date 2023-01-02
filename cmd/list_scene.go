@@ -33,8 +33,9 @@ import (
 )
 
 var listSceneCmd = &cobra.Command{
-	Use:   "scene",
-	Short: "Show scene card list",
+	Use:     "scene",
+	Short:   "Show scene card list",
+	Aliases: []string{"s"},
 	RunE: func(cmd *cobra.Command, args []string) error {
 		c, _ := cmd.Flags().GetString("color")
 		c = getColorName(c)

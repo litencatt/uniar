@@ -29,8 +29,9 @@ import (
 )
 
 var listLiveCmd = &cobra.Command{
-	Use:   "live",
-	Short: "Show live list",
+	Use:     "live",
+	Short:   "Show live list",
+	Aliases: []string{"l"},
 	RunE: func(cmd *cobra.Command, args []string) error {
 		ctx := context.Background()
 		dbPath := GetDbPath()
