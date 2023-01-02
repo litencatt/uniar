@@ -37,8 +37,9 @@ import (
 
 // sceneCmd represents the scene command
 var registSceneCmd = &cobra.Command{
-	Use:   "scene",
-	Short: "Regist a scene to database",
+	Use:     "scene",
+	Short:   "Regist a scene to database",
+	Aliases: []string{"s"},
 	RunE: func(cmd *cobra.Command, args []string) error {
 		ctx := context.Background()
 		dbPath := GetDbPath()

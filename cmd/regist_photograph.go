@@ -33,8 +33,9 @@ import (
 
 // photographCmd represents the photograph command
 var registPhotographCmd = &cobra.Command{
-	Use:   "photo",
-	Short: "Regist a photograph to database",
+	Use:     "photo",
+	Short:   "Regist a photograph to database",
+	Aliases: []string{"p"},
 	RunE: func(cmd *cobra.Command, args []string) error {
 		g := (&prompter.Prompter{
 			Choices: []string{"1", "2"},

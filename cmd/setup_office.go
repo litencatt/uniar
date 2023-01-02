@@ -35,7 +35,8 @@ import (
 )
 
 var setupOfficeCmd = &cobra.Command{
-	Use: "office",
+	Use:     "office",
+	Aliases: []string{"o"},
 	RunE: func(cmd *cobra.Command, args []string) error {
 		ctx := context.Background()
 		dbPath := GetDbPath()

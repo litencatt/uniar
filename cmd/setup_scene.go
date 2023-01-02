@@ -33,7 +33,8 @@ import (
 )
 
 var setupSceneCmd = &cobra.Command{
-	Use: "scene",
+	Use:     "scene",
+	Aliases: []string{"s"},
 	RunE: func(cmd *cobra.Command, args []string) error {
 		ctx := context.Background()
 		dbPath := GetDbPath()

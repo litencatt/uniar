@@ -32,9 +32,10 @@ import (
 )
 
 var setupCmd = &cobra.Command{
-	Use:   "setup",
-	Short: "Setup uniar",
-	Long:  "Setup your member status and scene card collections for uniar",
+	Use:     "setup",
+	Short:   "Setup uniar",
+	Long:    "Setup your member status and scene card collections for uniar",
+	Aliases: []string{"s"},
 	RunE: func(cmd *cobra.Command, args []string) error {
 		if err := setup(); err != nil {
 			return err

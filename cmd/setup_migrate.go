@@ -44,7 +44,8 @@ var (
 )
 
 var setupMigrateCmd = &cobra.Command{
-	Use: "migrate",
+	Use:     "migrate",
+	Aliases: []string{"mig"},
 	RunE: func(cmd *cobra.Command, args []string) error {
 		ctx := context.Background()
 		dbPath := GetDbPath()

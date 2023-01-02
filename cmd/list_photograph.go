@@ -29,8 +29,9 @@ import (
 )
 
 var listPhotoCmd = &cobra.Command{
-	Use:   "photo",
-	Short: "Show Photograph list",
+	Use:     "photo",
+	Short:   "Show Photograph list",
+	Aliases: []string{"p"},
 	RunE: func(cmd *cobra.Command, args []string) error {
 		ctx := context.Background()
 		dbPath := GetDbPath()
