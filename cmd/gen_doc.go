@@ -102,16 +102,16 @@ $ uniar list scene -d --ignore-columns All35,VoDa50,DaPe50,VoPe50 | head
 {{ .uniarListSceneDetail }}
 {{ .bt3 }}
 `
-		ua, _ := exec.Command("uniar").Output()
-		ual, _ := exec.Command("uniar", "list").Output()
-		ualsh, _ := exec.Command("/bin/bash", "-c", "uniar list scene -h").Output()
-		ualseg, _ := exec.Command("/bin/bash", "-c", "uniar list scene -f | head").Output()
-		ualsc, _ := exec.Command("/bin/bash", "-c", "uniar list scene -f -c Blue | head").Output()
-		ualsm, _ := exec.Command("/bin/bash", "-c", "uniar list scene -f -m 加藤史帆 | head").Output()
-		ualsp, _ := exec.Command("/bin/bash", "-c", "uniar list scene -f -p キュン | head").Output()
-		ualscb, _ := exec.Command("/bin/bash", "-c", "uniar list scene -f -c Blue -m 加藤史帆 -p キュン").Output()
-		ualsi, _ := exec.Command("/bin/bash", "-c", "uniar list scene --ignore-columns All35,VoDa50,DaPe50,VoPe50 | head").Output()
-		ualsd, _ := exec.Command("/bin/bash", "-c", "uniar list scene -d --ignore-columns All35,VoDa50,DaPe50,VoPe50 | head").Output()
+		ua, _ := exec.Command("/bin/bash", "-c", "./uniar").Output()
+		ual, _ := exec.Command("/bin/bash", "-c", "./uniar", "list").Output()
+		ualsh, _ := exec.Command("/bin/bash", "-c", "./uniar list scene -h").Output()
+		ualseg, _ := exec.Command("/bin/bash", "-c", "./uniar list scene -f | head").Output()
+		ualsc, _ := exec.Command("/bin/bash", "-c", "./uniar list scene -f -c Blue | head").Output()
+		ualsm, _ := exec.Command("/bin/bash", "-c", "./uniar list scene -f -m 加藤史帆 | head").Output()
+		ualsp, _ := exec.Command("/bin/bash", "-c", "./uniar list scene -f -p キュン | head").Output()
+		ualscb, _ := exec.Command("/bin/bash", "-c", "./uniar list scene -f -c Blue -m 加藤史帆 -p キュン").Output()
+		ualsi, _ := exec.Command("/bin/bash", "-c", "./uniar list scene --ignore-columns All35,VoDa50,DaPe50,VoPe50 | head").Output()
+		ualsd, _ := exec.Command("/bin/bash", "-c", "./uniar list scene -d --ignore-columns All35,VoDa50,DaPe50,VoPe50 | head").Output()
 		v := map[string]interface{}{
 			"bt":                    "`",
 			"bt3":                   "```",
