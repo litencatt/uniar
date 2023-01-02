@@ -41,10 +41,13 @@ db-migrate:
 echo:
 	echo $(NEXT_VER)
 
+doc: build
+	go run cmd/uniar/main.go doc > README.md
+
 prelerease:
 	@$(MAKE) dump
 	go mod tidy
-	go run cmd/uniar/main.go doc > README.md
+	@$(MAKE) doc
 	ghch -w -A --format=markdown -N $(NEXT_VER)
 	gocredits -skip-missing -w .
 

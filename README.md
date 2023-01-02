@@ -13,6 +13,7 @@ Usage:
 
 Available Commands:
   completion  Generate the autocompletion script for the specified shell
+  doc         Generate uniar document
   help        Help about any command
   list        Show data
   regist      Regist data
@@ -21,7 +22,6 @@ Available Commands:
 Flags:
       --config string   config file (default is $HOME/.uniar.yaml)
   -h, --help            help for uniar
-  -t, --toggle          Help message for toggle
   -v, --version         version for uniar
 
 Use "uniar [command] --help" for more information about a command.
@@ -41,26 +41,25 @@ $ brew install litencatt/tap/uniar
 
 ```
 $ uniar list
-Show data
+uniar is UNI'S ON AIR music and scene cards database and manage your scene cards collection tool.
 
 Usage:
-  uniar list [command]
+  uniar [command]
 
 Available Commands:
-  group       Show group list
-  live        Show live list
-  member      Show member list
-  music       Show music list
-  photo       Show Photograph list
-  scene       Show scene card list
+  completion  Generate the autocompletion script for the specified shell
+  doc         Generate uniar document
+  help        Help about any command
+  list        Show data
+  regist      Regist data
+  setup       Setup uniar
 
 Flags:
-  -h, --help   help for list
-
-Global Flags:
       --config string   config file (default is $HOME/.uniar.yaml)
+  -h, --help            help for uniar
+  -v, --version         version for uniar
 
-Use "uniar list [command] --help" for more information about a command.
+Use "uniar [command] --help" for more information about a command.
 
 ```
 
@@ -72,6 +71,9 @@ Show scene card list
 
 Usage:
   uniar list scene [flags]
+
+Aliases:
+  scene, s
 
 Flags:
   -c, --color string            Color filter(e.g. -c Red or -c r)
