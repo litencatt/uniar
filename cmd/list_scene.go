@@ -23,6 +23,8 @@ package cmd
 
 import (
 	"context"
+	"io"
+	"os"
 	"sort"
 	"strconv"
 	"strings"
@@ -37,6 +39,7 @@ var listSceneCmd = &cobra.Command{
 	Short:   "Show scene card list",
 	Aliases: []string{"s"},
 	RunE: func(cmd *cobra.Command, args []string) error {
+		// User inputs
 		c, _ := cmd.Flags().GetString("color")
 		c = getColorName(c)
 		m, _ := cmd.Flags().GetString("member")
@@ -170,7 +173,7 @@ var listSceneCmd = &cobra.Command{
 		}
 		ic := strings.Split(ignoreColumnsStr, ",")
 
-		render(scenes, ic)
+		render(os.Stdout, scenes, ic)
 		return nil
 	},
 }

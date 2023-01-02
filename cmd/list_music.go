@@ -23,6 +23,7 @@ package cmd
 
 import (
 	"context"
+	"os"
 
 	"github.com/litencatt/uniar/repository"
 	"github.com/spf13/cobra"
@@ -52,7 +53,7 @@ var listMusicCmd = &cobra.Command{
 			return err
 		}
 
-		render(music, []string{})
+		render(os.Stdout, music, []string{})
 		return nil
 	},
 }
