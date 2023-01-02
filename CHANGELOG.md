@@ -1,7 +1,11 @@
 # Changelog
 
+## [v0.9.1](https://github.com/litencatt/uniar/compare/v0.9.0...v0.9.1) (2023-01-02)
+
+
 ## [v0.9.0](https://github.com/litencatt/uniar/compare/v0.8.3...v0.9.0) (2022-12-11)
 
+* Bump to v0.9.0 [#44](https://github.com/litencatt/uniar/pull/44) ([litencatt](https://github.com/litencatt))
 * Setup command less run [#43](https://github.com/litencatt/uniar/pull/43) ([litencatt](https://github.com/litencatt))
 * Add doc gen cmd [#42](https://github.com/litencatt/uniar/pull/42) ([litencatt](https://github.com/litencatt))
 
