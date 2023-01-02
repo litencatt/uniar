@@ -44,6 +44,7 @@ echo:
 prelerease:
 	@$(MAKE) dump
 	go mod tidy
+	go run cmd/uniar/main.go doc > README.md
 	ghch -w -A --format=markdown -N $(NEXT_VER)
 	gocredits -skip-missing -w .
 
