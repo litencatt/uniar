@@ -23,7 +23,6 @@ package cmd
 
 import (
 	"context"
-	"io"
 	"os"
 	"sort"
 	"strconv"
@@ -39,9 +38,7 @@ var listSceneCmd = &cobra.Command{
 	Short:   "Show scene card list",
 	Aliases: []string{"s"},
 	RunE: func(cmd *cobra.Command, args []string) error {
-		// User inputs
 		c, _ := cmd.Flags().GetString("color")
-		c = getColorName(c)
 		m, _ := cmd.Flags().GetString("member")
 		p, _ := cmd.Flags().GetString("photograph")
 		s, _ := cmd.Flags().GetString("sort")
@@ -49,8 +46,39 @@ var listSceneCmd = &cobra.Command{
 		n, _ := cmd.Flags().GetBool("not-have")
 		d, _ := cmd.Flags().GetBool("detail")
 		f, _ := cmd.Flags().GetBool("full-name")
+		i, _ := cmd.Flags().GetString("ignore-columns")
+
+		// ユーザー入力の整形
+		color := getColorName(c)
+		if c == "" {
+			color = "%"
+		}
+
+		member := m
+		if m == "" {
+			member = "%"
+		} else {
+			member = "%" + m + "%"
+		}
+
+		photo := p
+		if p == "" {
+			photo = "%"
+		} else {
+			photo = "%" + p + "%"
+		}
+
+		// 指定非表示カラム
+		if !d && i != "" {
+			i += ",Vo,Da,Pe"
+		}
+		if !d && i == "" {
+			i = "Vo,Da,Pe"
+		}
+		ic := strings.Split(i, ",")
 
 		ctx := context.Background()
+
 		dbPath := GetDbPath()
 		db, err := repository.NewConnection(dbPath)
 		if err != nil {
@@ -58,23 +86,6 @@ var listSceneCmd = &cobra.Command{
 		}
 		q := repository.New()
 
-		var scenes []entity.Scene
-		color := c
-		if c == "" {
-			color = "%"
-		}
-		member := m
-		if m == "" {
-			member = "%"
-		} else {
-			member = "%" + m + "%"
-		}
-		photo := p
-		if p == "" {
-			photo = "%"
-		} else {
-			photo = "%" + p + "%"
-		}
 		ss, err := q.GetScenesWithColor(ctx, db, repository.GetScenesWithColorParams{
 			Name:   color,
 			Name_2: member,
@@ -83,6 +94,8 @@ var listSceneCmd = &cobra.Command{
 		if err != nil {
 			return err
 		}
+
+		var scenes []entity.Scene
 		for _, s := range ss {
 			// Show only scene you have
 			if h && s.Have == 0 {
@@ -116,6 +129,7 @@ var listSceneCmd = &cobra.Command{
 			scenes = append(scenes, scene)
 		}
 
+		// 各センタースキル毎の順位
 		sort.Slice(scenes, func(i, j int) bool { return scenes[i].All35Score > scenes[j].All35Score })
 		for i, _ := range scenes {
 			scenes[i].All35 = int64(i + 1)
@@ -145,6 +159,7 @@ var listSceneCmd = &cobra.Command{
 			scenes[i].Pe85 = int64(i + 1)
 		}
 
+		// 指定ソートで並び替え
 		switch s {
 		case "all35":
 			sort.Slice(scenes, func(i, j int) bool { return scenes[i].All35Score > scenes[j].All35Score })
@@ -163,15 +178,6 @@ var listSceneCmd = &cobra.Command{
 		default:
 			sort.Slice(scenes, func(i, j int) bool { return scenes[i].All35Score > scenes[j].All35Score })
 		}
-
-		ignoreColumnsStr, _ := cmd.Flags().GetString("ignore-columns")
-		if !d && ignoreColumnsStr != "" {
-			ignoreColumnsStr += ",Vo,Da,Pe"
-		}
-		if !d && ignoreColumnsStr == "" {
-			ignoreColumnsStr = "Vo,Da,Pe"
-		}
-		ic := strings.Split(ignoreColumnsStr, ",")
 
 		render(os.Stdout, scenes, ic)
 		return nil
