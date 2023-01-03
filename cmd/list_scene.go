@@ -26,6 +26,7 @@ import (
 	"os"
 	"strings"
 
+	"github.com/litencatt/uniar/repository"
 	"github.com/litencatt/uniar/service"
 	"github.com/spf13/cobra"
 )
@@ -87,7 +88,17 @@ var listSceneCmd = &cobra.Command{
 			FullName:   f,
 		}
 
-		srv := service.ListScene{}
+		dbPath := GetDbPath()
+		db, err := repository.NewConnection(dbPath)
+		if err != nil {
+			return err
+		}
+		q := repository.New()
+
+		srv := service.ListScene{
+			DB:      db,
+			Querier: q,
+		}
 		scenes, err := srv.ListScene(ctx, &req)
 		if err != nil {
 			return err

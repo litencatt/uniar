@@ -2,8 +2,7 @@ package service
 
 import (
 	"context"
-	"os"
-	"os/user"
+	"database/sql"
 	"sort"
 	"strconv"
 
@@ -11,7 +10,10 @@ import (
 	"github.com/litencatt/uniar/repository"
 )
 
-type ListScene struct{}
+type ListScene struct {
+	DB      *sql.DB
+	Querier repository.Querier
+}
 
 type ListSceneRequest struct {
 	Color      string
@@ -24,16 +26,9 @@ type ListSceneRequest struct {
 	FullName   bool
 }
 
-func (ls *ListScene) ListScene(ctx context.Context, arg *ListSceneRequest) ([]entity.Scene, error) {
+func (x *ListScene) ListScene(ctx context.Context, arg *ListSceneRequest) ([]entity.Scene, error) {
 
-	dbPath := GetDbPath()
-	db, err := repository.NewConnection(dbPath)
-	if err != nil {
-		return nil, err
-	}
-	q := repository.New()
-
-	ss, err := q.GetScenesWithColor(ctx, db, repository.GetScenesWithColorParams{
+	ss, err := x.Querier.GetScenesWithColor(ctx, x.DB, repository.GetScenesWithColorParams{
 		Name:   arg.Color,
 		Name_2: arg.Member,
 		Name_3: arg.Photograph,
@@ -127,21 +122,4 @@ func (ls *ListScene) ListScene(ctx context.Context, arg *ListSceneRequest) ([]en
 	}
 
 	return scenes, nil
-}
-
-func GetDbPath() string {
-	if p, ok := os.LookupEnv("UNIAR_DB_PATH"); ok {
-		return p
-	}
-	uniarPath := GetUniarPath()
-
-	return uniarPath + "/uniar.db"
-}
-
-func GetUniarPath() string {
-	user, err := user.Current()
-	if err != nil {
-		panic(err)
-	}
-	return user.HomeDir + "/.uniar"
 }
