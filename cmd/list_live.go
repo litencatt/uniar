@@ -23,6 +23,7 @@ package cmd
 
 import (
 	"context"
+	"os"
 
 	"github.com/litencatt/uniar/repository"
 	"github.com/spf13/cobra"
@@ -45,7 +46,7 @@ var listLiveCmd = &cobra.Command{
 		if err != nil {
 			return err
 		}
-		render(l, []string{})
+		render(os.Stdout, l, []string{})
 		return nil
 	},
 }

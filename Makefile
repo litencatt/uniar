@@ -44,6 +44,9 @@ echo:
 doc: build
 	go run cmd/uniar/main.go doc > README.md
 
+gen-mock:
+	mockgen -source repository/querier.go -destination repository/querier_mock.go -package repository
+
 prelerease:
 	@$(MAKE) dump
 	go mod tidy

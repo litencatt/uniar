@@ -23,7 +23,7 @@ package cmd
 
 import (
 	"fmt"
-	"os"
+	"io"
 	"reflect"
 	"regexp"
 
@@ -47,7 +47,7 @@ var (
 	scoreReg = regexp.MustCompile(`Score$`)
 )
 
-func render(data any, ignoreColumns []string) {
+func render(out io.Writer, data any, ignoreColumns []string) {
 	// // SetHeaderのためにフィールド名取得
 	var fields []string
 	var skipIdx []int
@@ -67,7 +67,7 @@ func render(data any, ignoreColumns []string) {
 	}
 	//fmt.Printf("%v\n", fields)
 
-	table := tablewriter.NewWriter(os.Stdout)
+	table := tablewriter.NewWriter(out)
 	table.SetHeader(fields)
 
 	// 各Rowの値を設定

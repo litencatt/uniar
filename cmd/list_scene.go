@@ -23,12 +23,11 @@ package cmd
 
 import (
 	"context"
-	"sort"
-	"strconv"
+	"os"
 	"strings"
 
-	"github.com/litencatt/uniar/entity"
 	"github.com/litencatt/uniar/repository"
+	"github.com/litencatt/uniar/service"
 	"github.com/spf13/cobra"
 )
 
@@ -38,7 +37,6 @@ var listSceneCmd = &cobra.Command{
 	Aliases: []string{"s"},
 	RunE: func(cmd *cobra.Command, args []string) error {
 		c, _ := cmd.Flags().GetString("color")
-		c = getColorName(c)
 		m, _ := cmd.Flags().GetString("member")
 		p, _ := cmd.Flags().GetString("photograph")
 		s, _ := cmd.Flags().GetString("sort")
@@ -46,131 +44,66 @@ var listSceneCmd = &cobra.Command{
 		n, _ := cmd.Flags().GetBool("not-have")
 		d, _ := cmd.Flags().GetBool("detail")
 		f, _ := cmd.Flags().GetBool("full-name")
+		i, _ := cmd.Flags().GetString("ignore-columns")
 
-		ctx := context.Background()
-		dbPath := GetDbPath()
-		db, err := repository.NewConnection(dbPath)
-		if err != nil {
-			return err
-		}
-		q := repository.New()
-
-		var scenes []entity.Scene
-		color := c
+		// ユーザー入力の整形
+		color := getColorName(c)
 		if c == "" {
 			color = "%"
 		}
+
 		member := m
 		if m == "" {
 			member = "%"
 		} else {
 			member = "%" + m + "%"
 		}
+
 		photo := p
 		if p == "" {
 			photo = "%"
 		} else {
 			photo = "%" + p + "%"
 		}
-		ss, err := q.GetScenesWithColor(ctx, db, repository.GetScenesWithColorParams{
-			Name:   color,
-			Name_2: member,
-			Name_3: photo,
-		})
+
+		// 指定非表示カラム
+		if !d && i != "" {
+			i += ",Vo,Da,Pe"
+		}
+		if !d && i == "" {
+			i = "Vo,Da,Pe"
+		}
+		ic := strings.Split(i, ",")
+
+		ctx := context.Background()
+
+		req := service.ListSceneRequest{
+			Color:      color,
+			Member:     member,
+			Photograph: photo,
+			Sort:       s,
+			Have:       h,
+			NotHave:    n,
+			Detail:     d,
+			FullName:   f,
+		}
+
+		db, err := repository.NewConnection(GetDbPath())
 		if err != nil {
 			return err
 		}
-		for _, s := range ss {
-			// Show only scene you have
-			if h && s.Have == 0 {
-				continue
-			}
-			// Show only scene you not have
-			if n && s.Have != 0 {
-				continue
-			}
+		q := repository.New()
 
-			var e float64
-			if s.ExpectedValue.Valid {
-				e, _ = strconv.ParseFloat(s.ExpectedValue.String, 32)
-			}
-			p := s.Photograph
-			if !f && s.Abbreviation != "" {
-				p = s.Abbreviation
-			}
-			scene := entity.Scene{
-				Photograph: p,
-				Member:     s.Member,
-				Color:      s.Color,
-				Total:      s.Total,
-				Vo:         s.VocalMax,
-				Da:         s.DanceMax,
-				Pe:         s.PerformanceMax,
-				Expect:     float32(e),
-				SsrPlus:    s.SsrPlus == 1,
-			}
-			scene.CalcTotal(s.Bonds, s.Discography)
-			scenes = append(scenes, scene)
+		svc := service.ListScene{
+			DB:      db,
+			Querier: q,
+		}
+		scenes, err := svc.ListScene(ctx, &req)
+		if err != nil {
+			return err
 		}
 
-		sort.Slice(scenes, func(i, j int) bool { return scenes[i].All35Score > scenes[j].All35Score })
-		for i, _ := range scenes {
-			scenes[i].All35 = int64(i + 1)
-		}
-		sort.Slice(scenes, func(i, j int) bool { return scenes[i].VoDa50Score > scenes[j].VoDa50Score })
-		for i, _ := range scenes {
-			scenes[i].VoDa50 = int64(i + 1)
-		}
-		sort.Slice(scenes, func(i, j int) bool { return scenes[i].DaPe50Score > scenes[j].DaPe50Score })
-		for i, _ := range scenes {
-			scenes[i].DaPe50 = int64(i + 1)
-		}
-		sort.Slice(scenes, func(i, j int) bool { return scenes[i].VoPe50Score > scenes[j].VoPe50Score })
-		for i, _ := range scenes {
-			scenes[i].VoPe50 = int64(i + 1)
-		}
-		sort.Slice(scenes, func(i, j int) bool { return scenes[i].Vo85Score > scenes[j].Vo85Score })
-		for i, _ := range scenes {
-			scenes[i].Vo85 = int64(i + 1)
-		}
-		sort.Slice(scenes, func(i, j int) bool { return scenes[i].Da85Score > scenes[j].Da85Score })
-		for i, _ := range scenes {
-			scenes[i].Da85 = int64(i + 1)
-		}
-		sort.Slice(scenes, func(i, j int) bool { return scenes[i].Pe85Score > scenes[j].Pe85Score })
-		for i, _ := range scenes {
-			scenes[i].Pe85 = int64(i + 1)
-		}
-
-		switch s {
-		case "all35":
-			sort.Slice(scenes, func(i, j int) bool { return scenes[i].All35Score > scenes[j].All35Score })
-		case "voda50":
-			sort.Slice(scenes, func(i, j int) bool { return scenes[i].VoDa50Score > scenes[j].VoDa50Score })
-		case "dape50":
-			sort.Slice(scenes, func(i, j int) bool { return scenes[i].DaPe50Score > scenes[j].DaPe50Score })
-		case "vope50":
-			sort.Slice(scenes, func(i, j int) bool { return scenes[i].VoPe50Score > scenes[j].VoPe50Score })
-		case "vo85":
-			sort.Slice(scenes, func(i, j int) bool { return scenes[i].Vo85Score > scenes[j].Vo85Score })
-		case "da85":
-			sort.Slice(scenes, func(i, j int) bool { return scenes[i].Da85Score > scenes[j].Da85Score })
-		case "pe85":
-			sort.Slice(scenes, func(i, j int) bool { return scenes[i].Pe85Score > scenes[j].Pe85Score })
-		default:
-			sort.Slice(scenes, func(i, j int) bool { return scenes[i].All35Score > scenes[j].All35Score })
-		}
-
-		ignoreColumnsStr, _ := cmd.Flags().GetString("ignore-columns")
-		if !d && ignoreColumnsStr != "" {
-			ignoreColumnsStr += ",Vo,Da,Pe"
-		}
-		if !d && ignoreColumnsStr == "" {
-			ignoreColumnsStr = "Vo,Da,Pe"
-		}
-		ic := strings.Split(ignoreColumnsStr, ",")
-
-		render(scenes, ic)
+		render(os.Stdout, scenes, ic)
 		return nil
 	},
 }

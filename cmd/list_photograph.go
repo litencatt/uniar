@@ -23,6 +23,7 @@ package cmd
 
 import (
 	"context"
+	"os"
 
 	"github.com/litencatt/uniar/repository"
 	"github.com/spf13/cobra"
@@ -47,7 +48,7 @@ var listPhotoCmd = &cobra.Command{
 			return err
 		}
 
-		render(l, []string{})
+		render(os.Stdout, l, []string{})
 		return nil
 	},
 }
