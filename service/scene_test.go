@@ -74,7 +74,7 @@ func TestListScene(t *testing.T) {
 				t.Fatal(err)
 			}
 			if res[0] != tc.exp[0] {
-				t.Errorf("Expected %v, got %+v instead", tc.exp[0], res[0])
+				t.Errorf("Expected %+v, got %+v instead", tc.exp[0], res[0])
 			}
 		})
 	}
