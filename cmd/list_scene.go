@@ -88,18 +88,17 @@ var listSceneCmd = &cobra.Command{
 			FullName:   f,
 		}
 
-		dbPath := GetDbPath()
-		db, err := repository.NewConnection(dbPath)
+		db, err := repository.NewConnection(GetDbPath())
 		if err != nil {
 			return err
 		}
 		q := repository.New()
 
-		srv := service.ListScene{
+		svc := service.ListScene{
 			DB:      db,
 			Querier: q,
 		}
-		scenes, err := srv.ListScene(ctx, &req)
+		scenes, err := svc.ListScene(ctx, &req)
 		if err != nil {
 			return err
 		}
