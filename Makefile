@@ -36,7 +36,7 @@ docker-build:
 	docker build -t litencatt/uniar:latest  --build-arg GITHUB_COM_TOKEN=$$GITHUB_COM_TOKEN .
 
 db-migrate:
-	sqlite3def uniar.db -f sql/schema.sql
+	sqlite3def ~/.uniar/uniar.db -f sql/schema.sql
 
 echo:
 	echo $(NEXT_VER)
