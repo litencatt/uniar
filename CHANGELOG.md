@@ -1,7 +1,15 @@
 # Changelog
 
+## [v0.10.0](https://github.com/litencatt/uniar/compare/v0.9.2...v0.10.0) (2023-01-08)
+
+* Change producer member primary key [#50](https://github.com/litencatt/uniar/pull/50) ([litencatt](https://github.com/litencatt))
+* Add photograph NEW YEAR'23 [#49](https://github.com/litencatt/uniar/pull/49) ([litencatt](https://github.com/litencatt))
+* Add photograph FL ひなくり2021 and scenes [#48](https://github.com/litencatt/uniar/pull/48) ([litencatt](https://github.com/litencatt))
+* Add service layer [#47](https://github.com/litencatt/uniar/pull/47) ([litencatt](https://github.com/litencatt))
+
 ## [v0.9.2](https://github.com/litencatt/uniar/compare/v0.9.1...v0.9.2) (2023-01-02)
 
+* Fix doc generation [#46](https://github.com/litencatt/uniar/pull/46) ([litencatt](https://github.com/litencatt))
 
 ## [v0.9.1](https://github.com/litencatt/uniar/compare/v0.9.0...v0.9.1) (2023-01-02)
 
