@@ -1,6 +1,5 @@
 -- name: GetProducerMember :many
 SELECT
-    pm.id,
     m.name,
     pm.bond_level_curent,
     pm.discography_disc_total
@@ -12,7 +11,7 @@ ORDER BY
 ;
 
 -- name: RegistProducerMember :exec
-INSERT INTO producer_members (
+INSERT OR IGNORE INTO producer_members (
     producer_id,
     member_id,
     bond_level_curent,
@@ -31,5 +30,5 @@ SET
     bond_level_curent = ?,
     discography_disc_total = ?
 WHERE
-    id = ?
+    producer_id = ? AND member_id = ?
 ;

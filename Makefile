@@ -12,17 +12,9 @@ export GO111MODULE=on
 BUILD_LDFLAGS = -X $(PKG).commit=$(COMMIT) -X $(PKG).date=$(DATE)
 UNIAR_BINARY ?= ./uniar
 
-dump:
-	sqlite3 ~/.uniar/uniar.db '.dump "center_skills"' | grep ^INSERT  > sql/seed.sql
-	sqlite3 ~/.uniar/uniar.db '.dump "color_types"'   | grep ^INSERT >> sql/seed.sql
-	sqlite3 ~/.uniar/uniar.db '.dump "groups"'        | grep ^INSERT >> sql/seed.sql
-	sqlite3 ~/.uniar/uniar.db '.dump "lives"'         | grep ^INSERT >> sql/seed.sql
-	sqlite3 ~/.uniar/uniar.db '.dump "members"'       | grep ^INSERT >> sql/seed.sql
-	sqlite3 ~/.uniar/uniar.db '.dump "music"'         | grep ^INSERT >> sql/seed.sql
-	sqlite3 ~/.uniar/uniar.db '.dump "photograph"'    | grep ^INSERT >> sql/seed.sql
-	sqlite3 ~/.uniar/uniar.db '.dump "scenes"'        | grep ^INSERT >> sql/seed.sql
-	sqlite3 ~/.uniar/uniar.db '.dump "skills"'        | grep ^INSERT >> sql/seed.sql
-	sed -i '' -e "s/INSERT INTO/INSERT OR REPLACE INTO/g" sql/seed.sql
+sqldef-update:
+	curl -OL https://github.com/k0kubun/sqldef/releases/download/v0.15.6/sqlite3def_darwin_arm64.zip
+	sudo tar xf sqlite3def_darwin_arm64.zip -C /usr/local/bin
 
 build:
 	go build -ldflags="$(BUILD_LDFLAGS)" -o $(UNIAR_BINARY) cmd/uniar/main.go
@@ -35,11 +27,23 @@ air-cmd:
 docker-build:
 	docker build -t litencatt/uniar:latest  --build-arg GITHUB_COM_TOKEN=$$GITHUB_COM_TOKEN .
 
+db-init:
+	rm ~/.uniar/uniar.db
+
 db-migrate:
 	sqlite3def ~/.uniar/uniar.db -f sql/schema.sql
 
-echo:
-	echo $(NEXT_VER)
+db-dump:
+	sqlite3 ~/.uniar/uniar.db '.dump "center_skills"' | grep ^INSERT  > sql/seed.sql
+	sqlite3 ~/.uniar/uniar.db '.dump "color_types"'   | grep ^INSERT >> sql/seed.sql
+	sqlite3 ~/.uniar/uniar.db '.dump "groups"'        | grep ^INSERT >> sql/seed.sql
+	sqlite3 ~/.uniar/uniar.db '.dump "lives"'         | grep ^INSERT >> sql/seed.sql
+	sqlite3 ~/.uniar/uniar.db '.dump "members"'       | grep ^INSERT >> sql/seed.sql
+	sqlite3 ~/.uniar/uniar.db '.dump "music"'         | grep ^INSERT >> sql/seed.sql
+	sqlite3 ~/.uniar/uniar.db '.dump "photograph"'    | grep ^INSERT >> sql/seed.sql
+	sqlite3 ~/.uniar/uniar.db '.dump "scenes"'        | grep ^INSERT >> sql/seed.sql
+	sqlite3 ~/.uniar/uniar.db '.dump "skills"'        | grep ^INSERT >> sql/seed.sql
+	sed -i '' -e "s/INSERT INTO/INSERT OR REPLACE INTO/g" sql/seed.sql
 
 doc: build
 	go run cmd/uniar/main.go doc > README.md
