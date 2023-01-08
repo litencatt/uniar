@@ -52,7 +52,7 @@ gen-mock:
 	mockgen -source repository/querier.go -destination repository/querier_mock.go -package repository
 
 prelerease:
-	@$(MAKE) dump
+	@$(MAKE) db-dump
 	go mod tidy
 	@$(MAKE) doc
 	ghch -w -A --format=markdown -N $(NEXT_VER)
