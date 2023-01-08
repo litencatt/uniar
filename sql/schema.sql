@@ -106,7 +106,6 @@ CREATE TABLE producer_scenes (
 );
 
 CREATE TABLE producer_members (
-  id integer PRIMARY KEY AUTOINCREMENT,
   producer_id integer NOT NULL,
   member_id integer NOT NULL,
   bond_level_curent integer NOT NULL,
@@ -115,6 +114,7 @@ CREATE TABLE producer_members (
   discography_disc_total integer NOT NULL,
   discography_disc_total_max integer NOT NULL,
   created_at DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  PRIMARY KEY(producer_id, member_id),
   CONSTRAINT fk_producer_members_producer_id FOREIGN KEY (producer_id) REFERENCES producers (id),
   CONSTRAINT fk_producer_members_member_id FOREIGN KEY (member_id) REFERENCES members (id)
 );

@@ -60,7 +60,7 @@ func (q *Queries) GetProducerMember(ctx context.Context, db DBTX) ([]GetProducer
 const registProducerMember = `-- name: RegistProducerMember :exec
 ;
 
-INSERT INTO producer_members (
+INSERT OR IGNORE INTO producer_members (
     producer_id,
     member_id,
     bond_level_curent,
