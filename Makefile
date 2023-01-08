@@ -51,7 +51,7 @@ doc: build
 gen-mock:
 	mockgen -source repository/querier.go -destination repository/querier_mock.go -package repository
 
-prelerease:
+prerelease:
 	@$(MAKE) db-dump
 	go mod tidy
 	@$(MAKE) doc
