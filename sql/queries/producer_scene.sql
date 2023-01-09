@@ -10,7 +10,7 @@ SELECT
     ps.have
 FROM
     producer_scenes ps
-    JOIN scenes s ON ps.photograph_id = s.photograph_id AND ps.member_id = s.member_id
+    JOIN scenes s ON ps.photograph_id = s.photograph_id AND ps.member_id = s.member_id AND ps.ssr_plus = s.ssr_plus
     JOIN photograph p on ps.photograph_id = p.id
     JOIN members m on ps.member_id = m.id
     JOIN color_types c ON s.color_type_id = c.id
