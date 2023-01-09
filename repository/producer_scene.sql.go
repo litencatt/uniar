@@ -12,7 +12,8 @@ import (
 const getProducerScenes = `-- name: GetProducerScenes :many
 SELECT
     ps.producer_id,
-    ps.scene_id,
+    ps.photograph_id,
+    ps.member_id,
     c.name AS color,
     p.name AS photograph,
     m.name AS member,
@@ -20,9 +21,9 @@ SELECT
     ps.have
 FROM
     producer_scenes ps
-    JOIN scenes s ON ps.scene_id = s.id
-    JOIN photograph p on s.photograph_id = p.id
-    JOIN members m on s.member_id = m.id
+    JOIN scenes s ON ps.photograph_id = s.photograph_id AND ps.member_id = s.member_id
+    JOIN photograph p on ps.photograph_id = p.id
+    JOIN members m on ps.member_id = m.id
     JOIN color_types c ON s.color_type_id = c.id
 ORDER BY
     p.id,
@@ -31,13 +32,14 @@ ORDER BY
 `
 
 type GetProducerScenesRow struct {
-	ProducerID int64
-	SceneID    int64
-	Color      string
-	Photograph string
-	Member     string
-	SsrPlus    int64
-	Have       int64
+	ProducerID   int64
+	PhotographID int64
+	MemberID     int64
+	Color        string
+	Photograph   string
+	Member       string
+	SsrPlus      int64
+	Have         int64
 }
 
 func (q *Queries) GetProducerScenes(ctx context.Context, db DBTX) ([]GetProducerScenesRow, error) {
@@ -51,7 +53,8 @@ func (q *Queries) GetProducerScenes(ctx context.Context, db DBTX) ([]GetProducer
 		var i GetProducerScenesRow
 		if err := rows.Scan(
 			&i.ProducerID,
-			&i.SceneID,
+			&i.PhotographID,
+			&i.MemberID,
 			&i.Color,
 			&i.Photograph,
 			&i.Member,
@@ -76,19 +79,26 @@ const insertOrUpdateProducerScene = `-- name: InsertOrUpdateProducerScene :exec
 
 INSERT OR REPLACE INTO producer_scenes (
 	producer_id,
-	scene_id,
+	photograph_id,
+    member_id,
     have
-) VALUES (?, ?, ?)
+) VALUES (?, ?, ?, ?)
 `
 
 type InsertOrUpdateProducerSceneParams struct {
-	ProducerID int64
-	SceneID    int64
-	Have       int64
+	ProducerID   int64
+	PhotographID int64
+	MemberID     int64
+	Have         int64
 }
 
 func (q *Queries) InsertOrUpdateProducerScene(ctx context.Context, db DBTX, arg InsertOrUpdateProducerSceneParams) error {
-	_, err := db.ExecContext(ctx, insertOrUpdateProducerScene, arg.ProducerID, arg.SceneID, arg.Have)
+	_, err := db.ExecContext(ctx, insertOrUpdateProducerScene,
+		arg.ProducerID,
+		arg.PhotographID,
+		arg.MemberID,
+		arg.Have,
+	)
 	return err
 }
 
@@ -97,16 +107,18 @@ const registProducerScene = `-- name: RegistProducerScene :exec
 
 INSERT OR IGNORE INTO producer_scenes (
 	producer_id,
-	scene_id
-) VALUES (?, ?)
+	photograph_id,
+    member_id
+) VALUES (?, ?, ?)
 `
 
 type RegistProducerSceneParams struct {
-	ProducerID int64
-	SceneID    int64
+	ProducerID   int64
+	PhotographID int64
+	MemberID     int64
 }
 
 func (q *Queries) RegistProducerScene(ctx context.Context, db DBTX, arg RegistProducerSceneParams) error {
-	_, err := db.ExecContext(ctx, registProducerScene, arg.ProducerID, arg.SceneID)
+	_, err := db.ExecContext(ctx, registProducerScene, arg.ProducerID, arg.PhotographID, arg.MemberID)
 	return err
 }

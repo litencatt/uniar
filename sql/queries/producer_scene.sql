@@ -1,7 +1,8 @@
 -- name: GetProducerScenes :many
 SELECT
     ps.producer_id,
-    ps.scene_id,
+    ps.photograph_id,
+    ps.member_id,
     c.name AS color,
     p.name AS photograph,
     m.name AS member,
@@ -9,9 +10,9 @@ SELECT
     ps.have
 FROM
     producer_scenes ps
-    JOIN scenes s ON ps.scene_id = s.id
-    JOIN photograph p on s.photograph_id = p.id
-    JOIN members m on s.member_id = m.id
+    JOIN scenes s ON ps.photograph_id = s.photograph_id AND ps.member_id = s.member_id
+    JOIN photograph p on ps.photograph_id = p.id
+    JOIN members m on ps.member_id = m.id
     JOIN color_types c ON s.color_type_id = c.id
 ORDER BY
     p.id,
@@ -22,14 +23,16 @@ ORDER BY
 -- name: RegistProducerScene :exec
 INSERT OR IGNORE INTO producer_scenes (
 	producer_id,
-	scene_id
-) VALUES (?, ?)
+	photograph_id,
+    member_id
+) VALUES (?, ?, ?)
 ;
 
 -- name: InsertOrUpdateProducerScene :exec
 INSERT OR REPLACE INTO producer_scenes (
 	producer_id,
-	scene_id,
+	photograph_id,
+    member_id,
     have
-) VALUES (?, ?, ?)
+) VALUES (?, ?, ?, ?)
 ;

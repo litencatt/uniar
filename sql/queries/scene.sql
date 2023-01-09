@@ -1,5 +1,10 @@
 -- name: GetAllScenes :many
-SELECT s.id FROM scenes s;
+SELECT
+	s.photograph_id,
+	s.member_id
+FROM
+	scenes s
+;
 
 -- name: GetScenesWithColor :many
 SELECT

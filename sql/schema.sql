@@ -99,12 +99,14 @@ CREATE TABLE producers (
 
 CREATE TABLE producer_scenes (
   producer_id integer NOT NULL,
-  scene_id integer NOT NULL,
+  photograph_id integer NOT NULL,
+  member_id integer NOT NULL,
   have integer NOT NULL DEFAULT 0,
   created_at DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
-  PRIMARY KEY(producer_id, scene_id),
+  PRIMARY KEY(producer_id, photograph_id, member_id),
   CONSTRAINT fk_producer_scenes_producer_id FOREIGN KEY (producer_id) REFERENCES producers (id),
-  CONSTRAINT fk_producer_scenes_scene_id FOREIGN KEY (scene_id) REFERENCES scenes (id)
+  CONSTRAINT fk_producer_scenes_photo_id FOREIGN KEY (photograph_id) REFERENCES photograph (id),
+  CONSTRAINT fk_producer_scenes_member_id FOREIGN KEY (member_id) REFERENCES members (id)
 );
 
 CREATE TABLE producer_members (

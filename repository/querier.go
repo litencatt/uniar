@@ -10,7 +10,7 @@ import (
 
 type Querier interface {
 	GetAllMembers(ctx context.Context, db DBTX) ([]Member, error)
-	GetAllScenes(ctx context.Context, db DBTX) ([]int64, error)
+	GetAllScenes(ctx context.Context, db DBTX) ([]GetAllScenesRow, error)
 	GetGroup(ctx context.Context, db DBTX) ([]GetGroupRow, error)
 	GetGroupNameById(ctx context.Context, db DBTX, id int64) (string, error)
 	GetLiveList(ctx context.Context, db DBTX) ([]GetLiveListRow, error)

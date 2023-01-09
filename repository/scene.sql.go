@@ -11,22 +11,31 @@ import (
 )
 
 const getAllScenes = `-- name: GetAllScenes :many
-SELECT s.id FROM scenes s
+SELECT
+	s.photograph_id,
+	s.member_id
+FROM
+	scenes s
 `
 
-func (q *Queries) GetAllScenes(ctx context.Context, db DBTX) ([]int64, error) {
+type GetAllScenesRow struct {
+	PhotographID int64
+	MemberID     int64
+}
+
+func (q *Queries) GetAllScenes(ctx context.Context, db DBTX) ([]GetAllScenesRow, error) {
 	rows, err := db.QueryContext(ctx, getAllScenes)
 	if err != nil {
 		return nil, err
 	}
 	defer rows.Close()
-	var items []int64
+	var items []GetAllScenesRow
 	for rows.Next() {
-		var id int64
-		if err := rows.Scan(&id); err != nil {
+		var i GetAllScenesRow
+		if err := rows.Scan(&i.PhotographID, &i.MemberID); err != nil {
 			return nil, err
 		}
-		items = append(items, id)
+		items = append(items, i)
 	}
 	if err := rows.Close(); err != nil {
 		return nil, err
@@ -38,6 +47,8 @@ func (q *Queries) GetAllScenes(ctx context.Context, db DBTX) ([]int64, error) {
 }
 
 const getScenesWithColor = `-- name: GetScenesWithColor :many
+;
+
 SELECT
 	s.id,
 	p.name AS photograph,
