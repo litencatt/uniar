@@ -95,6 +95,7 @@ type ProducerScene struct {
 	ProducerID   int64
 	PhotographID int64
 	MemberID     int64
+	SsrPlus      int64
 	Have         int64
 	CreatedAt    time.Time
 }

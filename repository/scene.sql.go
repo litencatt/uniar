@@ -13,7 +13,8 @@ import (
 const getAllScenes = `-- name: GetAllScenes :many
 SELECT
 	s.photograph_id,
-	s.member_id
+	s.member_id,
+	s.ssr_plus
 FROM
 	scenes s
 `
@@ -21,6 +22,7 @@ FROM
 type GetAllScenesRow struct {
 	PhotographID int64
 	MemberID     int64
+	SsrPlus      int64
 }
 
 func (q *Queries) GetAllScenes(ctx context.Context, db DBTX) ([]GetAllScenesRow, error) {
@@ -32,7 +34,7 @@ func (q *Queries) GetAllScenes(ctx context.Context, db DBTX) ([]GetAllScenesRow,
 	var items []GetAllScenesRow
 	for rows.Next() {
 		var i GetAllScenesRow
-		if err := rows.Scan(&i.PhotographID, &i.MemberID); err != nil {
+		if err := rows.Scan(&i.PhotographID, &i.MemberID, &i.SsrPlus); err != nil {
 			return nil, err
 		}
 		items = append(items, i)
@@ -70,7 +72,8 @@ FROM
 	JOIN color_types c ON s.color_type_id = c.id
 	JOIN members m ON s.member_id = m.id
 	LEFT OUTER JOIN producer_members pm ON s.member_id = pm.member_id
-	LEFT OUTER JOIN producer_scenes ps ON s.id = ps.scene_id
+	LEFT OUTER JOIN producer_scenes ps
+		ON s.photograph_id = ps.photograph_id AND s.member_id = ps.member_id AND s.ssr_plus = ps.ssr_plus
 WHERE
 	c.name LIKE ?
 	AND m.name LIKE ?

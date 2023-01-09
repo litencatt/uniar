@@ -62,6 +62,7 @@ func initProducerScene(ctx context.Context, db *sql.DB, q *repository.Queries) e
 			ProducerID:   1,
 			PhotographID: s.PhotographID,
 			MemberID:     s.MemberID,
+			SsrPlus:      s.SsrPlus,
 		}); err != nil {
 			return err
 		}
@@ -96,6 +97,7 @@ func setupScene(ctx context.Context, db *sql.DB, q *repository.Queries) error {
 			ProducerID:   s.ProducerID,
 			PhotographID: s.PhotographID,
 			MemberID:     s.MemberID,
+			SsrPlus:      s.SsrPlus,
 			Have:         int64(hi),
 		}); err != nil {
 			return err

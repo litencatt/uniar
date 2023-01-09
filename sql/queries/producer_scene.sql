@@ -24,8 +24,9 @@ ORDER BY
 INSERT OR IGNORE INTO producer_scenes (
 	producer_id,
 	photograph_id,
-    member_id
-) VALUES (?, ?, ?)
+    member_id,
+    ssr_plus
+) VALUES (?, ?, ?, ?)
 ;
 
 -- name: InsertOrUpdateProducerScene :exec
@@ -33,6 +34,7 @@ INSERT OR REPLACE INTO producer_scenes (
 	producer_id,
 	photograph_id,
     member_id,
+    ssr_plus,
     have
-) VALUES (?, ?, ?, ?)
+) VALUES (?, ?, ?, ?, ?)
 ;

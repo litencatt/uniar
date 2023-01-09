@@ -81,14 +81,16 @@ INSERT OR REPLACE INTO producer_scenes (
 	producer_id,
 	photograph_id,
     member_id,
+    ssr_plus,
     have
-) VALUES (?, ?, ?, ?)
+) VALUES (?, ?, ?, ?, ?)
 `
 
 type InsertOrUpdateProducerSceneParams struct {
 	ProducerID   int64
 	PhotographID int64
 	MemberID     int64
+	SsrPlus      int64
 	Have         int64
 }
 
@@ -97,6 +99,7 @@ func (q *Queries) InsertOrUpdateProducerScene(ctx context.Context, db DBTX, arg 
 		arg.ProducerID,
 		arg.PhotographID,
 		arg.MemberID,
+		arg.SsrPlus,
 		arg.Have,
 	)
 	return err
@@ -108,17 +111,24 @@ const registProducerScene = `-- name: RegistProducerScene :exec
 INSERT OR IGNORE INTO producer_scenes (
 	producer_id,
 	photograph_id,
-    member_id
-) VALUES (?, ?, ?)
+    member_id,
+    ssr_plus
+) VALUES (?, ?, ?, ?)
 `
 
 type RegistProducerSceneParams struct {
 	ProducerID   int64
 	PhotographID int64
 	MemberID     int64
+	SsrPlus      int64
 }
 
 func (q *Queries) RegistProducerScene(ctx context.Context, db DBTX, arg RegistProducerSceneParams) error {
-	_, err := db.ExecContext(ctx, registProducerScene, arg.ProducerID, arg.PhotographID, arg.MemberID)
+	_, err := db.ExecContext(ctx, registProducerScene,
+		arg.ProducerID,
+		arg.PhotographID,
+		arg.MemberID,
+		arg.SsrPlus,
+	)
 	return err
 }
