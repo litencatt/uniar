@@ -14,6 +14,9 @@ FROM
     JOIN photograph p on ps.photograph_id = p.id
     JOIN members m on ps.member_id = m.id
     JOIN color_types c ON s.color_type_id = c.id
+WHERE
+    p.name LIKE ?
+    AND m.name LIKE ?
 ORDER BY
     p.id,
     m.phase,
@@ -29,12 +32,13 @@ INSERT OR IGNORE INTO producer_scenes (
 ) VALUES (?, ?, ?, ?)
 ;
 
--- name: InsertOrUpdateProducerScene :exec
-INSERT OR REPLACE INTO producer_scenes (
-	producer_id,
-	photograph_id,
-    member_id,
-    ssr_plus,
-    have
-) VALUES (?, ?, ?, ?, ?)
+-- name: UpdateProducerScene :exec
+UPDATE
+    producer_scenes
+SET
+    have = ?
+WHERE
+	producer_id = ?
+	AND photograph_id = ?
+    AND member_id = ?
 ;

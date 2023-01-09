@@ -25,11 +25,19 @@ FROM
     JOIN photograph p on ps.photograph_id = p.id
     JOIN members m on ps.member_id = m.id
     JOIN color_types c ON s.color_type_id = c.id
+WHERE
+    p.name LIKE ?
+    AND m.name LIKE ?
 ORDER BY
     p.id,
     m.phase,
     m.first_name
 `
+
+type GetProducerScenesParams struct {
+	Name   string
+	Name_2 string
+}
 
 type GetProducerScenesRow struct {
 	ProducerID   int64
@@ -42,8 +50,8 @@ type GetProducerScenesRow struct {
 	Have         int64
 }
 
-func (q *Queries) GetProducerScenes(ctx context.Context, db DBTX) ([]GetProducerScenesRow, error) {
-	rows, err := db.QueryContext(ctx, getProducerScenes)
+func (q *Queries) GetProducerScenes(ctx context.Context, db DBTX, arg GetProducerScenesParams) ([]GetProducerScenesRow, error) {
+	rows, err := db.QueryContext(ctx, getProducerScenes, arg.Name, arg.Name_2)
 	if err != nil {
 		return nil, err
 	}
@@ -74,37 +82,6 @@ func (q *Queries) GetProducerScenes(ctx context.Context, db DBTX) ([]GetProducer
 	return items, nil
 }
 
-const insertOrUpdateProducerScene = `-- name: InsertOrUpdateProducerScene :exec
-;
-
-INSERT OR REPLACE INTO producer_scenes (
-	producer_id,
-	photograph_id,
-    member_id,
-    ssr_plus,
-    have
-) VALUES (?, ?, ?, ?, ?)
-`
-
-type InsertOrUpdateProducerSceneParams struct {
-	ProducerID   int64
-	PhotographID int64
-	MemberID     int64
-	SsrPlus      int64
-	Have         int64
-}
-
-func (q *Queries) InsertOrUpdateProducerScene(ctx context.Context, db DBTX, arg InsertOrUpdateProducerSceneParams) error {
-	_, err := db.ExecContext(ctx, insertOrUpdateProducerScene,
-		arg.ProducerID,
-		arg.PhotographID,
-		arg.MemberID,
-		arg.SsrPlus,
-		arg.Have,
-	)
-	return err
-}
-
 const registProducerScene = `-- name: RegistProducerScene :exec
 ;
 
@@ -129,6 +106,36 @@ func (q *Queries) RegistProducerScene(ctx context.Context, db DBTX, arg RegistPr
 		arg.PhotographID,
 		arg.MemberID,
 		arg.SsrPlus,
+	)
+	return err
+}
+
+const updateProducerScene = `-- name: UpdateProducerScene :exec
+;
+
+UPDATE
+    producer_scenes
+SET
+    have = ?
+WHERE
+	producer_id = ?
+	AND photograph_id = ?
+    AND member_id = ?
+`
+
+type UpdateProducerSceneParams struct {
+	Have         int64
+	ProducerID   int64
+	PhotographID int64
+	MemberID     int64
+}
+
+func (q *Queries) UpdateProducerScene(ctx context.Context, db DBTX, arg UpdateProducerSceneParams) error {
+	_, err := db.ExecContext(ctx, updateProducerScene,
+		arg.Have,
+		arg.ProducerID,
+		arg.PhotographID,
+		arg.MemberID,
 	)
 	return err
 }
