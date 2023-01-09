@@ -17,7 +17,6 @@ Available Commands:
   help        Help about any command
   list        Show data
   regist      Regist data
-  server      Start uniar web server
   setup       Setup uniar
 
 Flags:
@@ -53,7 +52,6 @@ Available Commands:
   help        Help about any command
   list        Show data
   regist      Regist data
-  server      Start uniar web server
   setup       Setup uniar
 
 Flags:
