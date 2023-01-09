@@ -11,7 +11,6 @@ import (
 
 const getProducerMember = `-- name: GetProducerMember :many
 SELECT
-    pm.id,
     m.name,
     pm.bond_level_curent,
     pm.discography_disc_total
@@ -23,7 +22,6 @@ ORDER BY
 `
 
 type GetProducerMemberRow struct {
-	ID                   int64
 	Name                 string
 	BondLevelCurent      int64
 	DiscographyDiscTotal int64
@@ -38,12 +36,7 @@ func (q *Queries) GetProducerMember(ctx context.Context, db DBTX) ([]GetProducer
 	var items []GetProducerMemberRow
 	for rows.Next() {
 		var i GetProducerMemberRow
-		if err := rows.Scan(
-			&i.ID,
-			&i.Name,
-			&i.BondLevelCurent,
-			&i.DiscographyDiscTotal,
-		); err != nil {
+		if err := rows.Scan(&i.Name, &i.BondLevelCurent, &i.DiscographyDiscTotal); err != nil {
 			return nil, err
 		}
 		items = append(items, i)
@@ -89,16 +82,22 @@ SET
     bond_level_curent = ?,
     discography_disc_total = ?
 WHERE
-    id = ?
+    producer_id = ? AND member_id = ?
 `
 
 type UpdateProducerMemberParams struct {
 	BondLevelCurent      int64
 	DiscographyDiscTotal int64
-	ID                   int64
+	ProducerID           int64
+	MemberID             int64
 }
 
 func (q *Queries) UpdateProducerMember(ctx context.Context, db DBTX, arg UpdateProducerMemberParams) error {
-	_, err := db.ExecContext(ctx, updateProducerMember, arg.BondLevelCurent, arg.DiscographyDiscTotal, arg.ID)
+	_, err := db.ExecContext(ctx, updateProducerMember,
+		arg.BondLevelCurent,
+		arg.DiscographyDiscTotal,
+		arg.ProducerID,
+		arg.MemberID,
+	)
 	return err
 }

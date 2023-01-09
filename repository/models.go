@@ -74,7 +74,6 @@ type Producer struct {
 }
 
 type ProducerMember struct {
-	ID                      int64
 	ProducerID              int64
 	MemberID                int64
 	BondLevelCurent         int64
