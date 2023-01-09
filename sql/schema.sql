@@ -69,6 +69,8 @@ CREATE TABLE scenes (
   vocal_max integer NOT NULL,
   dance_max integer NOT NULL,
   performance_max integer NOT NULL,
+  life integer NOT NULL DEFAULT 0,
+  luck integer NOT NULL DEFAULT 0,
   center_skill varchar(100)  DEFAULT NULL,
   expected_value varchar(100)  DEFAULT NULL,
   ssr_plus integer NOT NULL DEFAULT '0',
