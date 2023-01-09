@@ -1,7 +1,16 @@
 # Changelog
 
+## [v0.11.0](https://github.com/litencatt/uniar/compare/v0.10.0...v0.11.0) (2023-01-09)
+
+* Add flag photograph and member [#56](https://github.com/litencatt/uniar/pull/56) ([litencatt](https://github.com/litencatt))
+* Add ssr_plus column condition [#55](https://github.com/litencatt/uniar/pull/55) ([litencatt](https://github.com/litencatt))
+* Database refactoring [#54](https://github.com/litencatt/uniar/pull/54) ([litencatt](https://github.com/litencatt))
+* Database refactoring [#53](https://github.com/litencatt/uniar/pull/53) ([litencatt](https://github.com/litencatt))
+* Add live ひなくり2021 [#52](https://github.com/litencatt/uniar/pull/52) ([litencatt](https://github.com/litencatt))
+
 ## [v0.10.0](https://github.com/litencatt/uniar/compare/v0.9.2...v0.10.0) (2023-01-08)
 
+* Bump to v0.10.0 [#51](https://github.com/litencatt/uniar/pull/51) ([litencatt](https://github.com/litencatt))
 * Change producer member primary key [#50](https://github.com/litencatt/uniar/pull/50) ([litencatt](https://github.com/litencatt))
 * Add photograph NEW YEAR'23 [#49](https://github.com/litencatt/uniar/pull/49) ([litencatt](https://github.com/litencatt))
 * Add photograph FL ひなくり2021 and scenes [#48](https://github.com/litencatt/uniar/pull/48) ([litencatt](https://github.com/litencatt))
