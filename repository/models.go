@@ -99,17 +99,17 @@ type ProducerScene struct {
 }
 
 type Scene struct {
-	ID              int64
-	PhotographID    int64
-	MemberID        int64
-	ColorTypeID     int64
-	VocalMax        int64
-	DanceMax        int64
-	PerformanceMax  int64
-	CenterSkillName sql.NullString
-	ExpectedValue   sql.NullString
-	SsrPlus         int64
-	CreatedAt       time.Time
+	ID             int64
+	PhotographID   int64
+	MemberID       int64
+	ColorTypeID    int64
+	VocalMax       int64
+	DanceMax       int64
+	PerformanceMax int64
+	CenterSkill    sql.NullString
+	ExpectedValue  sql.NullString
+	SsrPlus        int64
+	CreatedAt      time.Time
 }
 
 type Skill struct {

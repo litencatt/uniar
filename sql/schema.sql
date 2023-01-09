@@ -69,7 +69,7 @@ CREATE TABLE scenes (
   vocal_max integer NOT NULL,
   dance_max integer NOT NULL,
   performance_max integer NOT NULL,
-  center_skill_name varchar(100)  DEFAULT NULL,
+  center_skill varchar(100)  DEFAULT NULL,
   expected_value varchar(100)  DEFAULT NULL,
   ssr_plus integer NOT NULL DEFAULT '0',
   created_at DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
