@@ -53,14 +53,16 @@ var setupSceneCmd = &cobra.Command{
 
 func initProducerScene(ctx context.Context, db *sql.DB, q *repository.Queries) error {
 	// producer_scenesレコード作成
-	asIDs, err := q.GetAllScenes(ctx, db)
+	ss, err := q.GetAllScenes(ctx, db)
 	if err != nil {
 		return err
 	}
-	for _, sid := range asIDs {
+	for _, s := range ss {
 		if err := q.RegistProducerScene(ctx, db, repository.RegistProducerSceneParams{
-			ProducerID: 1,
-			SceneID:    sid,
+			ProducerID:   1,
+			PhotographID: s.PhotographID,
+			MemberID:     s.MemberID,
+			SsrPlus:      s.SsrPlus,
 		}); err != nil {
 			return err
 		}
@@ -92,9 +94,11 @@ func setupScene(ctx context.Context, db *sql.DB, q *repository.Queries) error {
 		}).Prompt()
 		hi, _ := strconv.Atoi(have)
 		if err := q.InsertOrUpdateProducerScene(ctx, db, repository.InsertOrUpdateProducerSceneParams{
-			ProducerID: s.ProducerID,
-			SceneID:    s.SceneID,
-			Have:       int64(hi),
+			ProducerID:   s.ProducerID,
+			PhotographID: s.PhotographID,
+			MemberID:     s.MemberID,
+			SsrPlus:      s.SsrPlus,
+			Have:         int64(hi),
 		}); err != nil {
 			return err
 		}
