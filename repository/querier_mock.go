@@ -50,10 +50,10 @@ func (mr *MockQuerierMockRecorder) GetAllMembers(ctx, db interface{}) *gomock.Ca
 }
 
 // GetAllScenes mocks base method.
-func (m *MockQuerier) GetAllScenes(ctx context.Context, db DBTX) ([]int64, error) {
+func (m *MockQuerier) GetAllScenes(ctx context.Context, db DBTX) ([]GetAllScenesRow, error) {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "GetAllScenes", ctx, db)
-	ret0, _ := ret[0].([]int64)
+	ret0, _ := ret[0].([]GetAllScenesRow)
 	ret1, _ := ret[1].(error)
 	return ret0, ret1
 }
