@@ -33,9 +33,27 @@ import (
 )
 
 var setupSceneCmd = &cobra.Command{
-	Use:     "scene",
-	Aliases: []string{"s"},
+	Use:          "scene",
+	Aliases:      []string{"s"},
+	SilenceUsage: true,
 	RunE: func(cmd *cobra.Command, args []string) error {
+		m, _ := cmd.Flags().GetString("member")
+		p, _ := cmd.Flags().GetString("photograph")
+
+		member := m
+		if m == "" {
+			member = "%"
+		} else {
+			member = "%" + m + "%"
+		}
+
+		photo := p
+		if p == "" {
+			photo = "%"
+		} else {
+			photo = "%" + p + "%"
+		}
+
 		ctx := context.Background()
 		dbPath := GetDbPath()
 		db, err := repository.NewConnection(dbPath)
@@ -44,7 +62,7 @@ var setupSceneCmd = &cobra.Command{
 		}
 		q := repository.New()
 
-		if err := setupScene(ctx, db, q); err != nil {
+		if err := setupScene(ctx, db, q, photo, member); err != nil {
 			return err
 		}
 		return nil
@@ -71,34 +89,39 @@ func initProducerScene(ctx context.Context, db *sql.DB, q *repository.Queries) e
 	return nil
 }
 
-func setupScene(ctx context.Context, db *sql.DB, q *repository.Queries) error {
+func setupScene(ctx context.Context, db *sql.DB, q *repository.Queries, photo, member string) error {
 	fmt.Printf("== 所持シーンカードセットアップ ==\n0:未所持\n1:所持\nデフォルト値:0(未所持)\n\n")
-	ps, err := q.GetProducerScenes(ctx, db)
+	ps, err := q.GetProducerScenes(ctx, db, repository.GetProducerScenesParams{
+		Name:   photo,
+		Name_2: member,
+	})
 	if err != nil {
 		return err
 	}
+
 	for _, s := range ps {
 		ssrp := ""
 		if s.SsrPlus == 1 {
-			ssrp = "(SSR+)"
+			continue
 		}
 		h := "未所持"
 		if s.Have != 0 {
 			h = "1(所持)"
 		}
+
 		str := fmt.Sprintf("%s %s %s%s\n(現在: %s)", s.Photograph, s.Color, s.Member, ssrp, h)
 		have := (&prompter.Prompter{
 			Message: str,
 			Choices: []string{"0", "1"},
 			Default: fmt.Sprintf("%d", s.Have),
 		}).Prompt()
+
 		hi, _ := strconv.Atoi(have)
-		if err := q.InsertOrUpdateProducerScene(ctx, db, repository.InsertOrUpdateProducerSceneParams{
+		if err := q.UpdateProducerScene(ctx, db, repository.UpdateProducerSceneParams{
+			Have:         int64(hi),
 			ProducerID:   s.ProducerID,
 			PhotographID: s.PhotographID,
 			MemberID:     s.MemberID,
-			SsrPlus:      s.SsrPlus,
-			Have:         int64(hi),
 		}); err != nil {
 			return err
 		}
@@ -108,4 +131,6 @@ func setupScene(ctx context.Context, db *sql.DB, q *repository.Queries) error {
 
 func init() {
 	setupCmd.AddCommand(setupSceneCmd)
+	setupSceneCmd.Flags().StringP("member", "m", "", "Member filter(e.g. -m 加藤史帆)")
+	setupSceneCmd.Flags().StringP("photograph", "p", "", "Photograph filter(e.g. -p JOYFULLOVE)")
 }

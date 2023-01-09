@@ -109,6 +109,21 @@ func (mr *MockQuerierMockRecorder) GetLiveList(ctx, db interface{}) *gomock.Call
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "GetLiveList", reflect.TypeOf((*MockQuerier)(nil).GetLiveList), ctx, db)
 }
 
+// GetMemberId mocks base method.
+func (m *MockQuerier) GetMemberId(ctx context.Context, db DBTX, name string) (int64, error) {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "GetMemberId", ctx, db, name)
+	ret0, _ := ret[0].(int64)
+	ret1, _ := ret[1].(error)
+	return ret0, ret1
+}
+
+// GetMemberId indicates an expected call of GetMemberId.
+func (mr *MockQuerierMockRecorder) GetMemberId(ctx, db, name interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "GetMemberId", reflect.TypeOf((*MockQuerier)(nil).GetMemberId), ctx, db, name)
+}
+
 // GetMemberList mocks base method.
 func (m *MockQuerier) GetMemberList(ctx context.Context, db DBTX, groupID int64) ([]GetMemberListRow, error) {
 	m.ctrl.T.Helper()
@@ -167,6 +182,21 @@ func (m *MockQuerier) GetMusicListWithColor(ctx context.Context, db DBTX, name s
 func (mr *MockQuerierMockRecorder) GetMusicListWithColor(ctx, db, name interface{}) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "GetMusicListWithColor", reflect.TypeOf((*MockQuerier)(nil).GetMusicListWithColor), ctx, db, name)
+}
+
+// GetPhotograph mocks base method.
+func (m *MockQuerier) GetPhotograph(ctx context.Context, db DBTX, name string) (int64, error) {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "GetPhotograph", ctx, db, name)
+	ret0, _ := ret[0].(int64)
+	ret1, _ := ret[1].(error)
+	return ret0, ret1
+}
+
+// GetPhotograph indicates an expected call of GetPhotograph.
+func (mr *MockQuerierMockRecorder) GetPhotograph(ctx, db, name interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "GetPhotograph", reflect.TypeOf((*MockQuerier)(nil).GetPhotograph), ctx, db, name)
 }
 
 // GetPhotographList mocks base method.
@@ -245,18 +275,18 @@ func (mr *MockQuerierMockRecorder) GetProducerOffice(ctx, db, producerID interfa
 }
 
 // GetProducerScenes mocks base method.
-func (m *MockQuerier) GetProducerScenes(ctx context.Context, db DBTX) ([]GetProducerScenesRow, error) {
+func (m *MockQuerier) GetProducerScenes(ctx context.Context, db DBTX, arg GetProducerScenesParams) ([]GetProducerScenesRow, error) {
 	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "GetProducerScenes", ctx, db)
+	ret := m.ctrl.Call(m, "GetProducerScenes", ctx, db, arg)
 	ret0, _ := ret[0].([]GetProducerScenesRow)
 	ret1, _ := ret[1].(error)
 	return ret0, ret1
 }
 
 // GetProducerScenes indicates an expected call of GetProducerScenes.
-func (mr *MockQuerierMockRecorder) GetProducerScenes(ctx, db interface{}) *gomock.Call {
+func (mr *MockQuerierMockRecorder) GetProducerScenes(ctx, db, arg interface{}) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "GetProducerScenes", reflect.TypeOf((*MockQuerier)(nil).GetProducerScenes), ctx, db)
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "GetProducerScenes", reflect.TypeOf((*MockQuerier)(nil).GetProducerScenes), ctx, db, arg)
 }
 
 // GetScenesWithColor mocks base method.
@@ -272,20 +302,6 @@ func (m *MockQuerier) GetScenesWithColor(ctx context.Context, db DBTX, arg GetSc
 func (mr *MockQuerierMockRecorder) GetScenesWithColor(ctx, db, arg interface{}) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "GetScenesWithColor", reflect.TypeOf((*MockQuerier)(nil).GetScenesWithColor), ctx, db, arg)
-}
-
-// InsertOrUpdateProducerScene mocks base method.
-func (m *MockQuerier) InsertOrUpdateProducerScene(ctx context.Context, db DBTX, arg InsertOrUpdateProducerSceneParams) error {
-	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "InsertOrUpdateProducerScene", ctx, db, arg)
-	ret0, _ := ret[0].(error)
-	return ret0
-}
-
-// InsertOrUpdateProducerScene indicates an expected call of InsertOrUpdateProducerScene.
-func (mr *MockQuerierMockRecorder) InsertOrUpdateProducerScene(ctx, db, arg interface{}) *gomock.Call {
-	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "InsertOrUpdateProducerScene", reflect.TypeOf((*MockQuerier)(nil).InsertOrUpdateProducerScene), ctx, db, arg)
 }
 
 // RegistLive mocks base method.
@@ -412,4 +428,18 @@ func (m *MockQuerier) UpdateProducerOffice(ctx context.Context, db DBTX, arg Upd
 func (mr *MockQuerierMockRecorder) UpdateProducerOffice(ctx, db, arg interface{}) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "UpdateProducerOffice", reflect.TypeOf((*MockQuerier)(nil).UpdateProducerOffice), ctx, db, arg)
+}
+
+// UpdateProducerScene mocks base method.
+func (m *MockQuerier) UpdateProducerScene(ctx context.Context, db DBTX, arg UpdateProducerSceneParams) error {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "UpdateProducerScene", ctx, db, arg)
+	ret0, _ := ret[0].(error)
+	return ret0
+}
+
+// UpdateProducerScene indicates an expected call of UpdateProducerScene.
+func (mr *MockQuerierMockRecorder) UpdateProducerScene(ctx, db, arg interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "UpdateProducerScene", reflect.TypeOf((*MockQuerier)(nil).UpdateProducerScene), ctx, db, arg)
 }
