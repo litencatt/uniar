@@ -98,7 +98,6 @@ func setupMember(ctx context.Context, db *sql.DB, q *repository.Queries) error {
 		ddti, _ := strconv.Atoi(ddt)
 
 		if err := q.UpdateProducerMember(ctx, db, repository.UpdateProducerMemberParams{
-			ID:                   m.ID,
 			BondLevelCurent:      int64(pmbi),
 			DiscographyDiscTotal: int64(ddti),
 		}); err != nil {

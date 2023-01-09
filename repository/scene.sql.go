@@ -139,22 +139,22 @@ INSERT INTO scenes (
 	vocal_max,
 	dance_max,
 	performance_max,
-	center_skill_name,
+	center_skill,
 	expected_value,
 	ssr_plus
 ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)
 `
 
 type RegistSceneParams struct {
-	PhotographID    int64
-	MemberID        int64
-	ColorTypeID     int64
-	VocalMax        int64
-	DanceMax        int64
-	PerformanceMax  int64
-	CenterSkillName sql.NullString
-	ExpectedValue   sql.NullString
-	SsrPlus         int64
+	PhotographID   int64
+	MemberID       int64
+	ColorTypeID    int64
+	VocalMax       int64
+	DanceMax       int64
+	PerformanceMax int64
+	CenterSkill    sql.NullString
+	ExpectedValue  sql.NullString
+	SsrPlus        int64
 }
 
 func (q *Queries) RegistScene(ctx context.Context, db DBTX, arg RegistSceneParams) error {
@@ -165,7 +165,7 @@ func (q *Queries) RegistScene(ctx context.Context, db DBTX, arg RegistSceneParam
 		arg.VocalMax,
 		arg.DanceMax,
 		arg.PerformanceMax,
-		arg.CenterSkillName,
+		arg.CenterSkill,
 		arg.ExpectedValue,
 		arg.SsrPlus,
 	)

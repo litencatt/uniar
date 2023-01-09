@@ -40,7 +40,7 @@ INSERT INTO scenes (
 	vocal_max,
 	dance_max,
 	performance_max,
-	center_skill_name,
+	center_skill,
 	expected_value,
 	ssr_plus
 ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)
