@@ -28,6 +28,7 @@ import (
 	"strconv"
 
 	"github.com/Songmu/prompter"
+	"github.com/fatih/color"
 	"github.com/litencatt/uniar/repository"
 	"github.com/spf13/cobra"
 )
@@ -109,7 +110,21 @@ func setupScene(ctx context.Context, db *sql.DB, q *repository.Queries, photo, m
 			h = "1(所持)"
 		}
 
-		str := fmt.Sprintf("%s %s %s%s\n(現在: %s)", s.Photograph, s.Color, s.Member, ssrp, h)
+		var col string
+		switch s.Color {
+		case "Red":
+			col = color.RedString(s.Color)
+		case "Blue":
+			col = color.BlueString(s.Color)
+		case "Green":
+			col = color.GreenString(s.Color)
+		case "Yellow":
+			col = color.YellowString(s.Color)
+		case "Purple":
+			col = color.MagentaString(s.Color)
+		}
+
+		str := fmt.Sprintf("%s %s %s%s\n(現在: %s)", s.Photograph, col, s.Member, ssrp, h)
 		have := (&prompter.Prompter{
 			Message: str,
 			Choices: []string{"0", "1"},
