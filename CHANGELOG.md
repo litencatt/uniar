@@ -1,7 +1,12 @@
 # Changelog
 
+## [v0.12.0](https://github.com/litencatt/uniar/compare/v0.11.0...v0.12.0) (2023-01-14)
+
+* Add Precious -pair-'23 [#58](https://github.com/litencatt/uniar/pull/58) ([litencatt](https://github.com/litencatt))
+
 ## [v0.11.0](https://github.com/litencatt/uniar/compare/v0.10.0...v0.11.0) (2023-01-09)
 
+* bump to v0.11.0 [#57](https://github.com/litencatt/uniar/pull/57) ([litencatt](https://github.com/litencatt))
 * Add flag photograph and member [#56](https://github.com/litencatt/uniar/pull/56) ([litencatt](https://github.com/litencatt))
 * Add ssr_plus column condition [#55](https://github.com/litencatt/uniar/pull/55) ([litencatt](https://github.com/litencatt))
 * Database refactoring [#54](https://github.com/litencatt/uniar/pull/54) ([litencatt](https://github.com/litencatt))
