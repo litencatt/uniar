@@ -59,9 +59,9 @@ func run(ctx context.Context) error {
 	r.GET("/", handler.Top)
 
 	ls := &handler.ListScene{
-		Service: &service.ListScene{
-			DB:      db,
-			Querier: q},
+		SceneService:      &service.Scene{DB: db, Querier: q},
+		MemberService:     &service.Member{DB: db, Querier: q},
+		PhotographService: &service.Photgraph{DB: db, Querier: q},
 	}
 	r.GET("/scenes", ls.ListScene)
 	r.Run(":8090")

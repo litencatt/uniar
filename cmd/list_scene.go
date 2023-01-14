@@ -94,7 +94,7 @@ var listSceneCmd = &cobra.Command{
 		}
 		q := repository.New()
 
-		svc := service.ListScene{
+		svc := service.Scene{
 			DB:      db,
 			Querier: q,
 		}

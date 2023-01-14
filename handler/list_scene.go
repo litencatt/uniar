@@ -10,7 +10,9 @@ import (
 )
 
 type ListScene struct {
-	Service ListSceneService
+	SceneService      ListSceneService
+	MemberService     ListMemberService
+	PhotographService ListPhotographService
 }
 
 func (ls *ListScene) ListScene(c *gin.Context) {
@@ -36,14 +38,26 @@ func (ls *ListScene) ListScene(c *gin.Context) {
 	}
 	req.FullName = true
 
-	ss, err := ls.Service.ListScene(ctx, &req)
+	ss, err := ls.SceneService.ListScene(ctx, &req)
 	if err != nil {
 		c.String(http.StatusInternalServerError, err.Error())
 		return
 	}
 
+	ms, err := ls.MemberService.ListMember(ctx)
+	if err != nil {
+		c.String(http.StatusInternalServerError, err.Error())
+		return
+	}
+	ps, err := ls.PhotographService.ListPhotograph(ctx)
+	if err != nil {
+		c.String(http.StatusInternalServerError, err.Error())
+		return
+	}
 	c.HTML(http.StatusOK, "scenes/index.go.tmpl", gin.H{
-		"title":  "Scenes Index",
-		"scenes": ss,
+		"title":      "Scenes Index",
+		"scenes":     ss,
+		"member":     ms,
+		"photograph": ps,
 	})
 }

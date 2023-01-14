@@ -4,6 +4,40 @@
     {{ .title }}
   </h1>
 
+  <select name="member" id="member-select">
+    <option value="%">All member</option>
+    {{range .member}}
+    <option value="{{.Name}}">{{.Name}}</option>
+    {{end}}
+  </select>
+
+  <select name="Photograph" id="photo-select">
+    <option value="%">All photograph</option>
+    {{range .photograph}}
+    <option value="{{.Name}}">{{.Name}}</option>
+    {{end}}
+  </select>
+
+  <input type="checkbox" id="have" name="have">
+  <label for="have">Have</label>
+
+  <input type="checkbox" id="not-have" name="not-have">
+  <label for="not-have">NotHave</label>
+
+  <input type="checkbox" id="detail" name="detail">
+  <label for="detail">Detail</label>
+
+  <label for="sort">Sort</label>
+  <select name="Sort" id="sort-select">
+    <option value="all35">All35</option>
+    <option value="voda50">VoDa50</option>
+    <option value="dape50">DaPe50</option>
+    <option value="vope50">VoPe50</option>
+    <option value="vo85">Vo85</option>
+    <option value="da85">Da85</option>
+    <option value="pe85">Pe85</option>
+  </select>
+
   <table>
     <thead>
       <tr>
@@ -15,6 +49,13 @@
         <th>Vo</th>
         <th>Da</th>
         <th>Pe</th>
+        <th>ALL35</th>
+        <th>VoDa50</th>
+        <th>DaPe50</th>
+        <th>VoPe50</th>
+        <th>Vo85</th>
+        <th>Da85</th>
+        <th>Pe85</th>
       </tr>
     </thead>
     <tbody>
@@ -32,6 +73,13 @@
         <td>{{.Vo}}</td>
         <td>{{.Da}}</td>
         <td>{{.Pe}}</td>
+        <td>{{.All35}}</td>
+        <td>{{.VoDa50}}</td>
+        <td>{{.DaPe50}}</td>
+        <td>{{.VoPe50}}</td>
+        <td>{{.Vo85}}</td>
+        <td>{{.Da85}}</td>
+        <td>{{.Pe85}}</td>
       </tr>
     {{end}}
     </tbody>

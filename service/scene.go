@@ -10,7 +10,7 @@ import (
 	"github.com/litencatt/uniar/repository"
 )
 
-type ListScene struct {
+type Scene struct {
 	DB      *sql.DB
 	Querier repository.Querier
 }
@@ -26,7 +26,7 @@ type ListSceneRequest struct {
 	FullName   bool   `form:"full_name"`
 }
 
-func (x *ListScene) ListScene(ctx context.Context, arg *ListSceneRequest) ([]entity.Scene, error) {
+func (x *Scene) ListScene(ctx context.Context, arg *ListSceneRequest) ([]entity.Scene, error) {
 
 	ss, err := x.Querier.GetScenesWithColor(ctx, x.DB, repository.GetScenesWithColorParams{
 		Name:   arg.Color,
