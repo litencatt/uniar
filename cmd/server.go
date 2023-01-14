@@ -48,12 +48,12 @@ func run(ctx context.Context) error {
 	r := gin.Default()
 	r.LoadHTMLGlob("templates/**/*")
 	r.GET("/", func(c *gin.Context) {
-		c.HTML(http.StatusOK, "top/index.tmpl", gin.H{
+		c.HTML(http.StatusOK, "top/index.go.tmpl", gin.H{
 			"title": "Main Index",
 		})
 	})
 	r.GET("/scenes", func(c *gin.Context) {
-		c.HTML(http.StatusOK, "scenes/index.tmpl", gin.H{
+		c.HTML(http.StatusOK, "scenes/index.go.tmpl", gin.H{
 			"title": "Scenes Index",
 		})
 	})
