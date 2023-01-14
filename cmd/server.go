@@ -24,10 +24,10 @@ package cmd
 import (
 	"context"
 	"log"
-	"net/http"
 	"os"
 
 	"github.com/gin-gonic/gin"
+	"github.com/litencatt/uniar/handler"
 	"github.com/spf13/cobra"
 )
 
@@ -47,16 +47,8 @@ var serverCmd = &cobra.Command{
 func run(ctx context.Context) error {
 	r := gin.Default()
 	r.LoadHTMLGlob("templates/**/*")
-	r.GET("/", func(c *gin.Context) {
-		c.HTML(http.StatusOK, "top/index.go.tmpl", gin.H{
-			"title": "Main Index",
-		})
-	})
-	r.GET("/scenes", func(c *gin.Context) {
-		c.HTML(http.StatusOK, "scenes/index.go.tmpl", gin.H{
-			"title": "Scenes Index",
-		})
-	})
+	r.GET("/", handler.Top)
+	r.GET("/scenes", handler.ListScene)
 	r.Run(":8090")
 	return nil
 }
