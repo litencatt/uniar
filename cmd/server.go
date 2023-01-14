@@ -28,6 +28,8 @@ import (
 
 	"github.com/gin-gonic/gin"
 	"github.com/litencatt/uniar/handler"
+	"github.com/litencatt/uniar/repository"
+	"github.com/litencatt/uniar/service"
 	"github.com/spf13/cobra"
 )
 
@@ -47,8 +49,21 @@ var serverCmd = &cobra.Command{
 func run(ctx context.Context) error {
 	r := gin.Default()
 	r.LoadHTMLGlob("templates/**/*")
+
+	db, err := repository.NewConnection(GetDbPath())
+	if err != nil {
+		return err
+	}
+	q := repository.New()
+
 	r.GET("/", handler.Top)
-	r.GET("/scenes", handler.ListScene)
+
+	ls := &handler.ListScene{
+		Service: &service.ListScene{
+			DB:      db,
+			Querier: q},
+	}
+	r.GET("/scenes", ls.ListScene)
 	r.Run(":8090")
 	return nil
 }

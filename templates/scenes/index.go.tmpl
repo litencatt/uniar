@@ -1,7 +1,37 @@
 {{ define "scenes/index.go.tmpl" }}
-<html><h1>
+<html>
+<h1>
 	{{ .title }}
 </h1>
-<p>Using scenes/index.go.tmpl</p>
+
+<table>
+    <thead>
+        <tr>
+            <th>Photograph</th>
+            <th>Color</th>
+            <th>Member</th>
+            <th>Expect</th>
+            <th>Total</th>
+            <th>Vo</th>
+            <th>Da</th>
+            <th>Pe</th>
+        </tr>
+    </thead>
+    <tbody>
+		{{range .scenes}}
+        <tr>
+            <td>{{.Photograph}}</td>
+            <td>{{.Color}}</td>
+            <td>{{.Member}}</td>
+            <td>{{.Expect}}</td>
+            <td>{{.Total}}</td>
+            <td>{{.Vo}}</td>
+            <td>{{.Da}}</td>
+            <td>{{.Pe}}</td>
+        </tr>
+		{{end}}
+    </tbody>
+</table>
+
 </html>
 {{ end }}
