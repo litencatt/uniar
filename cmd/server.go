@@ -46,10 +46,15 @@ var serverCmd = &cobra.Command{
 
 func run(ctx context.Context) error {
 	r := gin.Default()
-	r.LoadHTMLGlob("templates/*")
-	r.GET("/index", func(c *gin.Context) {
-		c.HTML(http.StatusOK, "index.tmpl", gin.H{
-			"title": "Main website1",
+	r.LoadHTMLGlob("templates/**/*")
+	r.GET("/", func(c *gin.Context) {
+		c.HTML(http.StatusOK, "top/index.tmpl", gin.H{
+			"title": "Main Index",
+		})
+	})
+	r.GET("/scenes", func(c *gin.Context) {
+		c.HTML(http.StatusOK, "scenes/index.tmpl", gin.H{
+			"title": "Scenes Index",
 		})
 	})
 	r.Run(":8090")
