@@ -34,6 +34,7 @@ func (ls *ListScene) ListScene(c *gin.Context) {
 	} else {
 		req.Photograph = fmt.Sprintf("%%%s%%", req.Photograph)
 	}
+	req.FullName = true
 
 	ss, err := ls.Service.ListScene(ctx, &req)
 	if err != nil {
