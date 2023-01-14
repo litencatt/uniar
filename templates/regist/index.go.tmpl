@@ -7,17 +7,31 @@
     </style>
 </head>
 <body>
-    <p>Using regist/index.go.tmpl</p>
-
-    <label class="scene-checkbox">
-        <input class="scene-checkbox-Input" type="checkbox">
-        <span class="scene-checkbox-DummyInput"></span>
-    </label>
-    <label class="scene-checkbox">
-        <input class="scene-checkbox-Input" type="checkbox">
-        <span class="scene-checkbox-DummyInput"></span>
-    </label>    
-    <img src="/assets/images/sample.svg">
+  <form action="/regist" method="POST">
+    <input type="submit" />    
+    <div>
+      <table border="1">
+        <thead>
+          <tr>
+            <th>photograph\member</th>
+            {{range .s_member}}
+            <th>{{ .Name }}</th>
+            {{end}}        
+          </tr>
+        </thead>
+        <tbody>
+        {{range $pi, $pv := .s_photograph}}
+          <tr>
+            <td>{{ .Name }}</td>
+            {{range $mi, $mv := $.s_member}}
+              <td><input type="checkbox" id="{{.Name}}{{$mi}}" name="member_{{$mv.ID}}[]" value="{{$pv.ID}}"></td>    
+            {{end}}
+          </tr>
+        {{end}}
+        </tbody>
+      </table>
+    </div>
+  </form>
 </body>
 </html>
 {{ end }}

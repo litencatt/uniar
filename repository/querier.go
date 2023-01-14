@@ -18,6 +18,7 @@ type Querier interface {
 	GetMembers(ctx context.Context, db DBTX) ([]GetMembersRow, error)
 	GetMusicList(ctx context.Context, db DBTX) ([]GetMusicListRow, error)
 	GetMusicListWithColor(ctx context.Context, db DBTX, name string) ([]GetMusicListWithColorRow, error)
+	GetPhotographByGroupId(ctx context.Context, db DBTX, groupID int64) ([]GetPhotographByGroupIdRow, error)
 	GetPhotographList(ctx context.Context, db DBTX, arg GetPhotographListParams) ([]GetPhotographListRow, error)
 	GetPhotographListAll(ctx context.Context, db DBTX) ([]GetPhotographListAllRow, error)
 	GetPhotographListByPhotoType(ctx context.Context, db DBTX, photoType string) ([]GetPhotographListByPhotoTypeRow, error)

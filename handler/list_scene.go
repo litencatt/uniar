@@ -10,9 +10,9 @@ import (
 )
 
 type ListScene struct {
-	SceneService      ListSceneService
-	MemberService     ListMemberService
-	PhotographService ListPhotographService
+	SceneService      SceneService
+	MemberService     MemberService
+	PhotographService PhotographService
 }
 
 func (ls *ListScene) ListScene(c *gin.Context) {

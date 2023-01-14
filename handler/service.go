@@ -7,12 +7,15 @@ import (
 	"github.com/litencatt/uniar/service"
 )
 
-type ListSceneService interface {
+type SceneService interface {
 	ListScene(context.Context, *service.ListSceneRequest) ([]entity.Scene, error)
+	RegistScene(context.Context, *service.RegistSceneRequest) error
 }
-type ListMemberService interface {
+type MemberService interface {
 	ListMember(context.Context) ([]entity.Member, error)
+	GetMemberByGroup(context.Context, int) ([]entity.Member, error)
 }
-type ListPhotographService interface {
+type PhotographService interface {
 	ListPhotograph(context.Context) ([]entity.Photograph, error)
+	GetPhotographByGroup(context.Context, int) ([]entity.Photograph, error)
 }

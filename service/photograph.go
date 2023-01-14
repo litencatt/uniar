@@ -28,3 +28,20 @@ func (x *Photgraph) ListPhotograph(ctx context.Context) ([]entity.Photograph, er
 	}
 	return photograph, nil
 }
+
+func (x *Photgraph) GetPhotographByGroup(ctx context.Context, groupId int) ([]entity.Photograph, error) {
+	ps, err := x.Querier.GetPhotographByGroupId(ctx, x.DB, 1)
+	if err != nil {
+		return nil, err
+	}
+
+	var photograph []entity.Photograph
+	for _, p := range ps {
+		e := entity.Photograph{
+			ID:   p.ID,
+			Name: p.Name,
+		}
+		photograph = append(photograph, e)
+	}
+	return photograph, nil
+}
