@@ -16,14 +16,14 @@ type ListScene struct {
 }
 
 type ListSceneRequest struct {
-	Color      string
-	Member     string
-	Photograph string
-	Sort       string
-	Have       bool
-	NotHave    bool
-	Detail     bool
-	FullName   bool
+	Color      string `form:"color"`
+	Member     string `form:"member"`
+	Photograph string `form:"photograph"`
+	Sort       string `form:"sort"`
+	Have       bool   `form:"have"`
+	NotHave    bool   `form:"not_have"`
+	Detail     bool   `form:"detail"`
+	FullName   bool   `form:"full_name"`
 }
 
 func (x *ListScene) ListScene(ctx context.Context, arg *ListSceneRequest) ([]entity.Scene, error) {
