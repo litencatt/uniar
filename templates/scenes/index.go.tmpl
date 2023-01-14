@@ -7,45 +7,39 @@
   <form action="/scenes" method="GET">
     <select name="photograph" id="photo-select">
       <option value="">All photograph</option>
-      {{range .photograph}}
-      <option value="{{.Name}}">{{.Name}}</option>
+      {{range $p := .photograph}}
+      <option value="{{ $p.Name }}" {{ if eq $p.Name $.selectedPhotograph }}selected="selected"{{ end }}>{{.Name}}</option>
       {{end}}
     </select>
 
     <select name="color" id="color-select">
       <option value="">All color</option>
-      <option value="Red">Red</option>
-      <option value="Blue">Blue</option>
-      <option value="Green">Green</option>
-      <option value="Yellow">Yellow</option>
-      <option value="Purple">Purple</option>
+      {{range $c := .color}}
+      <option value="{{ $c }}" {{ if eq $c $.selectedColor }}selected="selected"{{ end }}>{{$c}}</option>
+      {{end}}
     </select>
 
     <select name="member" id="member-select">
       <option value="">All member</option>
-      {{range .member}}
-      <option value="{{.Name}}">{{.Name}}</option>
+      {{range $m := .member}}
+      <option value="{{ $m.Name }}" {{ if eq $m.Name $.selectedMember }}selected="selected"{{ end }}>{{$m.Name}}</option>
       {{end}}
     </select>
 
-    <input type="checkbox" id="have" name="have">
+    <input type="checkbox" id="have" name="have" value="1" {{ if .have}}checked{{end}}>
     <label for="have">Have</label>
 
-    <input type="checkbox" id="not-have" name="not-have">
+    <input type="checkbox" id="not-have" name="not-have" value="1" {{ if .notHave}}checked{{end}}>
     <label for="not-have">NotHave</label>
 
-    <input type="checkbox" id="detail" name="detail">
+    <input type="checkbox" id="detail" name="detail" value="1" {{ if .detail}}checked{{end}}>
     <label for="detail">Detail</label>
 
     <label for="sort">Sort</label>
     <select name="sort" id="sort-select">
-      <option value="all35">All35</option>
-      <option value="voda50">VoDa50</option>
-      <option value="dape50">DaPe50</option>
-      <option value="vope50">VoPe50</option>
-      <option value="vo85">Vo85</option>
-      <option value="da85">Da85</option>
-      <option value="pe85">Pe85</option>
+      {{range $s := .sort}}
+      <option value="{{ $s }}" {{ if eq $s $.selectedSort }}selected="selected"{{ end }}>{{$s}}</option>
+      {{end}}
     </select>
 
     <input type="submit">

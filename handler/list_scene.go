@@ -22,19 +22,14 @@ func (ls *ListScene) ListScene(c *gin.Context) {
 	// bind request params to object
 	c.ShouldBind(&req)
 
+	if req.Photograph == "" {
+		req.Photograph = "%"
+	}
 	if req.Color == "" {
 		req.Color = "%"
 	}
 	if req.Member == "" {
 		req.Member = "%"
-	} else {
-		req.Member = fmt.Sprintf("%%%s%%", req.Member)
-	}
-
-	if req.Photograph == "" {
-		req.Photograph = "%"
-	} else {
-		req.Photograph = fmt.Sprintf("%%%s%%", req.Photograph)
 	}
 	req.FullName = true
 
@@ -55,9 +50,18 @@ func (ls *ListScene) ListScene(c *gin.Context) {
 		return
 	}
 	c.HTML(http.StatusOK, "scenes/index.go.tmpl", gin.H{
-		"title":      "Scenes Index",
-		"scenes":     ss,
-		"member":     ms,
-		"photograph": ps,
+		"title":              "Scenes Index",
+		"photograph":         ps,
+		"selectedPhotograph": req.Photograph,
+		"color":              []string{"Red", "Blue", "Green", "Yellow", "Purple"},
+		"selectedColor":      req.Color,
+		"member":             ms,
+		"selectedMember":     req.Member,
+		"have":               req.Have,
+		"notHave":            req.NotHave,
+		"detail":             req.Detail,
+		"sort":               []string{"All35", "VoDa50", "DaPe50", "VoPe50", "Vo85", "Da85", "Pe85"},
+		"selectedSort":       req.Sort,
+		"scenes":             ss,
 	})
 }
