@@ -56,6 +56,8 @@ func run(ctx context.Context) error {
 	}
 	q := repository.New()
 
+	r.Static("/assets", "./assets")
+
 	r.GET("/", handler.Top)
 
 	ls := &handler.ListScene{
@@ -64,6 +66,12 @@ func run(ctx context.Context) error {
 		PhotographService: &service.Photgraph{DB: db, Querier: q},
 	}
 	r.GET("/scenes", ls.ListScene)
+
+	rs := &handler.RegistScene{
+		SceneService: &service.Scene{DB: db, Querier: q},
+	}
+	r.GET("/regist", rs.RegistScene)
+
 	r.Run(":8090")
 	return nil
 }
