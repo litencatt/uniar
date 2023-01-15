@@ -28,6 +28,7 @@ type Scene struct {
 	Vo          int64
 	Da          int64
 	Pe          int64
+	Have        bool
 }
 
 type SceneTotal struct {

@@ -64,7 +64,7 @@ func TestListScene(t *testing.T) {
 					SsrPlus:        1,
 				},
 			}, nil)
-			svc := &ListScene{
+			svc := &Scene{
 				DB:      db,
 				Querier: q,
 			}

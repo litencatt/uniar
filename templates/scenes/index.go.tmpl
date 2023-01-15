@@ -1,0 +1,103 @@
+{{ define "scenes/index.go.tmpl" }}
+<html>
+<head>
+    <title>{{ .title }}</title>
+    <style type="text/css" media="screen">
+        @import url("/assets/css/regist.css");
+    </style>
+</head>
+<body>
+  <a href="/scenes">シーン一覧</a>
+  <a href="/regist/1">シーン登録(櫻坂46)</a>
+  <a href="/regist/2">シーン登録(日向坂46)</a>
+
+  <form action="/scenes" method="GET">
+    <select name="photograph" id="photo-select">
+      <option value="">All photograph</option>
+      {{range $p := .photograph}}
+      <option value="{{ $p.Name }}" {{ if eq $p.Name $.selectedPhotograph }}selected="selected"{{ end }}>{{.Name}}</option>
+      {{end}}
+    </select>
+
+    <select name="color" id="color-select">
+      <option value="">All color</option>
+      {{range $c := .color}}
+      <option value="{{ $c }}" {{ if eq $c $.selectedColor }}selected="selected"{{ end }}>{{$c}}</option>
+      {{end}}
+    </select>
+
+    <select name="member" id="member-select">
+      <option value="">All member</option>
+      {{range $m := .member}}
+      <option value="{{ $m.Name }}" {{ if eq $m.Name $.selectedMember }}selected="selected"{{ end }}>{{$m.Name}}</option>
+      {{end}}
+    </select>
+
+    <input type="checkbox" id="have" name="have" value="1" {{ if .have}}checked{{end}}>
+    <label for="have">Have</label>
+
+    <input type="checkbox" id="not-have" name="not-have" value="1" {{ if .notHave}}checked{{end}}>
+    <label for="not-have">NotHave</label>
+
+    <input type="checkbox" id="detail" name="detail" value="1" {{ if .detail}}checked{{end}}>
+    <label for="detail">Detail</label>
+
+    <label for="sort">Sort</label>
+    <select name="sort" id="sort-select">
+      {{range $s := .sort}}
+      <option value="{{ $s }}" {{ if eq $s $.selectedSort }}selected="selected"{{ end }}>{{$s}}</option>
+      {{end}}
+    </select>
+
+    <input type="submit">
+  </form>
+
+  <table border="1">
+    <thead>
+      <tr>
+        <th>Photograph</th>
+        <th>Color</th>
+        <th>Member</th>
+        <th>Expect</th>
+        <th>Total</th>
+        <th>Vo</th>
+        <th>Da</th>
+        <th>Pe</th>
+        <th>ALL35</th>
+        <th>VoDa50</th>
+        <th>DaPe50</th>
+        <th>VoPe50</th>
+        <th>Vo85</th>
+        <th>Da85</th>
+        <th>Pe85</th>
+      </tr>
+    </thead>
+    <tbody>
+    {{range .scenes}}
+      <tr>
+        {{if .SsrPlus}}
+        <td>{{.Photograph}}+</td>
+        {{else}}
+        <td>{{.Photograph}}</td>
+        {{end}}
+        <td>{{.Color}}</td>
+        <td>{{.Member}}</td>
+        <td>{{.Expect}}</td>
+        <td>{{.Total}}</td>
+        <td>{{.Vo}}</td>
+        <td>{{.Da}}</td>
+        <td>{{.Pe}}</td>
+        <td>{{.All35}}</td>
+        <td>{{.VoDa50}}</td>
+        <td>{{.DaPe50}}</td>
+        <td>{{.VoPe50}}</td>
+        <td>{{.Vo85}}</td>
+        <td>{{.Da85}}</td>
+        <td>{{.Pe85}}</td>
+      </tr>
+    {{end}}
+    </tbody>
+  </table>
+</body>
+</html>
+{{ end }}

@@ -10,23 +10,23 @@ import (
 	"github.com/litencatt/uniar/repository"
 )
 
-type ListScene struct {
+type Scene struct {
 	DB      *sql.DB
 	Querier repository.Querier
 }
 
 type ListSceneRequest struct {
-	Color      string
-	Member     string
-	Photograph string
-	Sort       string
-	Have       bool
-	NotHave    bool
-	Detail     bool
-	FullName   bool
+	Color      string `form:"color"`
+	Member     string `form:"member"`
+	Photograph string `form:"photograph"`
+	Sort       string `form:"sort"`
+	Have       bool   `form:"have"`
+	NotHave    bool   `form:"not_have"`
+	Detail     bool   `form:"detail"`
+	FullName   bool   `form:"full_name"`
 }
 
-func (x *ListScene) ListScene(ctx context.Context, arg *ListSceneRequest) ([]entity.Scene, error) {
+func (x *Scene) ListScene(ctx context.Context, arg *ListSceneRequest) ([]entity.Scene, error) {
 
 	ss, err := x.Querier.GetScenesWithColor(ctx, x.DB, repository.GetScenesWithColorParams{
 		Name:   arg.Color,
@@ -103,19 +103,19 @@ func (x *ListScene) ListScene(ctx context.Context, arg *ListSceneRequest) ([]ent
 
 	// 指定ソートで並び替え
 	switch arg.Sort {
-	case "all35":
+	case "All35":
 		sort.Slice(scenes, func(i, j int) bool { return scenes[i].All35Score > scenes[j].All35Score })
-	case "voda50":
+	case "VoDa50":
 		sort.Slice(scenes, func(i, j int) bool { return scenes[i].VoDa50Score > scenes[j].VoDa50Score })
-	case "dape50":
+	case "DaPe50":
 		sort.Slice(scenes, func(i, j int) bool { return scenes[i].DaPe50Score > scenes[j].DaPe50Score })
-	case "vope50":
+	case "VoPe50":
 		sort.Slice(scenes, func(i, j int) bool { return scenes[i].VoPe50Score > scenes[j].VoPe50Score })
-	case "vo85":
+	case "Vo85":
 		sort.Slice(scenes, func(i, j int) bool { return scenes[i].Vo85Score > scenes[j].Vo85Score })
-	case "da85":
+	case "Da85":
 		sort.Slice(scenes, func(i, j int) bool { return scenes[i].Da85Score > scenes[j].Da85Score })
-	case "pe85":
+	case "Pe85":
 		sort.Slice(scenes, func(i, j int) bool { return scenes[i].Pe85Score > scenes[j].Pe85Score })
 	default:
 		sort.Slice(scenes, func(i, j int) bool { return scenes[i].All35Score > scenes[j].All35Score })

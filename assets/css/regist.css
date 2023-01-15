@@ -1,0 +1,31 @@
+.scene-checkbox {
+    display: flex;
+    flex-wrap: wrap;
+    cursor: pointer;
+}
+.scene-checkbox-Input {
+    margin: 0;
+    width: 0;
+    opacity: 0;
+}
+.scene-checkbox-Input + .scene-checkbox-DummyInput {
+    background: url("/assets/images/sample.svg") no-repeat center;
+    background-position: center;
+    background-size: cover;
+    opacity: 0.3;
+}
+.scene-checkbox-Input:checked + .scene-checkbox-DummyInput {
+    background: url("/assets/images/sample.svg") no-repeat center;
+    background-position: center;
+    background-size: cover;
+    opacity: 1;
+}
+.scene-checkbox-DummyInput {
+    position: relative;
+    top: 0;
+    left: 0;
+    display: block;
+    width: 100px;
+    height: 100px;
+    border-radius: 8px;
+}
