@@ -1,8 +1,15 @@
 {{ define "scenes/index.go.tmpl" }}
 <html>
-  <h1>
-    {{ .title }}
-  </h1>
+<head>
+    <title>{{ .title }}</title>
+    <style type="text/css" media="screen">
+        @import url("/assets/css/regist.css");
+    </style>
+</head>
+<body>
+  <a href="/scenes">シーン一覧</a>
+  <a href="/regist/1">櫻坂46</a>
+  <a href="/regist/2">日向坂46</a>
 
   <form action="/scenes" method="GET">
     <select name="photograph" id="photo-select">
@@ -91,6 +98,6 @@
     {{end}}
     </tbody>
   </table>
-
+</body>
 </html>
 {{ end }}
