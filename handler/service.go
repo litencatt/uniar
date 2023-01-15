@@ -17,9 +17,9 @@ type ProducerSceneService interface {
 }
 type MemberService interface {
 	ListMember(context.Context) ([]entity.Member, error)
-	GetMemberByGroup(context.Context, int) ([]entity.Member, error)
+	GetMemberByGroup(context.Context, int64) ([]entity.Member, error)
 }
 type PhotographService interface {
 	ListPhotograph(context.Context) ([]entity.Photograph, error)
-	GetPhotographByGroup(context.Context, int) ([]entity.Photograph, error)
+	GetPhotographByGroup(context.Context, int64) ([]entity.Photograph, error)
 }

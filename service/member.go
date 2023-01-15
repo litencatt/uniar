@@ -29,8 +29,8 @@ func (x *Member) ListMember(ctx context.Context) ([]entity.Member, error) {
 	return member, nil
 }
 
-func (x *Member) GetMemberByGroup(ctx context.Context, groupId int) ([]entity.Member, error) {
-	ms, err := x.Querier.GetMemberList(ctx, x.DB, int64(groupId))
+func (x *Member) GetMemberByGroup(ctx context.Context, groupId int64) ([]entity.Member, error) {
+	ms, err := x.Querier.GetMemberList(ctx, x.DB, groupId)
 	if err != nil {
 		return nil, err
 	}

@@ -29,8 +29,8 @@ func (x *Photgraph) ListPhotograph(ctx context.Context) ([]entity.Photograph, er
 	return photograph, nil
 }
 
-func (x *Photgraph) GetPhotographByGroup(ctx context.Context, groupId int) ([]entity.Photograph, error) {
-	ps, err := x.Querier.GetPhotographByGroupId(ctx, x.DB, 1)
+func (x *Photgraph) GetPhotographByGroup(ctx context.Context, groupId int64) ([]entity.Photograph, error) {
+	ps, err := x.Querier.GetPhotographByGroupId(ctx, x.DB, groupId)
 	if err != nil {
 		return nil, err
 	}
