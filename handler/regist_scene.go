@@ -94,8 +94,5 @@ func (x *RegistScene) PostRegist(c *gin.Context) {
 			}
 		}
 	}
-
-	c.HTML(http.StatusCreated, "regist/index.go.tmpl", gin.H{
-		"title": "Regist Index",
-	})
+	c.Redirect(http.StatusFound, "/regist")
 }
