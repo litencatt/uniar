@@ -151,6 +151,28 @@ func (q *Queries) GetProducerScenesByGroupId(ctx context.Context, db DBTX, group
 	return items, nil
 }
 
+const initProducerSceneAll = `-- name: InitProducerSceneAll :exec
+;
+
+UPDATE
+    producer_scenes
+SET
+    have = 0
+WHERE
+	producer_id = ?
+    AND member_id = ?
+`
+
+type InitProducerSceneAllParams struct {
+	ProducerID int64
+	MemberID   int64
+}
+
+func (q *Queries) InitProducerSceneAll(ctx context.Context, db DBTX, arg InitProducerSceneAllParams) error {
+	_, err := db.ExecContext(ctx, initProducerSceneAll, arg.ProducerID, arg.MemberID)
+	return err
+}
+
 const registProducerScene = `-- name: RegistProducerScene :exec
 ;
 

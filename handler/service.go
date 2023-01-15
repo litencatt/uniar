@@ -13,6 +13,7 @@ type SceneService interface {
 type ProducerSceneService interface {
 	ListScene(context.Context, *service.ListSceneRequest) ([]entity.ProducerScene, error)
 	RegistScene(context.Context, *service.RegistProducerSceneRequest) error
+	InitAllScene(context.Context, *service.InitProducerSceneRequest) error
 }
 type MemberService interface {
 	ListMember(context.Context) ([]entity.Member, error)

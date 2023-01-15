@@ -48,6 +48,7 @@ type RegistProducerSceneRequest struct {
 	ProducerID   int64
 	PhotographID int64
 	MemberID     int64
+	Have         int64
 }
 
 func (x *ProducerScene) RegistScene(ctx context.Context, arg *RegistProducerSceneRequest) error {
@@ -56,7 +57,23 @@ func (x *ProducerScene) RegistScene(ctx context.Context, arg *RegistProducerScen
 		ProducerID:   arg.ProducerID,
 		PhotographID: arg.PhotographID,
 		MemberID:     arg.MemberID,
-		Have:         int64(1),
+		Have:         arg.Have,
+	}); err != nil {
+		fmt.Println(err)
+		return err
+	}
+	return nil
+}
+
+type InitProducerSceneRequest struct {
+	ProducerID int64
+	MemberID   int64
+}
+
+func (x *ProducerScene) InitAllScene(ctx context.Context, arg *InitProducerSceneRequest) error {
+	if err := x.Querier.InitProducerSceneAll(ctx, x.DB, repository.InitProducerSceneAllParams{
+		ProducerID: arg.ProducerID,
+		MemberID:   arg.MemberID,
 	}); err != nil {
 		fmt.Println(err)
 		return err

@@ -69,6 +69,14 @@ func (x *RegistScene) PostRegist(c *gin.Context) {
 	}
 
 	for _, m := range sakuraMembers {
+		if err := x.ProducerSceneService.InitAllScene(ctx, &service.InitProducerSceneRequest{
+			ProducerID: 1,
+			MemberID:   m.ID,
+		}); err != nil {
+			c.String(http.StatusInternalServerError, err.Error())
+			return
+		}
+
 		pids := c.Request.Form[fmt.Sprintf("member_%d[]", m.ID)]
 		fmt.Println(pids)
 		for _, pid := range pids {
@@ -77,6 +85,7 @@ func (x *RegistScene) PostRegist(c *gin.Context) {
 				ProducerID:   1,
 				PhotographID: id,
 				MemberID:     m.ID,
+				Have:         1,
 			}); err != nil {
 				c.String(http.StatusInternalServerError, err.Error())
 				return

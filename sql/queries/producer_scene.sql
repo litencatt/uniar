@@ -66,3 +66,13 @@ WHERE
 	AND photograph_id = ?
     AND member_id = ?
 ;
+
+-- name: InitProducerSceneAll :exec
+UPDATE
+    producer_scenes
+SET
+    have = 0
+WHERE
+	producer_id = ?
+    AND member_id = ?
+;
