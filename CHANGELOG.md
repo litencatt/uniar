@@ -1,7 +1,11 @@
 # Changelog
 
+## [v0.13.0](https://github.com/litencatt/uniar/compare/v0.12.0...v0.13.0) (2023-01-14)
+
+
 ## [v0.12.0](https://github.com/litencatt/uniar/compare/v0.11.0...v0.12.0) (2023-01-14)
 
+* bump to v0.12.0 [#59](https://github.com/litencatt/uniar/pull/59) ([litencatt](https://github.com/litencatt))
 * Add Precious -pair-'23 [#58](https://github.com/litencatt/uniar/pull/58) ([litencatt](https://github.com/litencatt))
 
 ## [v0.11.0](https://github.com/litencatt/uniar/compare/v0.10.0...v0.11.0) (2023-01-09)
