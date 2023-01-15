@@ -25,19 +25,18 @@ type ListProducerSceneRequest struct {
 	FullName   bool   `form:"full_name"`
 }
 
-func (x *ProducerScene) ListScene(ctx context.Context, arg *ListSceneRequest) ([]entity.Scene, error) {
+func (x *ProducerScene) ListScene(ctx context.Context, arg *ListSceneRequest) ([]entity.ProducerScene, error) {
 	pss, err := x.Querier.GetProducerScenesByGroupId(ctx, x.DB, 1)
 	if err != nil {
 		return nil, err
 	}
 
-	var scenes []entity.Scene
+	var scenes []entity.ProducerScene
 	for _, s := range pss {
-		scene := entity.Scene{
-			Photograph: s.Photograph,
-			Member:     s.Member,
-			Color:      s.Color,
-			Have:       s.Have == int64(1),
+		scene := entity.ProducerScene{
+			PhotographID: s.PhotographID,
+			MemberID:     s.MemberID,
+			Have:         s.Have,
 		}
 		scenes = append(scenes, scene)
 	}
