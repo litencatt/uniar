@@ -18,23 +18,12 @@ type RegistScene struct {
 
 func (x *RegistScene) GetRegist(c *gin.Context) {
 	ctx := context.Background()
-
-	var req service.ListSceneRequest
-	// bind request params to object
-	c.ShouldBind(&req)
-	fmt.Printf("%+v\n", req)
-	if req.Photograph == "" {
-		req.Photograph = "%"
-	}
-	if req.Color == "" {
-		req.Color = "%"
-	}
-	if req.Member == "" {
-		req.Member = "%"
-	}
-	req.FullName = true
-
-	sps, err := x.ProducerSceneService.ListScene(ctx, &req)
+	sps, err := x.ProducerSceneService.ListScene(ctx, &service.ListSceneRequest{
+		Photograph: "%",
+		Color:      "%",
+		Member:     "%",
+		FullName:   true,
+	})
 	if err != nil {
 		c.String(http.StatusInternalServerError, err.Error())
 		return
