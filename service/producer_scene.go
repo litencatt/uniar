@@ -53,7 +53,7 @@ type RegistProducerSceneRequest struct {
 }
 
 func (x *ProducerScene) RegistScene(ctx context.Context, arg *RegistProducerSceneRequest) error {
-	fmt.Printf("%+v\n", arg)
+	// fmt.Printf("%+v\n", arg)
 	if err := x.Querier.UpdateProducerScene(ctx, x.DB, repository.UpdateProducerSceneParams{
 		ProducerID:   arg.ProducerID,
 		PhotographID: arg.PhotographID,

@@ -2,7 +2,6 @@ package handler
 
 import (
 	"context"
-	"fmt"
 	"net/http"
 
 	"github.com/gin-gonic/gin"
@@ -21,7 +20,7 @@ func (ls *ListScene) ListScene(c *gin.Context) {
 	var req service.ListSceneRequest
 	// bind request params to object
 	c.ShouldBind(&req)
-
+	// fmt.Printf("%+v\n", req)
 	if req.Photograph == "" {
 		req.Photograph = "%"
 	}

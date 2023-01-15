@@ -98,7 +98,7 @@ func (x *RegistScene) PostRegist(c *gin.Context) {
 		}
 
 		pids := c.Request.Form[fmt.Sprintf("member_%d[]", m.ID)]
-		fmt.Println(pids)
+		// fmt.Println(pids)
 		for _, pid := range pids {
 			id, _ := strconv.ParseInt(pid, 10, 64)
 			if err := x.ProducerSceneService.RegistScene(ctx, &service.RegistProducerSceneRequest{
