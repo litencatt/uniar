@@ -11,7 +11,7 @@ type SceneService interface {
 	ListScene(context.Context, *service.ListSceneRequest) ([]entity.Scene, error)
 }
 type ProducerSceneService interface {
-	ListScene(context.Context, *service.ListSceneRequest) ([]entity.ProducerScene, error)
+	ListScene(context.Context, *service.ListProducerSceneRequest) ([]entity.ProducerScene, error)
 	RegistScene(context.Context, *service.RegistProducerSceneRequest) error
 	InitAllScene(context.Context, *service.InitProducerSceneRequest) error
 }

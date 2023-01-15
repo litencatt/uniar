@@ -23,10 +23,11 @@ type ListProducerSceneRequest struct {
 	NotHave    bool   `form:"not_have"`
 	Detail     bool   `form:"detail"`
 	FullName   bool   `form:"full_name"`
+	GroupID    int64
 }
 
-func (x *ProducerScene) ListScene(ctx context.Context, arg *ListSceneRequest) ([]entity.ProducerScene, error) {
-	pss, err := x.Querier.GetProducerScenesByGroupId(ctx, x.DB, 1)
+func (x *ProducerScene) ListScene(ctx context.Context, arg *ListProducerSceneRequest) ([]entity.ProducerScene, error) {
+	pss, err := x.Querier.GetProducerScenesByGroupId(ctx, x.DB, arg.GroupID)
 	if err != nil {
 		return nil, err
 	}

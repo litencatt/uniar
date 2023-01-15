@@ -14,17 +14,18 @@
         <thead>
           <tr>
             <th>photograph\member</th>
-            {{range .sakuraMembers}}
+            {{range .members}}
             <th>{{ .Name }}</th>
             {{end}}        
           </tr>
         </thead>
         <tbody>
-        {{range $pi, $pv := .sakuraPhotos}}
+        {{range $pi, $pv := .photos}}
           <tr>
             <td>{{ .Name }}</td>
-            {{range $mi, $mv := $.sakuraMembers}}
-              <td><input type="checkbox" name="member_{{$mv.ID}}[]" value="{{$pv.ID}}" {{if eq (index (index $.sakuraProducerScenes $pi) $mi) 1}}checked{{end}}></td>    
+            {{range $mi, $mv := $.members}}
+              {{ $have := index (index $.producerScenes $pv.ID) $mv.ID }}
+              <td><input type="checkbox" name="member_{{$mv.ID}}[]" value="{{$pv.ID}}" {{if eq $have 1}}checked{{end}}></td>    
             {{end}}
           </tr>
         {{end}}

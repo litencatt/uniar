@@ -31,11 +31,12 @@ func (x *RegistScene) GetRegist(c *gin.Context) {
 		return
 	}
 
-	sps, err := x.ProducerSceneService.ListScene(ctx, &service.ListSceneRequest{
+	sps, err := x.ProducerSceneService.ListScene(ctx, &service.ListProducerSceneRequest{
 		Photograph: "%",
 		Color:      "%",
 		Member:     "%",
 		FullName:   true,
+		GroupID:    groupId,
 	})
 	if err != nil {
 		c.String(http.StatusInternalServerError, err.Error())
@@ -53,20 +54,19 @@ func (x *RegistScene) GetRegist(c *gin.Context) {
 	}
 
 	producerScenes := make([][]int64, 120)
-	fmt.Println(len(producerScenes))
 	for i := 0; i < 120; i++ {
 		producerScenes[i] = make([]int64, 100)
 	}
 	for _, ps := range sps {
-		producerScenes[ps.PhotographID-1][ps.MemberID-1] = ps.Have
+		producerScenes[ps.PhotographID][ps.MemberID] = ps.Have
 	}
-	//fmt.Println(sakuraProducerScenes[1])
 
 	c.HTML(http.StatusOK, "regist/index.go.tmpl", gin.H{
-		"title":                "Regist Index",
-		"sakuraPhotos":         photos,
-		"sakuraMembers":        members,
-		"sakuraProducerScenes": producerScenes,
+		"title":          "Regist Index",
+		"photos":         photos,
+		"members":        members,
+		"producerScenes": producerScenes,
+		"groupId":        groupId,
 	})
 }
 
@@ -82,13 +82,13 @@ func (x *RegistScene) PostRegist(c *gin.Context) {
 	}
 
 	c.Request.ParseForm()
-	sakuraMembers, err := x.MemberService.GetMemberByGroup(ctx, groupId)
+	members, err := x.MemberService.GetMemberByGroup(ctx, groupId)
 	if err != nil {
 		c.String(http.StatusInternalServerError, err.Error())
 		return
 	}
 
-	for _, m := range sakuraMembers {
+	for _, m := range members {
 		if err := x.ProducerSceneService.InitAllScene(ctx, &service.InitProducerSceneRequest{
 			ProducerID: 1,
 			MemberID:   m.ID,
@@ -112,5 +112,5 @@ func (x *RegistScene) PostRegist(c *gin.Context) {
 			}
 		}
 	}
-	c.Redirect(http.StatusFound, "/regist")
+	c.Redirect(http.StatusFound, fmt.Sprintf("/regist/%d", groupId))
 }
