@@ -3,7 +3,6 @@ package service
 import (
 	"context"
 	"database/sql"
-	"fmt"
 	"sort"
 	"strconv"
 
@@ -123,23 +122,4 @@ func (x *Scene) ListScene(ctx context.Context, arg *ListSceneRequest) ([]entity.
 	}
 
 	return scenes, nil
-}
-
-type RegistSceneRequest struct {
-	ProducerID   int64
-	PhotographID int64
-	MemberID     int64
-}
-
-func (x *Scene) RegistScene(ctx context.Context, arg *RegistSceneRequest) error {
-	if err := x.Querier.UpdateProducerScene(ctx, x.DB, repository.UpdateProducerSceneParams{
-		ProducerID:   arg.ProducerID,
-		PhotographID: arg.PhotographID,
-		MemberID:     arg.MemberID,
-		Have:         1,
-	}); err != nil {
-		fmt.Println(err)
-		return err
-	}
-	return nil
 }

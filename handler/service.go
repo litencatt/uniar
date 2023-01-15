@@ -9,7 +9,10 @@ import (
 
 type SceneService interface {
 	ListScene(context.Context, *service.ListSceneRequest) ([]entity.Scene, error)
-	RegistScene(context.Context, *service.RegistSceneRequest) error
+}
+type ProducerSceneService interface {
+	ListScene(context.Context, *service.ListSceneRequest) ([]entity.Scene, error)
+	RegistScene(context.Context, *service.RegistProducerSceneRequest) error
 }
 type MemberService interface {
 	ListMember(context.Context) ([]entity.Member, error)

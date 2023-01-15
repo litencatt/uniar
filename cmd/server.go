@@ -68,9 +68,9 @@ func run(ctx context.Context) error {
 	r.GET("/scenes", ls.ListScene)
 
 	rs := &handler.RegistScene{
-		SceneService:      &service.Scene{DB: db, Querier: q},
-		MemberService:     &service.Member{DB: db, Querier: q},
-		PhotographService: &service.Photgraph{DB: db, Querier: q},
+		ProducerSceneService: &service.ProducerScene{DB: db, Querier: q},
+		MemberService:        &service.Member{DB: db, Querier: q},
+		PhotographService:    &service.Photgraph{DB: db, Querier: q},
 	}
 	r.GET("/regist", rs.GetRegist)
 	r.POST("/regist", rs.PostRegist)

@@ -10,6 +10,8 @@ import (
 )
 
 const getProducerScenes = `-- name: GetProducerScenes :many
+;
+
 SELECT
     ps.producer_id,
     ps.photograph_id,
@@ -59,6 +61,73 @@ func (q *Queries) GetProducerScenes(ctx context.Context, db DBTX, arg GetProduce
 	var items []GetProducerScenesRow
 	for rows.Next() {
 		var i GetProducerScenesRow
+		if err := rows.Scan(
+			&i.ProducerID,
+			&i.PhotographID,
+			&i.MemberID,
+			&i.Color,
+			&i.Photograph,
+			&i.Member,
+			&i.SsrPlus,
+			&i.Have,
+		); err != nil {
+			return nil, err
+		}
+		items = append(items, i)
+	}
+	if err := rows.Close(); err != nil {
+		return nil, err
+	}
+	if err := rows.Err(); err != nil {
+		return nil, err
+	}
+	return items, nil
+}
+
+const getProducerScenesByGroupId = `-- name: GetProducerScenesByGroupId :many
+SELECT
+    ps.producer_id,
+    ps.photograph_id,
+    ps.member_id,
+    c.name AS color,
+    p.name AS photograph,
+    m.name AS member,
+    s.ssr_plus,
+    ps.have
+FROM
+    producer_scenes ps
+    JOIN scenes s ON ps.photograph_id = s.photograph_id AND ps.member_id = s.member_id AND ps.ssr_plus = s.ssr_plus
+    JOIN photograph p on ps.photograph_id = p.id
+    JOIN members m on ps.member_id = m.id
+    JOIN color_types c ON s.color_type_id = c.id
+WHERE
+    m.group_id = ?
+ORDER BY
+    p.id,
+    m.phase,
+    m.first_name
+`
+
+type GetProducerScenesByGroupIdRow struct {
+	ProducerID   int64
+	PhotographID int64
+	MemberID     int64
+	Color        string
+	Photograph   string
+	Member       string
+	SsrPlus      int64
+	Have         int64
+}
+
+func (q *Queries) GetProducerScenesByGroupId(ctx context.Context, db DBTX, groupID int64) ([]GetProducerScenesByGroupIdRow, error) {
+	rows, err := db.QueryContext(ctx, getProducerScenesByGroupId, groupID)
+	if err != nil {
+		return nil, err
+	}
+	defer rows.Close()
+	var items []GetProducerScenesByGroupIdRow
+	for rows.Next() {
+		var i GetProducerScenesByGroupIdRow
 		if err := rows.Scan(
 			&i.ProducerID,
 			&i.PhotographID,

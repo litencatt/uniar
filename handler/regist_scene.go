@@ -11,9 +11,9 @@ import (
 )
 
 type RegistScene struct {
-	SceneService      SceneService
-	MemberService     MemberService
-	PhotographService PhotographService
+	ProducerSceneService ProducerSceneService
+	MemberService        MemberService
+	PhotographService    PhotographService
 }
 
 func (x *RegistScene) GetRegist(c *gin.Context) {
@@ -34,7 +34,7 @@ func (x *RegistScene) GetRegist(c *gin.Context) {
 	}
 	req.FullName = true
 
-	sss, err := x.SceneService.ListScene(ctx, &req)
+	sss, err := x.ProducerSceneService.ListScene(ctx, &req)
 	if err != nil {
 		c.String(http.StatusInternalServerError, err.Error())
 		return
@@ -69,9 +69,10 @@ func (x *RegistScene) PostRegist(c *gin.Context) {
 
 	for _, m := range sakuraMembers {
 		pids := c.Request.Form[fmt.Sprintf("member_%d[]", m.ID)]
+		fmt.Println(pids)
 		for _, pid := range pids {
 			id, _ := strconv.ParseInt(pid, 10, 64)
-			if err := x.SceneService.RegistScene(ctx, &service.RegistSceneRequest{
+			if err := x.ProducerSceneService.RegistScene(ctx, &service.RegistProducerSceneRequest{
 				ProducerID:   1,
 				PhotographID: id,
 				MemberID:     m.ID,
