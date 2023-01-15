@@ -16,8 +16,21 @@ type RegistScene struct {
 	PhotographService    PhotographService
 }
 
+type Group struct {
+	GroupID string `uri:"group_id"`
+}
+
 func (x *RegistScene) GetRegist(c *gin.Context) {
 	ctx := context.Background()
+
+	var group Group
+	c.ShouldBindUri(&group)
+	groupId, err := strconv.ParseInt(group.GroupID, 10, 64)
+	if err != nil {
+		c.String(http.StatusInternalServerError, err.Error())
+		return
+	}
+
 	sps, err := x.ProducerSceneService.ListScene(ctx, &service.ListSceneRequest{
 		Photograph: "%",
 		Color:      "%",
@@ -28,41 +41,48 @@ func (x *RegistScene) GetRegist(c *gin.Context) {
 		c.String(http.StatusInternalServerError, err.Error())
 		return
 	}
-	sakuraMembers, err := x.MemberService.GetMemberByGroup(ctx, 1)
+	members, err := x.MemberService.GetMemberByGroup(ctx, groupId)
 	if err != nil {
 		c.String(http.StatusInternalServerError, err.Error())
 		return
 	}
-	sakuraPhotos, err := x.PhotographService.GetPhotographByGroup(ctx, 1)
+	photos, err := x.PhotographService.GetPhotographByGroup(ctx, groupId)
 	if err != nil {
 		c.String(http.StatusInternalServerError, err.Error())
 		return
 	}
 
-	sakuraProducerScenes := make([][]int64, 120)
-	fmt.Println(len(sakuraProducerScenes))
+	producerScenes := make([][]int64, 120)
+	fmt.Println(len(producerScenes))
 	for i := 0; i < 120; i++ {
-		sakuraProducerScenes[i] = make([]int64, 100)
+		producerScenes[i] = make([]int64, 100)
 	}
 	for _, ps := range sps {
-		//fmt.Printf("%+v\n", ps)
-		sakuraProducerScenes[ps.PhotographID-1][ps.MemberID-1] = ps.Have
+		producerScenes[ps.PhotographID-1][ps.MemberID-1] = ps.Have
 	}
-	fmt.Println(sakuraProducerScenes)
+	//fmt.Println(sakuraProducerScenes[1])
 
 	c.HTML(http.StatusOK, "regist/index.go.tmpl", gin.H{
 		"title":                "Regist Index",
-		"sakuraPhotos":         sakuraPhotos,
-		"sakuraMembers":        sakuraMembers,
-		"sakuraProducerScenes": sakuraProducerScenes,
+		"sakuraPhotos":         photos,
+		"sakuraMembers":        members,
+		"sakuraProducerScenes": producerScenes,
 	})
 }
 
 func (x *RegistScene) PostRegist(c *gin.Context) {
 	ctx := context.Background()
 
+	var group Group
+	c.ShouldBindUri(&group)
+	groupId, err := strconv.ParseInt(group.GroupID, 10, 64)
+	if err != nil {
+		c.String(http.StatusInternalServerError, err.Error())
+		return
+	}
+
 	c.Request.ParseForm()
-	sakuraMembers, err := x.MemberService.GetMemberByGroup(ctx, 1)
+	sakuraMembers, err := x.MemberService.GetMemberByGroup(ctx, groupId)
 	if err != nil {
 		c.String(http.StatusInternalServerError, err.Error())
 		return

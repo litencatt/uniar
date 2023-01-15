@@ -72,7 +72,7 @@ func run(ctx context.Context) error {
 		MemberService:        &service.Member{DB: db, Querier: q},
 		PhotographService:    &service.Photgraph{DB: db, Querier: q},
 	}
-	r.GET("/regist", rs.GetRegist)
+	r.GET("/regist/:group_id", rs.GetRegist)
 	r.POST("/regist", rs.PostRegist)
 
 	r.Run(":8090")
