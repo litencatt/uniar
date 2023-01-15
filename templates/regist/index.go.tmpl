@@ -24,7 +24,7 @@
           <tr>
             <td>{{ .Name }}</td>
             {{range $mi, $mv := $.sakuraMembers}}
-              <td><input type="checkbox" id="{{.Name}}{{$mi}}" name="member_{{$mv.ID}}[]" value="{{$pv.ID}}" {{if eq (index (index $.sakuraProducerScenes $mi) $pi) 1}}checked{{end}}></td>    
+              <td><input type="checkbox" name="member_{{$mv.ID}}[]" value="{{$pv.ID}}" {{if eq (index (index $.sakuraProducerScenes $pi) $mi) 1}}checked{{end}}></td>    
             {{end}}
           </tr>
         {{end}}
