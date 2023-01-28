@@ -41,6 +41,7 @@ db-dump:
 	sqlite3 ~/.uniar/uniar.db '.dump "members"'       | grep ^INSERT >> sql/seed.sql
 	sqlite3 ~/.uniar/uniar.db '.dump "music"'         | grep ^INSERT >> sql/seed.sql
 	sqlite3 ~/.uniar/uniar.db '.dump "photograph"'    | grep ^INSERT >> sql/seed.sql
+	sqlite3 ~/.uniar/uniar.db '.dump "photo_types"'   | grep ^INSERT >> sql/seed.sql
 	sqlite3 ~/.uniar/uniar.db '.dump "scenes"'        | grep ^INSERT >> sql/seed.sql
 	sqlite3 ~/.uniar/uniar.db '.dump "skills"'        | grep ^INSERT >> sql/seed.sql
 	sed -i '' -e "s/INSERT INTO/INSERT OR REPLACE INTO/g" sql/seed.sql
