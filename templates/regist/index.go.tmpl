@@ -28,7 +28,7 @@
             <td>{{ .Name }}</td>
             {{range $mi, $mv := $.members}}
               {{ $have := index (index $.producerScenes $pv.ID) $mv.ID }}
-              <td><input type="checkbox" name="member_{{$mv.ID}}[]" value="{{$pv.ID}}" {{if eq $have 1}}checked{{end}}></td>    
+              <td><input type="checkbox" name="member_{{$mv.ID}}[]" value="{{$pv.ID}}" {{if eq $have 1}}checked{{end}} {{if eq $have -1}}disabled{{end}}></td>    
             {{end}}
           </tr>
         {{end}}
