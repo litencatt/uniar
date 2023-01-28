@@ -62,7 +62,7 @@ FROM
 WHERE
 	group_id = ?
 ORDER BY
-	m.phase, m.first_name asc
+	graduated asc, m.first_name asc
 `
 
 type GetMemberListRow struct {

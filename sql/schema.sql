@@ -58,6 +58,7 @@ CREATE TABLE photograph (
   photo_type varchar(10) NOT NULL,
   released_at DATETIME NULL,
   created_at DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  photo_type_id integer DEFAULT 0,
   CONSTRAINT Photograph_ibfk_1 FOREIGN KEY (group_id) REFERENCES groups (id) ON DELETE CASCADE ON UPDATE CASCADE
 );
 
@@ -130,4 +131,10 @@ CREATE TABLE producer_offices (
   office_bonus integer DEFAULT 0,
   created_at DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
   CONSTRAINT fk_producer_offices_producer_id FOREIGN KEY (producer_id) REFERENCES producers (id)
+);
+
+CREATE TABLE photo_types (
+  id integer PRIMARY KEY AUTOINCREMENT,
+  name varchar(100) NOT NULL,
+  created_at DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP
 );

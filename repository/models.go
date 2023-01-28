@@ -58,6 +58,12 @@ type Music struct {
 	CreatedAt   time.Time
 }
 
+type PhotoType struct {
+	ID        int64
+	Name      string
+	CreatedAt time.Time
+}
+
 type Photograph struct {
 	ID           int64
 	Name         string
@@ -66,6 +72,7 @@ type Photograph struct {
 	PhotoType    string
 	ReleasedAt   interface{}
 	CreatedAt    time.Time
+	PhotoTypeID  sql.NullInt64
 }
 
 type Producer struct {

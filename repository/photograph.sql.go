@@ -19,6 +19,8 @@ FROM
     photograph
 WHERE
     group_id = ?
+ORDER BY
+	photo_type_id, released_at
 `
 
 type GetPhotographByGroupIdRow struct {
