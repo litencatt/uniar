@@ -56,6 +56,9 @@ func (x *RegistScene) GetRegist(c *gin.Context) {
 	producerScenes := make([][]int64, 120)
 	for i := 0; i < 120; i++ {
 		producerScenes[i] = make([]int64, 100)
+		for j := 0; j < 100; j++ {
+			producerScenes[i][j] = -1
+		}
 	}
 	for _, ps := range producerSceneList {
 		producerScenes[ps.PhotographID][ps.MemberID] = ps.Have
