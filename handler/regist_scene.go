@@ -31,7 +31,7 @@ func (x *RegistScene) GetRegist(c *gin.Context) {
 		return
 	}
 
-	sps, err := x.ProducerSceneService.ListScene(ctx, &service.ListProducerSceneRequest{
+	producerSceneList, err := x.ProducerSceneService.ListScene(ctx, &service.ListProducerSceneRequest{
 		Photograph: "%",
 		Color:      "%",
 		Member:     "%",
@@ -57,16 +57,16 @@ func (x *RegistScene) GetRegist(c *gin.Context) {
 	for i := 0; i < 120; i++ {
 		producerScenes[i] = make([]int64, 100)
 	}
-	for _, ps := range sps {
+	for _, ps := range producerSceneList {
 		producerScenes[ps.PhotographID][ps.MemberID] = ps.Have
 	}
 
 	c.HTML(http.StatusOK, "regist/index.go.tmpl", gin.H{
 		"title":          "Regist Index",
+		"groupId":        groupId,
 		"photos":         photos,
 		"members":        members,
 		"producerScenes": producerScenes,
-		"groupId":        groupId,
 	})
 }
 
