@@ -70,9 +70,9 @@ type Photograph struct {
 	GroupID      int64
 	Abbreviation string
 	PhotoType    string
-	PhotoTypeID  sql.NullInt64
 	ReleasedAt   interface{}
 	CreatedAt    time.Time
+	PhotoTypeID  sql.NullInt64
 }
 
 type Producer struct {
