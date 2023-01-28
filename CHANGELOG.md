@@ -1,7 +1,11 @@
 # Changelog
 
+## [v0.14.1](https://github.com/litencatt/uniar/compare/v0.14.0...v0.14.1) (2023-01-28)
+
+
 ## [v0.14.0](https://github.com/litencatt/uniar/compare/v0.13.0...v0.14.0) (2023-01-28)
 
+* bump to v0.14.0 [#64](https://github.com/litencatt/uniar/pull/64) ([litencatt](https://github.com/litencatt))
 * Update photo and scenes [#63](https://github.com/litencatt/uniar/pull/63) ([litencatt](https://github.com/litencatt))
 * Add 櫻坂46 1YAL FL [#62](https://github.com/litencatt/uniar/pull/62) ([litencatt](https://github.com/litencatt))
 
