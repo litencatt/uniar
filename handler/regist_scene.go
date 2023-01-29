@@ -84,13 +84,13 @@ func (x *RegistScene) PostRegist(c *gin.Context) {
 		return
 	}
 
-	c.Request.ParseForm()
 	members, err := x.MemberService.GetMemberByGroup(ctx, groupId)
 	if err != nil {
 		c.String(http.StatusInternalServerError, err.Error())
 		return
 	}
 
+	c.Request.ParseForm()
 	for _, m := range members {
 		if err := x.ProducerSceneService.InitAllScene(ctx, &service.InitProducerSceneRequest{
 			ProducerID: 1,

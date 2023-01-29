@@ -1,5 +1,6 @@
 -- name: GetProducerMember :many
 SELECT
+    m.id AS MemberID,
     m.name,
     pm.bond_level_curent,
     pm.discography_disc_total
@@ -7,7 +8,7 @@ FROM
     producer_members pm
     JOIN members m ON pm.member_id = m.id
 ORDER BY
-    m.group_id, m.phase, m.first_name
+    m.group_id, m.graduated ASC, m.phase, m.first_name
 ;
 
 -- name: RegistProducerMember :exec
