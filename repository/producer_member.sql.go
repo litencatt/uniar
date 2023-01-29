@@ -11,6 +11,7 @@ import (
 
 const getProducerMember = `-- name: GetProducerMember :many
 SELECT
+    m.id AS MemberID,
     m.name,
     pm.bond_level_curent,
     pm.discography_disc_total
@@ -18,10 +19,11 @@ FROM
     producer_members pm
     JOIN members m ON pm.member_id = m.id
 ORDER BY
-    m.group_id, m.phase, m.first_name
+    m.group_id, m.graduated ASC, m.phase, m.first_name
 `
 
 type GetProducerMemberRow struct {
+	MemberID             int64
 	Name                 string
 	BondLevelCurent      int64
 	DiscographyDiscTotal int64
@@ -36,7 +38,12 @@ func (q *Queries) GetProducerMember(ctx context.Context, db DBTX) ([]GetProducer
 	var items []GetProducerMemberRow
 	for rows.Next() {
 		var i GetProducerMemberRow
-		if err := rows.Scan(&i.Name, &i.BondLevelCurent, &i.DiscographyDiscTotal); err != nil {
+		if err := rows.Scan(
+			&i.MemberID,
+			&i.Name,
+			&i.BondLevelCurent,
+			&i.DiscographyDiscTotal,
+		); err != nil {
 			return nil, err
 		}
 		items = append(items, i)

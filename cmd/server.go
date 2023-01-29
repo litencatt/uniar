@@ -75,6 +75,12 @@ func run(ctx context.Context) error {
 	r.GET("/regist/:group_id", rs.GetRegist)
 	r.POST("/regist/:group_id", rs.PostRegist)
 
+	lm := &handler.ListMember{
+		MemberService: &service.Member{DB: db, Querier: q},
+	}
+	r.GET("/members", lm.ListMember)
+	r.POST("/members", lm.UpdateMember)
+
 	r.Run(":8090")
 	return nil
 }
