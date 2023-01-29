@@ -1,41 +1,30 @@
 {{ define "regist/index.go.tmpl" }}
-<html>
-<head>
-    <title>{{ .title }}</title>
-    <style type="text/css" media="screen">
-        @import url("/assets/css/regist.css");
-    </style>
-</head>
-<body>
-  <a href="/scenes">シーン一覧</a>
-  <a href="/regist/1">シーン登録(櫻坂46)</a>
-  <a href="/regist/2">シーン登録(日向坂46)</a>
-  <form action="/regist/{{ .groupId }}" method="POST">
-    <input type="submit" />    
-    <div>
-      <table border="1">
-        <thead>
-          <tr>
-            <th>photograph\member</th>
-            {{range .members}}
-            <th>{{ .Name }}</th>
-            {{end}}        
-          </tr>
-        </thead>
-        <tbody>
-        {{range $pi, $pv := .photos}}
-          <tr>
-            <td>{{ .Name }}</td>
-            {{range $mi, $mv := $.members}}
-              {{ $have := index (index $.producerScenes $pv.ID) $mv.ID }}
-              <td><input type="checkbox" name="member_{{$mv.ID}}[]" value="{{$pv.ID}}" {{if eq $have 1}}checked{{end}} {{if eq $have -1}}disabled{{end}}></td>    
-            {{end}}
-          </tr>
-        {{end}}
-        </tbody>
-      </table>
-    </div>
-  </form>
-</body>
-</html>
+{{ template "header" }}
+<form action="/regist/{{ .groupId }}" method="POST">
+  <input type="submit" />    
+  <div>
+    <table border="1">
+      <thead>
+        <tr>
+          <th>photograph\member</th>
+          {{range .members}}
+          <th>{{ .Name }}</th>
+          {{end}}        
+        </tr>
+      </thead>
+      <tbody>
+      {{range $pi, $pv := .photos}}
+        <tr>
+          <td>{{ .Name }}</td>
+          {{range $mi, $mv := $.members}}
+            {{ $have := index (index $.producerScenes $pv.ID) $mv.ID }}
+            <td><input type="checkbox" name="member_{{$mv.ID}}[]" value="{{$pv.ID}}" {{if eq $have 1}}checked{{end}} {{if eq $have -1}}disabled{{end}}></td>    
+          {{end}}
+        </tr>
+      {{end}}
+      </tbody>
+    </table>
+  </div>
+</form>
+{{ template "footer" }}
 {{ end }}
