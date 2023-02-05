@@ -7,10 +7,18 @@
     </style>
 </head>
 <body>
+  {{ if .LoggedIn }}
+  <p>Email: {{ .EMail }}</p>
   <a href="/scenes">シーン一覧</a>
   <a href="/regist/1">シーン登録(櫻坂46)</a>
   <a href="/regist/2">シーン登録(日向坂46)</a>
-  <a href="/members">メンバー情報更新</a>
+  <a href="/members">メンバー情報更新</a>  
+  <a href="/logout">ログアウト</a>
+  {{ else }}
+  <a href="/login">ログイン</a>
+  <a href="/scenes">シーン一覧</a>
+  {{ end }}
+
 {{ end }}
 
 {{ define "footer" }}

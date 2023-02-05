@@ -1,5 +1,5 @@
 {{ define "regist/index.go.tmpl" }}
-{{ template "header" }}
+{{ template "header" . }}
 <form action="/regist/{{ .groupId }}" method="POST">
   <input type="submit" />    
   <div>
@@ -26,5 +26,5 @@
     </table>
   </div>
 </form>
-{{ template "footer" }}
+{{ template "footer" . }}
 {{ end }}

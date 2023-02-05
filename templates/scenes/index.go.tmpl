@@ -1,5 +1,5 @@
 {{ define "scenes/index.go.tmpl" }}
-{{ template "header" }}
+{{ template "header" . }}
 <form action="/scenes" method="GET">
   <select name="photograph" id="photo-select">
     <option value="">All photograph</option>
@@ -87,5 +87,5 @@
   {{end}}
   </tbody>
 </table>
-{{ template "footer" }}
+{{ template "footer" . }}
 {{ end }}
