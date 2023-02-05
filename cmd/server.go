@@ -31,6 +31,11 @@ import (
 	"github.com/litencatt/uniar/repository"
 	"github.com/litencatt/uniar/service"
 	"github.com/spf13/cobra"
+	"github.com/zalando/gin-oauth2/google"
+)
+
+const (
+	oauthSessionName = "uniar_oauth_session"
 )
 
 var serverCmd = &cobra.Command{
@@ -47,18 +52,32 @@ var serverCmd = &cobra.Command{
 }
 
 func run(ctx context.Context) error {
-	r := gin.Default()
-	r.LoadHTMLGlob("templates/**/*")
-
 	db, err := repository.NewConnection(GetDbPath())
 	if err != nil {
 		return err
 	}
 	q := repository.New()
 
-	r.Static("/assets", "./assets")
+	redirectURL := "http://127.0.0.1:8090/auth"
+	credFile := "./cred.json"
+	scopes := []string{"https://www.googleapis.com/auth/userinfo.email"}
+	secret := []byte("secret")
 
-	r.GET("/", handler.Top)
+	r := gin.Default()
+	r.Use(handler.LoginCheck())
+	r.Static("/assets", "./assets")
+	r.LoadHTMLGlob("templates/**/*")
+
+	r.GET("/", handler.TopHandler)
+
+	google.Setup(redirectURL, credFile, scopes, secret)
+	r.Use(google.Session(oauthSessionName))
+	private := r.Group("/auth")
+	private.Use(google.Auth())
+	private.GET("/", handler.AuthHandler)
+
+	r.GET("/login", google.LoginHandler)
+	r.GET("/logout", handler.LogoutHandler)
 
 	ls := &handler.ListScene{
 		SceneService:      &service.Scene{DB: db, Querier: q},
