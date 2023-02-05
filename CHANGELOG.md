@@ -1,7 +1,15 @@
 # Changelog
 
+## [v0.15.0](https://github.com/litencatt/uniar/compare/v0.14.3...v0.15.0) (2023-02-05)
+
+* 20230201 update [#71](https://github.com/litencatt/uniar/pull/71) ([litencatt](https://github.com/litencatt))
+* Update graduated member [#70](https://github.com/litencatt/uniar/pull/70) ([litencatt](https://github.com/litencatt))
+* Add update producer member page [#69](https://github.com/litencatt/uniar/pull/69) ([litencatt](https://github.com/litencatt))
+* Disable regist checkbox when the scene is not exist [#68](https://github.com/litencatt/uniar/pull/68) ([litencatt](https://github.com/litencatt))
+
 ## [v0.14.3](https://github.com/litencatt/uniar/compare/v0.14.2...v0.14.3) (2023-01-28)
 
+* Fix regist member order [#67](https://github.com/litencatt/uniar/pull/67) ([litencatt](https://github.com/litencatt))
 
 ## [v0.14.2](https://github.com/litencatt/uniar/compare/v0.14.1...v0.14.2) (2023-01-28)
 
