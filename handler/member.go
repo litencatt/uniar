@@ -26,8 +26,10 @@ func (ls *ListMember) ListMember(c *gin.Context) {
 	}
 
 	c.HTML(http.StatusOK, "members/index.go.tmpl", gin.H{
-		"title":   "Members",
-		"members": ms,
+		"title":    "Members",
+		"LoggedIn": LoginInfo.LoggedIn,
+		"EMail":    LoginInfo.UserMail,
+		"members":  ms,
 	})
 }
 

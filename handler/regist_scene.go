@@ -66,6 +66,8 @@ func (x *RegistScene) GetRegist(c *gin.Context) {
 
 	c.HTML(http.StatusOK, "regist/index.go.tmpl", gin.H{
 		"title":          "Regist Index",
+		"LoggedIn":       LoginInfo.LoggedIn,
+		"EMail":          LoginInfo.UserMail,
 		"groupId":        groupId,
 		"photos":         photos,
 		"members":        members,
