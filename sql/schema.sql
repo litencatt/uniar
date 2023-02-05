@@ -95,6 +95,14 @@ CREATE TABLE skills (
 
 CREATE TABLE producers (
   id integer PRIMARY KEY AUTOINCREMENT,
+  provider_id integer DEFAULT NULL,
+  display_name varchar(255) DEFAULT NULL,
+  created_at DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP
+);
+
+CREATE TABLE id_providers (
+  id integer PRIMARY KEY AUTOINCREMENT,
+  name varchar(255) DEFAULT NULL,
   created_at DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP
 );
 
