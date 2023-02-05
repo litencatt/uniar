@@ -103,7 +103,7 @@ $ uniar list scene -f | head
 | Purple | なぜ　恋をして来なかったんだろう？ | true    | 藤吉夏鈴   |   3.72 | 13076 |     2 |     32 |      1 |      1 |   36 |   45 |    1 | false |
 | Yellow | 誰がその鐘を鳴らすのか？           | true    | 山﨑天     |   3.68 | 13076 |     3 |      3 |     22 |      4 |    1 |   19 |   15 | false |
 | Green  | こんなに好きになっちゃっていいの？ | true    | 加藤史帆   |   3.68 | 13067 |     4 |      2 |     23 |      5 |    2 |   18 |   17 | false |
-| Blue   | Nobody’s fault                    | true    | 渡邉理佐   |   3.68 | 13065 |     5 |      1 |      3 |     37 |   39 |    1 |   45 | false |
+| Blue   | Nobody’s fault                    | true    | 渡邉理佐   |   3.68 | 13065 |     5 |      1 |      3 |     37 |   40 |    1 |   46 | false |
 | Red    | 誰がその鐘を鳴らすのか？           | true    | 菅井友香   |   3.68 | 13064 |     6 |     20 |      6 |      6 |   11 |   17 |    7 | false |
 | Purple | こんなに好きになっちゃっていいの？ | true    | 東村芽依   |   3.68 | 13059 |     7 |      5 |      5 |     19 |   12 |    2 |   16 | false |
 
@@ -174,7 +174,7 @@ $ uniar list scene --ignore-columns All35,VoDa50,DaPe50,VoPe50 | head
 | Purple | なぜ恋                         | true    | 藤吉夏鈴   |   3.72 | 13076 |   36 |   45 |    1 | false |
 | Yellow | 誰鐘                           | true    | 山﨑天     |   3.68 | 13076 |    1 |   19 |   15 | false |
 | Green  | こん好き                       | true    | 加藤史帆   |   3.68 | 13067 |    2 |   18 |   17 | false |
-| Blue   | ノバフォ                       | true    | 渡邉理佐   |   3.68 | 13065 |   39 |    1 |   45 | false |
+| Blue   | ノバフォ                       | true    | 渡邉理佐   |   3.68 | 13065 |   40 |    1 |   46 | false |
 | Red    | 誰鐘                           | true    | 菅井友香   |   3.68 | 13064 |   11 |   17 |    7 | false |
 | Purple | こん好き                       | true    | 東村芽依   |   3.68 | 13059 |   12 |    2 |   16 | false |
 
@@ -189,7 +189,7 @@ $ uniar list scene -d --ignore-columns All35,VoDa50,DaPe50,VoPe50 | head
 | Purple | なぜ恋                         | true    | 藤吉夏鈴   |   3.72 | 13076 |   36 |   45 |    1 | 2971 | 2974 | 6701 | false |
 | Yellow | 誰鐘                           | true    | 山﨑天     |   3.68 | 13076 |    1 |   19 |   15 | 5092 | 3756 | 3798 | false |
 | Green  | こん好き                       | true    | 加藤史帆   |   3.68 | 13067 |    2 |   18 |   17 | 5102 | 3780 | 3755 | false |
-| Blue   | ノバフォ                       | true    | 渡邉理佐   |   3.68 | 13065 |   39 |    1 |   45 | 3020 | 6614 | 3001 | false |
+| Blue   | ノバフォ                       | true    | 渡邉理佐   |   3.68 | 13065 |   40 |    1 |   46 | 3020 | 6614 | 3001 | false |
 | Red    | 誰鐘                           | true    | 菅井友香   |   3.68 | 13064 |   11 |   17 |    7 | 3779 | 3888 | 4967 | false |
 | Purple | こん好き                       | true    | 東村芽依   |   3.68 | 13059 |   12 |    2 |   16 | 3745 | 5066 | 3818 | false |
 
