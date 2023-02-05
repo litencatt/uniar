@@ -1,9 +1,9 @@
 package entity
 
 type Producer struct {
-	ID         int64
-	ProducerID string
-	Name       string
+	ID          int64
+	IdentityId  string
+	DisplayName string
 }
 
 type ProducerScene struct {

@@ -22,6 +22,7 @@ type Querier interface {
 	GetPhotographList(ctx context.Context, db DBTX, arg GetPhotographListParams) ([]GetPhotographListRow, error)
 	GetPhotographListAll(ctx context.Context, db DBTX) ([]GetPhotographListAllRow, error)
 	GetPhotographListByPhotoType(ctx context.Context, db DBTX, photoType string) ([]GetPhotographListByPhotoTypeRow, error)
+	GetProducer(ctx context.Context, db DBTX, identityID string) (Producer, error)
 	GetProducerMember(ctx context.Context, db DBTX) ([]GetProducerMemberRow, error)
 	GetProducerOffice(ctx context.Context, db DBTX, producerID int64) (ProducerOffice, error)
 	GetProducerScenes(ctx context.Context, db DBTX, arg GetProducerScenesParams) ([]GetProducerScenesRow, error)
@@ -31,10 +32,12 @@ type Querier interface {
 	RegistLive(ctx context.Context, db DBTX, name string) error
 	RegistMusic(ctx context.Context, db DBTX, arg RegistMusicParams) error
 	RegistPhotograph(ctx context.Context, db DBTX, arg RegistPhotographParams) error
+	RegistProducer(ctx context.Context, db DBTX, arg RegistProducerParams) error
 	RegistProducerMember(ctx context.Context, db DBTX, arg RegistProducerMemberParams) error
 	RegistProducerOffice(ctx context.Context, db DBTX, producerID int64) error
 	RegistProducerScene(ctx context.Context, db DBTX, arg RegistProducerSceneParams) error
 	RegistScene(ctx context.Context, db DBTX, arg RegistSceneParams) error
+	UpdateProducer(ctx context.Context, db DBTX, arg UpdateProducerParams) error
 	UpdateProducerMember(ctx context.Context, db DBTX, arg UpdateProducerMemberParams) error
 	UpdateProducerOffice(ctx context.Context, db DBTX, arg UpdateProducerOfficeParams) error
 	UpdateProducerScene(ctx context.Context, db DBTX, arg UpdateProducerSceneParams) error

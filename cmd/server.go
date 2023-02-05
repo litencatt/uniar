@@ -74,7 +74,10 @@ func run(ctx context.Context) error {
 	r.Use(google.Session(oauthSessionName))
 	private := r.Group("/auth")
 	private.Use(google.Auth())
-	private.GET("/", handler.AuthHandler)
+	ah := &handler.LoginProducer{
+		ProducerService: &service.Producer{DB: db, Querier: q},
+	}
+	private.GET("/", ah.AuthHandler)
 
 	r.GET("/login", google.LoginHandler)
 	r.GET("/logout", handler.LogoutHandler)

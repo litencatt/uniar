@@ -25,3 +25,8 @@ type PhotographService interface {
 	ListPhotograph(context.Context) ([]entity.Photograph, error)
 	GetPhotographByGroup(context.Context, int64) ([]entity.Photograph, error)
 }
+
+type ProducerService interface {
+	FindProducer(context.Context, string) (entity.Producer, error)
+	RegistProducer(context.Context, string, string) error
+}
