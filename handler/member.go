@@ -57,5 +57,5 @@ func (ls *ListMember) UpdateMember(c *gin.Context) {
 		})
 	}
 
-	c.Redirect(http.StatusFound, "/members")
+	c.Redirect(http.StatusFound, "/auth/members")
 }

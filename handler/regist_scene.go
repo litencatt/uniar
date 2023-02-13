@@ -117,5 +117,5 @@ func (x *RegistScene) PostRegist(c *gin.Context) {
 			}
 		}
 	}
-	c.Redirect(http.StatusFound, fmt.Sprintf("/regist/%d", groupId))
+	c.Redirect(http.StatusFound, fmt.Sprintf("/auth/regist/%d", groupId))
 }
