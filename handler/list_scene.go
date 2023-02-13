@@ -50,8 +50,8 @@ func (ls *ListScene) ListScene(c *gin.Context) {
 	}
 	c.HTML(http.StatusOK, "scenes/index.go.tmpl", gin.H{
 		"title":              "Scenes Index",
-		"LoggedIn":           LoginInfo.LoggedIn,
-		"EMail":              LoginInfo.UserMail,
+		"LoggedIn":           User.LoggedIn,
+		"EMail":              User.EMail,
 		"photograph":         ps,
 		"selectedPhotograph": req.Photograph,
 		"color":              []string{"Red", "Blue", "Green", "Yellow", "Purple"},

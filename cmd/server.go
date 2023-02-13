@@ -35,7 +35,7 @@ import (
 )
 
 const (
-	oauthSessionName = "uniar_oauth_session"
+	sessionName = "uniar_oauth_session"
 )
 
 var serverCmd = &cobra.Command{
@@ -58,50 +58,54 @@ func run(ctx context.Context) error {
 	}
 	q := repository.New()
 
-	redirectURL := "http://127.0.0.1:8090/auth"
-	credFile := "./cred.json"
-	scopes := []string{"https://www.googleapis.com/auth/userinfo.email"}
-	secret := []byte("secret")
-
-	r := gin.Default()
-	r.Use(handler.LoginCheck())
-	r.Static("/assets", "./assets")
-	r.LoadHTMLGlob("templates/**/*")
-
-	r.GET("/", handler.TopHandler)
-
-	google.Setup(redirectURL, credFile, scopes, secret)
-	r.Use(google.Session(oauthSessionName))
-	private := r.Group("/auth")
-	private.Use(google.Auth())
-	ah := &handler.LoginProducer{
-		ProducerService: &service.Producer{DB: db, Querier: q},
-	}
-	private.GET("/", ah.AuthHandler)
-
-	r.GET("/login", google.LoginHandler)
-	r.GET("/logout", handler.LogoutHandler)
-
 	ls := &handler.ListScene{
 		SceneService:      &service.Scene{DB: db, Querier: q},
 		MemberService:     &service.Member{DB: db, Querier: q},
 		PhotographService: &service.Photgraph{DB: db, Querier: q},
 	}
-	r.GET("/scenes", ls.ListScene)
 
 	rs := &handler.RegistScene{
 		ProducerSceneService: &service.ProducerScene{DB: db, Querier: q},
 		MemberService:        &service.Member{DB: db, Querier: q},
 		PhotographService:    &service.Photgraph{DB: db, Querier: q},
 	}
-	r.GET("/regist/:group_id", rs.GetRegist)
-	r.POST("/regist/:group_id", rs.PostRegist)
 
 	lm := &handler.ListMember{
 		MemberService: &service.Member{DB: db, Querier: q},
 	}
-	r.GET("/members", lm.ListMember)
-	r.POST("/members", lm.UpdateMember)
+	ah := &handler.LoginProducer{
+		ProducerService: &service.Producer{DB: db, Querier: q},
+	}
+
+	redirectURL := "http://127.0.0.1:8090/auth"
+	credFile := "./cred.json"
+	scopes := []string{"https://www.googleapis.com/auth/userinfo.email"}
+	secret := []byte("secret")
+
+	r := gin.Default()
+	google.Setup(redirectURL, credFile, scopes, secret)
+	r.Use(google.Session(sessionName))
+
+	r.Static("/assets", "./assets")
+	r.LoadHTMLGlob("templates/**/*")
+
+	r.GET("/", handler.RootHandler)
+	r.GET("/login", google.LoginHandler)
+
+	private := r.Group("/auth")
+	private.Use(google.Auth())
+	private.Use(handler.AuthCheck())
+
+	private.GET("/", ah.AuthHandler)
+	private.GET("/logout", handler.LogoutHandler)
+
+	private.GET("/scenes", ls.ListScene)
+
+	private.GET("/regist/:group_id", rs.GetRegist)
+	private.POST("/regist/:group_id", rs.PostRegist)
+
+	private.GET("/members", lm.ListMember)
+	private.POST("/members", lm.UpdateMember)
 
 	r.Run(":8090")
 	return nil
