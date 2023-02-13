@@ -104,12 +104,14 @@ func (x *LoginProducer) AuthHandler(c *gin.Context) {
 
 func LogoutHandler(c *gin.Context) {
 	session := sessions.Default(c)
-	pid := session.Get("ProducerId")
+	// session key name of zalando/gin-oauth2
+	// https://github.com/zalando/gin-oauth2/blob/master/google/google.go
+	session.Set("ginoauth_google_session", "")
 	session.Clear()
+	session.Options(sessions.Options{Path: "/", MaxAge: -1})
 	session.Save()
 	ClearUser()
 
-	fmt.Printf("Logouted. User.Id = %v\n", pid)
 	c.Redirect(http.StatusMovedPermanently, "/")
 }
 
