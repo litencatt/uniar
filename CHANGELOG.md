@@ -1,7 +1,12 @@
 # Changelog
 
+## [v0.16.0](https://github.com/litencatt/uniar/compare/v0.15.0...v0.16.0) (2023-02-20)
+
+* 2023-02-13 update [#74](https://github.com/litencatt/uniar/pull/74) ([litencatt](https://github.com/litencatt))
+
 ## [v0.15.0](https://github.com/litencatt/uniar/compare/v0.14.3...v0.15.0) (2023-02-05)
 
+* bump to v0.15.0 [#72](https://github.com/litencatt/uniar/pull/72) ([litencatt](https://github.com/litencatt))
 * 20230201 update [#71](https://github.com/litencatt/uniar/pull/71) ([litencatt](https://github.com/litencatt))
 * Update graduated member [#70](https://github.com/litencatt/uniar/pull/70) ([litencatt](https://github.com/litencatt))
 * Add update producer member page [#69](https://github.com/litencatt/uniar/pull/69) ([litencatt](https://github.com/litencatt))
