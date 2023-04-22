@@ -1,7 +1,12 @@
 # Changelog
 
+## [v0.17.0](https://github.com/litencatt/uniar/compare/v0.16.0...v0.17.0) (2023-04-22)
+
+* 20230422 updates [#76](https://github.com/litencatt/uniar/pull/76) ([litencatt](https://github.com/litencatt))
+
 ## [v0.16.0](https://github.com/litencatt/uniar/compare/v0.15.0...v0.16.0) (2023-02-20)
 
+* bump to v0.16.0 [#75](https://github.com/litencatt/uniar/pull/75) ([litencatt](https://github.com/litencatt))
 * 2023-02-13 update [#74](https://github.com/litencatt/uniar/pull/74) ([litencatt](https://github.com/litencatt))
 
 ## [v0.15.0](https://github.com/litencatt/uniar/compare/v0.14.3...v0.15.0) (2023-02-05)
