@@ -60,5 +60,6 @@ prerelease:
 	gocredits -skip-missing -w .
 
 release:
+	git tag ${NEXT_VER}
 	git push origin main --tag
 	goreleaser --rm-dist
