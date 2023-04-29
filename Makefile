@@ -59,7 +59,6 @@ prerelease:
 	@$(MAKE) doc
 	ghch -w -A --format=markdown -N $(NEXT_VER)
 	gocredits -skip-missing -w .
-	git add -A
 	git commit -am "Pre release for $(NEXT_VER)"
 
 release:
