@@ -37,7 +37,7 @@ func (x *ProducerScene) ListScene(ctx context.Context, arg *ListProducerSceneReq
 		scene := entity.ProducerScene{
 			PhotographID: s.PhotographID,
 			MemberID:     s.MemberID,
-			Have:         s.Have,
+			Have:         s.PsHave.(int64),
 		}
 		scenes = append(scenes, scene)
 	}
@@ -49,7 +49,7 @@ type RegistProducerSceneRequest struct {
 	ProducerID   int64
 	PhotographID int64
 	MemberID     int64
-	Have         int64
+	Have         sql.NullInt64
 }
 
 func (x *ProducerScene) RegistScene(ctx context.Context, arg *RegistProducerSceneRequest) error {

@@ -22,7 +22,11 @@ SELECT
 	s.ssr_plus,
 	pm.bond_level_curent AS bonds,
 	pm.discography_disc_total AS discography,
-	ps.have
+	case
+		when ps.have = 1 then true
+		when ps.have != 1 then false
+		when ps.have is NULL then false
+	end as ps_have
 FROM
 	scenes s
 	JOIN photograph p ON s.photograph_id = p.id

@@ -7,7 +7,11 @@ SELECT
     p.name AS photograph,
     m.name AS member,
     s.ssr_plus,
-    ps.have
+    CASE
+      WHEN ps.have IS NULL then false
+      WHEN ps.have = 0 then false
+      WHEN ps.have = 1 then true
+    end as ps_have
 FROM
     producer_scenes ps
     JOIN scenes s ON ps.photograph_id = s.photograph_id AND ps.member_id = s.member_id AND ps.ssr_plus = s.ssr_plus

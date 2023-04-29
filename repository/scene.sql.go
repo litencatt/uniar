@@ -65,7 +65,11 @@ SELECT
 	s.ssr_plus,
 	pm.bond_level_curent AS bonds,
 	pm.discography_disc_total AS discography,
-	ps.have
+	case
+		when ps.have = 1 then true
+		when ps.have != 1 then false
+		when ps.have is NULL then false
+	end as ps_have
 FROM
 	scenes s
 	JOIN photograph p ON s.photograph_id = p.id
@@ -102,7 +106,7 @@ type GetScenesWithColorRow struct {
 	SsrPlus        int64
 	Bonds          int64
 	Discography    int64
-	Have           int64
+	PsHave         interface{}
 }
 
 func (q *Queries) GetScenesWithColor(ctx context.Context, db DBTX, arg GetScenesWithColorParams) ([]GetScenesWithColorRow, error) {
@@ -128,7 +132,7 @@ func (q *Queries) GetScenesWithColor(ctx context.Context, db DBTX, arg GetScenes
 			&i.SsrPlus,
 			&i.Bonds,
 			&i.Discography,
-			&i.Have,
+			&i.PsHave,
 		); err != nil {
 			return nil, err
 		}
