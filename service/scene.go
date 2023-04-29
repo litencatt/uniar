@@ -40,18 +40,12 @@ func (x *Scene) ListScene(ctx context.Context, arg *ListSceneRequest) ([]entity.
 	var scenes []entity.Scene
 	for _, s := range ss {
 		// Show only scene you have
-		if arg.Have && s.PsHave == nil {
-			continue
-		}
-		if arg.Have && s.PsHave != nil && s.PsHave.(int64) == 0 {
+		if arg.Have && s.PsHave.(int64) == 0 {
 			continue
 		}
 
 		// Show only scene you not have
-		if arg.NotHave && s.PsHave != nil {
-			continue
-		}
-		if arg.NotHave && s.PsHave != nil && s.PsHave.(int64) == 1 {
+		if arg.NotHave && s.PsHave.(int64) == 1 {
 			continue
 		}
 
