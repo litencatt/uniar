@@ -27,17 +27,19 @@ type ListProducerSceneRequest struct {
 }
 
 func (x *ProducerScene) ListScene(ctx context.Context, arg *ListProducerSceneRequest) ([]entity.ProducerScene, error) {
-	pss, err := x.Querier.GetProducerScenesByGroupId(ctx, x.DB, arg.GroupID)
+	ss, err := x.Querier.GetScenesWithGroupId(ctx, x.DB, arg.GroupID)
 	if err != nil {
 		return nil, err
 	}
 
 	var scenes []entity.ProducerScene
-	for _, s := range pss {
+	for _, s := range ss {
+		fmt.Printf("%+v\n", s)
 		scene := entity.ProducerScene{
 			PhotographID: s.PhotographID,
 			MemberID:     s.MemberID,
-			Have:         s.Have,
+			SsrPlus:      s.SsrPlus == 1,
+			Have:         s.PsHave.(int64),
 		}
 		scenes = append(scenes, scene)
 	}
@@ -49,16 +51,18 @@ type RegistProducerSceneRequest struct {
 	ProducerID   int64
 	PhotographID int64
 	MemberID     int64
+	SsrPlus      int64
 	Have         int64
 }
 
 func (x *ProducerScene) RegistScene(ctx context.Context, arg *RegistProducerSceneRequest) error {
 	// fmt.Printf("%+v\n", arg)
-	if err := x.Querier.UpdateProducerScene(ctx, x.DB, repository.UpdateProducerSceneParams{
+	if err := x.Querier.RegistProducerScene(ctx, x.DB, repository.RegistProducerSceneParams{
 		ProducerID:   arg.ProducerID,
 		PhotographID: arg.PhotographID,
 		MemberID:     arg.MemberID,
-		Have:         arg.Have,
+		SsrPlus:      arg.SsrPlus,
+		Have:         sql.NullInt64{Valid: true, Int64: arg.Have},
 	}); err != nil {
 		fmt.Println(err)
 		return err

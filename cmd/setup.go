@@ -60,9 +60,9 @@ func setup() error {
 	if err := migrate(ctx, db, dbPath); err != nil {
 		return err
 	}
-	if err := initProducerScene(ctx, db, q); err != nil {
-		return err
-	}
+	// if err := initProducerScene(ctx, db, q); err != nil {
+	// 	return err
+	// }
 	if err := initProducerMember(ctx, db, q); err != nil {
 		return err
 	}

@@ -22,7 +22,11 @@ SELECT
 	s.ssr_plus,
 	pm.bond_level_curent AS bonds,
 	pm.discography_disc_total AS discography,
-	ps.have
+	case
+		when ps.have = 1 then true
+		when ps.have != 1 then false
+		when ps.have is NULL then false
+	end as ps_have
 FROM
 	scenes s
 	JOIN photograph p ON s.photograph_id = p.id
@@ -37,6 +41,31 @@ WHERE
 	AND p.name LIKE ?
 ORDER BY
 	s.expected_value desc, total desc
+;
+
+
+-- name: GetScenesWithGroupId :many
+SELECT
+	p.id as photograph_id,
+	m.id as member_id,
+	s.ssr_plus,
+	case
+		when ps.have = 1 then true
+		when ps.have != 1 then false
+		when ps.have is NULL then false
+	end as ps_have
+FROM
+	scenes s
+	JOIN photograph p ON s.photograph_id = p.id
+	JOIN members m ON s.member_id = m.id
+	LEFT OUTER JOIN producer_scenes ps
+		ON s.photograph_id = ps.photograph_id AND s.member_id = ps.member_id AND s.ssr_plus = ps.ssr_plus
+WHERE
+    m.group_id = ?
+ORDER BY
+    p.id,
+    m.phase,
+    m.first_name
 ;
 
 -- name: RegistScene :exec

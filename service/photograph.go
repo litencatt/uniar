@@ -45,3 +45,19 @@ func (x *Photgraph) GetPhotographByGroup(ctx context.Context, groupId int64) ([]
 	}
 	return photograph, nil
 }
+
+func (x *Photgraph) GetSsrPlusReleasedPhotographList(ctx context.Context) ([]entity.Photograph, error) {
+	ps, err := x.Querier.GetSsrPlusReleasedPhotographList(ctx, x.DB)
+	if err != nil {
+		return nil, err
+	}
+
+	var photograph []entity.Photograph
+	for _, p := range ps {
+		e := entity.Photograph{
+			ID: p,
+		}
+		photograph = append(photograph, e)
+	}
+	return photograph, nil
+}

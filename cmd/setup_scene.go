@@ -106,7 +106,7 @@ func setupScene(ctx context.Context, db *sql.DB, q *repository.Queries, photo, m
 			continue
 		}
 		h := "未所持"
-		if s.Have != 0 {
+		if s.Have.Valid && s.Have.Int64 != 0 {
 			h = "1(所持)"
 		}
 
@@ -128,12 +128,12 @@ func setupScene(ctx context.Context, db *sql.DB, q *repository.Queries, photo, m
 		have := (&prompter.Prompter{
 			Message: str,
 			Choices: []string{"0", "1"},
-			Default: fmt.Sprintf("%d", s.Have),
+			Default: fmt.Sprintf("%d", s.Have.Int64),
 		}).Prompt()
 
 		hi, _ := strconv.Atoi(have)
 		if err := q.UpdateProducerScene(ctx, db, repository.UpdateProducerSceneParams{
-			Have:         int64(hi),
+			Have:         sql.NullInt64{Valid: true, Int64: int64(hi)},
 			ProducerID:   s.ProducerID,
 			PhotographID: s.PhotographID,
 			MemberID:     s.MemberID,

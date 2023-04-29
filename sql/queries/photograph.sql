@@ -47,3 +47,14 @@ WHERE
 ORDER BY
     group_id, id ASC
 ;
+
+-- name: GetSsrPlusReleasedPhotographList :many
+SELECT
+	photograph_id
+FROM
+	scenes
+WHERE
+	ssr_plus = 1
+GROUP BY
+	photograph_id
+;
