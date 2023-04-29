@@ -53,11 +53,13 @@ gen-mock:
 	mockgen -source repository/querier.go -destination repository/querier_mock.go -package repository
 
 prerelease:
+	git checkout -b bump-to-$(NEXT_VER)
 	@$(MAKE) db-dump
 	go mod tidy
 	@$(MAKE) doc
 	ghch -w -A --format=markdown -N $(NEXT_VER)
 	gocredits -skip-missing -w .
+	git commit -am "Pre release for $(NEXT_VER)"
 
 release:
 	git tag ${NEXT_VER}
