@@ -1,7 +1,12 @@
 # Changelog
 
+## [v0.18.0](https://github.com/litencatt/uniar/compare/v0.17.0...v0.18.0) (2023-04-29)
+
+* Improve producer_scenes table record insert policy [#78](https://github.com/litencatt/uniar/pull/78) ([litencatt](https://github.com/litencatt))
+
 ## [v0.17.0](https://github.com/litencatt/uniar/compare/v0.16.0...v0.17.0) (2023-04-22)
 
+* bump to v0.17.0 [#77](https://github.com/litencatt/uniar/pull/77) ([litencatt](https://github.com/litencatt))
 * 20230422 updates [#76](https://github.com/litencatt/uniar/pull/76) ([litencatt](https://github.com/litencatt))
 
 ## [v0.16.0](https://github.com/litencatt/uniar/compare/v0.15.0...v0.16.0) (2023-02-20)
