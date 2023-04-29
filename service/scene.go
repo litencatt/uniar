@@ -26,8 +26,38 @@ type ListSceneRequest struct {
 	FullName   bool   `form:"full_name"`
 }
 
-func (x *Scene) ListScene(ctx context.Context, arg *ListSceneRequest) ([]entity.Scene, error) {
+type ListSceneAllRequest struct {
+	Color      string `form:"color"`
+	Member     string `form:"member"`
+	Photograph string `form:"photograph"`
+	Sort       string `form:"sort"`
+	Have       bool   `form:"have"`
+	NotHave    bool   `form:"not_have"`
+	Detail     bool   `form:"detail"`
+	FullName   bool   `form:"full_name"`
+	GroupId    int64
+}
 
+func (x *Scene) ListSceneAll(ctx context.Context, arg *ListSceneAllRequest) ([]entity.ProducerScene, error) {
+	ss, err := x.Querier.GetScenesWithGroupId(ctx, x.DB, arg.GroupId)
+	if err != nil {
+		return nil, err
+	}
+
+	var scenes []entity.ProducerScene
+	for _, s := range ss {
+		scene := entity.ProducerScene{
+			PhotographID: s.PhotographID,
+			MemberID:     s.MemberID,
+			SsrPlus:      s.SsrPlus == 1,
+			Have:         s.PsHave.(int64),
+		}
+		scenes = append(scenes, scene)
+	}
+	return scenes, nil
+}
+
+func (x *Scene) ListScene(ctx context.Context, arg *ListSceneRequest) ([]entity.Scene, error) {
 	ss, err := x.Querier.GetScenesWithColor(ctx, x.DB, repository.GetScenesWithColorParams{
 		Name:   arg.Color,
 		Name_2: arg.Member,

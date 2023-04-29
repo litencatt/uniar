@@ -181,12 +181,13 @@ func (q *Queries) InitProducerSceneAll(ctx context.Context, db DBTX, arg InitPro
 const registProducerScene = `-- name: RegistProducerScene :exec
 ;
 
-INSERT OR IGNORE INTO producer_scenes (
+INSERT OR REPLACE INTO producer_scenes (
 	producer_id,
 	photograph_id,
     member_id,
-    ssr_plus
-) VALUES (?, ?, ?, ?)
+    ssr_plus,
+    have
+) VALUES (?, ?, ?, ?, ?)
 `
 
 type RegistProducerSceneParams struct {
@@ -194,6 +195,7 @@ type RegistProducerSceneParams struct {
 	PhotographID int64
 	MemberID     int64
 	SsrPlus      int64
+	Have         sql.NullInt64
 }
 
 func (q *Queries) RegistProducerScene(ctx context.Context, db DBTX, arg RegistProducerSceneParams) error {
@@ -202,6 +204,7 @@ func (q *Queries) RegistProducerScene(ctx context.Context, db DBTX, arg RegistPr
 		arg.PhotographID,
 		arg.MemberID,
 		arg.SsrPlus,
+		arg.Have,
 	)
 	return err
 }

@@ -180,6 +180,42 @@ func (q *Queries) GetPhotographListByPhotoType(ctx context.Context, db DBTX, pho
 	return items, nil
 }
 
+const getSsrPlusReleasedPhotographList = `-- name: GetSsrPlusReleasedPhotographList :many
+;
+
+SELECT
+	photograph_id
+FROM
+	scenes
+WHERE
+	ssr_plus = 1
+GROUP BY
+	photograph_id
+`
+
+func (q *Queries) GetSsrPlusReleasedPhotographList(ctx context.Context, db DBTX) ([]int64, error) {
+	rows, err := db.QueryContext(ctx, getSsrPlusReleasedPhotographList)
+	if err != nil {
+		return nil, err
+	}
+	defer rows.Close()
+	var items []int64
+	for rows.Next() {
+		var photograph_id int64
+		if err := rows.Scan(&photograph_id); err != nil {
+			return nil, err
+		}
+		items = append(items, photograph_id)
+	}
+	if err := rows.Close(); err != nil {
+		return nil, err
+	}
+	if err := rows.Err(); err != nil {
+		return nil, err
+	}
+	return items, nil
+}
+
 const registPhotograph = `-- name: RegistPhotograph :exec
 INSERT INTO photograph (name, group_id, photo_type) VALUES (?, ?, ?)
 `

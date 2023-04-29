@@ -52,12 +52,13 @@ ORDER BY
 ;
 
 -- name: RegistProducerScene :exec
-INSERT OR IGNORE INTO producer_scenes (
+INSERT OR REPLACE INTO producer_scenes (
 	producer_id,
 	photograph_id,
     member_id,
-    ssr_plus
-) VALUES (?, ?, ?, ?)
+    ssr_plus,
+    have
+) VALUES (?, ?, ?, ?, ?)
 ;
 
 -- name: UpdateProducerScene :exec
