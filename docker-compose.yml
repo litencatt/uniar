@@ -4,7 +4,7 @@ services:
     build:
       context: .
     ports:
-      - "8090:8090"      
+      - "8090:8090"
     volumes:
       - .:/app
       - ~/.uniar/uniar.db:/root/.uniar/uniar.db
