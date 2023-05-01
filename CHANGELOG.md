@@ -1,7 +1,9 @@
 # Changelog
 
-## [v0.18.1](https://github.com/litencatt/uniar/compare/v0.18.0...v0.18.1) (2023-05-01)
+## [v0.18.2](https://github.com/litencatt/uniar/compare/v0.18.0...v0.18.2) (2023-05-01)
 
+* Fix photo order match to original game app [#83](https://github.com/litencatt/uniar/pull/83) ([litencatt](https://github.com/litencatt))
+* bump to v0.18.1 [#82](https://github.com/litencatt/uniar/pull/82) ([litencatt](https://github.com/litencatt))
 * Add generate mock command [#81](https://github.com/litencatt/uniar/pull/81) ([litencatt](https://github.com/litencatt))
 * Add phase condition to order by [#80](https://github.com/litencatt/uniar/pull/80) ([litencatt](https://github.com/litencatt))
 
