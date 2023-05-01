@@ -20,7 +20,7 @@ FROM
 WHERE
 	group_id = ?
 ORDER BY
-	graduated asc, m.phase, m.first_name asc
+	m.first_name asc
 ;
 
 -- name: GetAllMembers :many
