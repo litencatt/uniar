@@ -79,7 +79,7 @@ var registSceneCmd = &cobra.Command{
 			Regexp:  regexp.MustCompile(`\d`),
 		}).Prompt()
 
-		ml, err := q.GetMemberList(ctx, db, int64(groupId))
+		ml, err := q.GetMembersByGroup(ctx, db, int64(groupId))
 		if err != nil {
 			return err
 		}
