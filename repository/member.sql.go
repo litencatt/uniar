@@ -51,48 +51,6 @@ func (q *Queries) GetAllMembers(ctx context.Context, db DBTX) ([]Member, error) 
 	return items, nil
 }
 
-const getMemberList = `-- name: GetMemberList :many
-;
-
-SELECT
-	m.id,
-	m.name
-FROM
-	members m
-WHERE
-	group_id = ?
-ORDER BY
-	graduated asc, m.first_name asc
-`
-
-type GetMemberListRow struct {
-	ID   int64
-	Name string
-}
-
-func (q *Queries) GetMemberList(ctx context.Context, db DBTX, groupID int64) ([]GetMemberListRow, error) {
-	rows, err := db.QueryContext(ctx, getMemberList, groupID)
-	if err != nil {
-		return nil, err
-	}
-	defer rows.Close()
-	var items []GetMemberListRow
-	for rows.Next() {
-		var i GetMemberListRow
-		if err := rows.Scan(&i.ID, &i.Name); err != nil {
-			return nil, err
-		}
-		items = append(items, i)
-	}
-	if err := rows.Close(); err != nil {
-		return nil, err
-	}
-	if err := rows.Err(); err != nil {
-		return nil, err
-	}
-	return items, nil
-}
-
 const getMembers = `-- name: GetMembers :many
 SELECT
 	g.name AS group_name,
@@ -128,6 +86,48 @@ func (q *Queries) GetMembers(ctx context.Context, db DBTX) ([]GetMembersRow, err
 			&i.Phase,
 			&i.Graduated,
 		); err != nil {
+			return nil, err
+		}
+		items = append(items, i)
+	}
+	if err := rows.Close(); err != nil {
+		return nil, err
+	}
+	if err := rows.Err(); err != nil {
+		return nil, err
+	}
+	return items, nil
+}
+
+const getMembersByGroup = `-- name: GetMembersByGroup :many
+;
+
+SELECT
+	m.id,
+	m.name
+FROM
+	members m
+WHERE
+	group_id = ?
+ORDER BY
+	graduated asc, m.phase, m.first_name asc
+`
+
+type GetMembersByGroupRow struct {
+	ID   int64
+	Name string
+}
+
+func (q *Queries) GetMembersByGroup(ctx context.Context, db DBTX, groupID int64) ([]GetMembersByGroupRow, error) {
+	rows, err := db.QueryContext(ctx, getMembersByGroup, groupID)
+	if err != nil {
+		return nil, err
+	}
+	defer rows.Close()
+	var items []GetMembersByGroupRow
+	for rows.Next() {
+		var i GetMembersByGroupRow
+		if err := rows.Scan(&i.ID, &i.Name); err != nil {
 			return nil, err
 		}
 		items = append(items, i)
