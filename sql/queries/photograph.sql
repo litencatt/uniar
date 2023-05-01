@@ -33,7 +33,7 @@ FROM
 WHERE
     group_id = ?
 ORDER BY
-	photo_type_id, released_at
+	name_for_order ASC
 ;
 
 -- name: GetPhotographListByPhotoType :many

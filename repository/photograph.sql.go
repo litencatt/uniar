@@ -20,7 +20,7 @@ FROM
 WHERE
     group_id = ?
 ORDER BY
-	photo_type_id, released_at
+	name_for_order ASC
 `
 
 type GetPhotographByGroupIdRow struct {
