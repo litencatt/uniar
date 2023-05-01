@@ -1,7 +1,13 @@
 # Changelog
 
+## [v0.18.1](https://github.com/litencatt/uniar/compare/v0.18.0...v0.18.1) (2023-05-01)
+
+* Add generate mock command [#81](https://github.com/litencatt/uniar/pull/81) ([litencatt](https://github.com/litencatt))
+* Add phase condition to order by [#80](https://github.com/litencatt/uniar/pull/80) ([litencatt](https://github.com/litencatt))
+
 ## [v0.18.0](https://github.com/litencatt/uniar/compare/v0.17.0...v0.18.0) (2023-04-29)
 
+* Bump to v0.18.0 [#79](https://github.com/litencatt/uniar/pull/79) ([litencatt](https://github.com/litencatt))
 * Improve producer_scenes table record insert policy [#78](https://github.com/litencatt/uniar/pull/78) ([litencatt](https://github.com/litencatt))
 
 ## [v0.17.0](https://github.com/litencatt/uniar/compare/v0.16.0...v0.17.0) (2023-04-22)
