@@ -22,6 +22,7 @@ build:
 air-cmd:
 	go mod tidy
 	sqlc generate
+	@$(MAKE) gen-mock
 	go build -o ./tmp/main ./cmd/uniar/main.go
 
 docker-build:
