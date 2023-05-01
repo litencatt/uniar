@@ -49,7 +49,7 @@ func (x *Member) ListProducerMember(ctx context.Context) ([]entity.ProducerMembe
 }
 
 func (x *Member) GetMemberByGroup(ctx context.Context, groupId int64) ([]entity.Member, error) {
-	ms, err := x.Querier.GetMemberList(ctx, x.DB, groupId)
+	ms, err := x.Querier.GetMembersByGroup(ctx, x.DB, groupId)
 	if err != nil {
 		return nil, err
 	}
