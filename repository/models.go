@@ -73,6 +73,7 @@ type Photograph struct {
 	ReleasedAt   interface{}
 	CreatedAt    time.Time
 	PhotoTypeID  sql.NullInt64
+	NameForOrder string
 }
 
 type Producer struct {
