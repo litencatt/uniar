@@ -304,21 +304,6 @@ func (mr *MockQuerierMockRecorder) GetProducerScenes(ctx, db, arg interface{}) *
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "GetProducerScenes", reflect.TypeOf((*MockQuerier)(nil).GetProducerScenes), ctx, db, arg)
 }
 
-// GetProducerScenesByGroupId mocks base method.
-func (m *MockQuerier) GetProducerScenesByGroupId(ctx context.Context, db DBTX, groupID int64) ([]GetProducerScenesByGroupIdRow, error) {
-	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "GetProducerScenesByGroupId", ctx, db, groupID)
-	ret0, _ := ret[0].([]GetProducerScenesByGroupIdRow)
-	ret1, _ := ret[1].(error)
-	return ret0, ret1
-}
-
-// GetProducerScenesByGroupId indicates an expected call of GetProducerScenesByGroupId.
-func (mr *MockQuerierMockRecorder) GetProducerScenesByGroupId(ctx, db, groupID interface{}) *gomock.Call {
-	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "GetProducerScenesByGroupId", reflect.TypeOf((*MockQuerier)(nil).GetProducerScenesByGroupId), ctx, db, groupID)
-}
-
 // GetProducerScenesWithProducerId mocks base method.
 func (m *MockQuerier) GetProducerScenesWithProducerId(ctx context.Context, db DBTX, producerID int64) ([]GetProducerScenesWithProducerIdRow, error) {
 	m.ctrl.T.Helper()

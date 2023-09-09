@@ -197,12 +197,8 @@ const getScenesWithGroupId = `-- name: GetScenesWithGroupId :many
 SELECT
 	p.id as photograph_id,
 	m.id as member_id,
-	s.ssr_plus,
-	case
-		when ps.have = 1 then true
-		when ps.have != 1 then false
-		when ps.have is NULL then false
-	end as ps_have
+	s.ssr_plus
+
 FROM
 	scenes s
 	JOIN photograph p ON s.photograph_id = p.id
@@ -229,7 +225,6 @@ type GetScenesWithGroupIdRow struct {
 	PhotographID int64
 	MemberID     int64
 	SsrPlus      int64
-	PsHave       interface{}
 }
 
 func (q *Queries) GetScenesWithGroupId(ctx context.Context, db DBTX, arg GetScenesWithGroupIdParams) ([]GetScenesWithGroupIdRow, error) {
@@ -241,12 +236,7 @@ func (q *Queries) GetScenesWithGroupId(ctx context.Context, db DBTX, arg GetScen
 	var items []GetScenesWithGroupIdRow
 	for rows.Next() {
 		var i GetScenesWithGroupIdRow
-		if err := rows.Scan(
-			&i.PhotographID,
-			&i.MemberID,
-			&i.SsrPlus,
-			&i.PsHave,
-		); err != nil {
+		if err := rows.Scan(&i.PhotographID, &i.MemberID, &i.SsrPlus); err != nil {
 			return nil, err
 		}
 		items = append(items, i)

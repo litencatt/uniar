@@ -58,12 +58,8 @@ ORDER BY
 SELECT
 	p.id as photograph_id,
 	m.id as member_id,
-	s.ssr_plus,
-	case
-		when ps.have = 1 then true
-		when ps.have != 1 then false
-		when ps.have is NULL then false
-	end as ps_have
+	s.ssr_plus
+
 FROM
 	scenes s
 	JOIN photograph p ON s.photograph_id = p.id

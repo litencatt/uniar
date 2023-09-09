@@ -41,7 +41,6 @@ func (x *ProducerScene) ListScene(ctx context.Context, arg *ListProducerSceneReq
 			PhotographID: s.PhotographID,
 			MemberID:     s.MemberID,
 			SsrPlus:      s.SsrPlus == 1,
-			Have:         s.PsHave.(int64),
 		}
 		producerScenes = append(producerScenes, scene)
 	}
@@ -64,7 +63,6 @@ func (x *ProducerScene) RegistScene(ctx context.Context, arg *RegistProducerScen
 		PhotographID: arg.PhotographID,
 		MemberID:     arg.MemberID,
 		SsrPlus:      arg.SsrPlus,
-		Have:         sql.NullInt64{Valid: true, Int64: arg.Have},
 	}); err != nil {
 		fmt.Println(err)
 		return err
