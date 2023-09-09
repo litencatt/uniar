@@ -3,6 +3,7 @@ package service
 import (
 	"context"
 	"database/sql"
+	"fmt"
 	"sort"
 	"strconv"
 
@@ -27,13 +28,14 @@ type ListSceneRequest struct {
 }
 
 func (x *Scene) ListScene(ctx context.Context, arg *ListSceneRequest) ([]entity.Scene, error) {
-
+	fmt.Println("ListScene() start")
 	ss, err := x.Querier.GetScenesWithColor(ctx, x.DB, repository.GetScenesWithColorParams{
 		Name:   arg.Color,
 		Name_2: arg.Member,
 		Name_3: arg.Photograph,
 	})
 	if err != nil {
+		fmt.Println("GetScenesWithColor error.")
 		return nil, err
 	}
 

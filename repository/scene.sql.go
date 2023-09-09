@@ -73,7 +73,9 @@ FROM
 	JOIN members m ON s.member_id = m.id
 	LEFT OUTER JOIN producer_members pm ON s.member_id = pm.member_id
 	LEFT OUTER JOIN producer_scenes ps
-		ON s.photograph_id = ps.photograph_id AND s.member_id = ps.member_id AND s.ssr_plus = ps.ssr_plus
+		ON s.photograph_id = ps.photograph_id
+		AND s.member_id = ps.member_id
+		AND s.ssr_plus = ps.ssr_plus
 WHERE
 	c.name LIKE ?
 	AND m.name LIKE ?
