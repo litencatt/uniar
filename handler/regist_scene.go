@@ -107,8 +107,9 @@ func (x *RegistScene) PostRegist(c *gin.Context) {
 	}
 
 	c.Request.ParseForm()
+	// Delete a member's all producer_scenes once.
+	// And then, insert only checkbox ON producer_scenes.
 	for _, m := range members {
-		// Update ps.Have = 0
 		if err := x.ProducerSceneService.InitAllScene(ctx, &service.InitProducerSceneRequest{
 			ProducerID: User.ProducerId,
 			MemberID:   m.ID,
