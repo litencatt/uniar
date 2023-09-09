@@ -25,6 +25,7 @@ type ListSceneRequest struct {
 	NotHave    bool   `form:"not_have"`
 	Detail     bool   `form:"detail"`
 	FullName   bool   `form:"full_name"`
+	ProducerID int64
 }
 
 type ListSceneAllRequest struct {
@@ -86,15 +87,29 @@ func (x *Scene) ListScene(ctx context.Context, arg *ListSceneRequest) ([]entity.
 		return nil, err
 	}
 
+	ps, err := x.Querier.GetProducerScenesWithProducerId(ctx, x.DB, arg.ProducerID)
+	if err != nil {
+		fmt.Println("GetProducerScenesWithProducerId error.")
+		return nil, err
+	}
+	fmt.Printf("%+v\n", ps)
+
 	var scenes []entity.Scene
 	for _, s := range ss {
+		have := false
+		for _, p := range ps {
+			if s.PhotographID == p.PhotographID && s.MemberID == p.MemberID {
+				have = true
+				break
+			}
+		}
 		// Show only scene you have
-		if arg.Have && s.PsHave.(int64) == 0 {
+		if arg.Have && !have {
 			continue
 		}
 
 		// Show only scene you not have
-		if arg.NotHave && s.PsHave.(int64) == 1 {
+		if arg.NotHave && have {
 			continue
 		}
 

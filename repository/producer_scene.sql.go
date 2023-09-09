@@ -156,6 +156,49 @@ func (q *Queries) GetProducerScenesByGroupId(ctx context.Context, db DBTX, group
 	return items, nil
 }
 
+const getProducerScenesWithProducerId = `-- name: GetProducerScenesWithProducerId :many
+;
+
+
+SELECT
+    ps.photograph_id,
+    ps.member_id,
+    ps.ssr_plus
+FROM
+    producer_scenes ps
+WHERE
+    producer_id = ?
+`
+
+type GetProducerScenesWithProducerIdRow struct {
+	PhotographID int64
+	MemberID     int64
+	SsrPlus      int64
+}
+
+func (q *Queries) GetProducerScenesWithProducerId(ctx context.Context, db DBTX, producerID int64) ([]GetProducerScenesWithProducerIdRow, error) {
+	rows, err := db.QueryContext(ctx, getProducerScenesWithProducerId, producerID)
+	if err != nil {
+		return nil, err
+	}
+	defer rows.Close()
+	var items []GetProducerScenesWithProducerIdRow
+	for rows.Next() {
+		var i GetProducerScenesWithProducerIdRow
+		if err := rows.Scan(&i.PhotographID, &i.MemberID, &i.SsrPlus); err != nil {
+			return nil, err
+		}
+		items = append(items, i)
+	}
+	if err := rows.Close(); err != nil {
+		return nil, err
+	}
+	if err := rows.Err(); err != nil {
+		return nil, err
+	}
+	return items, nil
+}
+
 const initProducerSceneAll = `-- name: InitProducerSceneAll :exec
 ;
 

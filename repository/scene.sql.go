@@ -97,8 +97,10 @@ const getScenesWithColor = `-- name: GetScenesWithColor :many
 SELECT
 	s.id,
 	p.name AS photograph,
+	p.id AS photograph_id,
 	p.abbreviation,
 	m.name AS member,
+	m.id AS member_id,
 	c.name AS color,
 	s.vocal_max + s.dance_max + s.performance_max + 430 AS total,
 	s.vocal_max,
@@ -107,20 +109,14 @@ SELECT
 	s.expected_value,
 	s.ssr_plus,
 	pm.bond_level_curent AS bonds,
-	pm.discography_disc_total AS discography,
-	case
-		when ps.have = 1 then true
-		when ps.have != 1 then false
-		when ps.have is NULL then false
-	end as ps_have
+	pm.discography_disc_total AS discography
 FROM
 	scenes s
 	JOIN photograph p ON s.photograph_id = p.id
 	JOIN color_types c ON s.color_type_id = c.id
 	JOIN members m ON s.member_id = m.id
 	LEFT OUTER JOIN producer_members pm ON s.member_id = pm.member_id
-	LEFT OUTER JOIN producer_scenes ps
-		ON s.photograph_id = ps.photograph_id
+	LEFT OUTER JOIN producer_scenes ps ON s.photograph_id = ps.photograph_id
 		AND s.member_id = ps.member_id
 		AND s.ssr_plus = ps.ssr_plus
 WHERE
@@ -140,8 +136,10 @@ type GetScenesWithColorParams struct {
 type GetScenesWithColorRow struct {
 	ID             int64
 	Photograph     string
+	PhotographID   int64
 	Abbreviation   string
 	Member         string
+	MemberID       int64
 	Color          string
 	Total          int64
 	VocalMax       int64
@@ -151,7 +149,6 @@ type GetScenesWithColorRow struct {
 	SsrPlus        int64
 	Bonds          int64
 	Discography    int64
-	PsHave         interface{}
 }
 
 func (q *Queries) GetScenesWithColor(ctx context.Context, db DBTX, arg GetScenesWithColorParams) ([]GetScenesWithColorRow, error) {
@@ -166,8 +163,10 @@ func (q *Queries) GetScenesWithColor(ctx context.Context, db DBTX, arg GetScenes
 		if err := rows.Scan(
 			&i.ID,
 			&i.Photograph,
+			&i.PhotographID,
 			&i.Abbreviation,
 			&i.Member,
+			&i.MemberID,
 			&i.Color,
 			&i.Total,
 			&i.VocalMax,
@@ -177,7 +176,6 @@ func (q *Queries) GetScenesWithColor(ctx context.Context, db DBTX, arg GetScenes
 			&i.SsrPlus,
 			&i.Bonds,
 			&i.Discography,
-			&i.PsHave,
 		); err != nil {
 			return nil, err
 		}

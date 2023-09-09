@@ -34,6 +34,7 @@ func (ls *ListScene) ListScene(c *gin.Context) {
 		req.Member = "%"
 	}
 	req.FullName = true
+	req.ProducerID = User.ProducerId
 
 	ss, err := ls.SceneService.ListScene(ctx, &req)
 	if err != nil {

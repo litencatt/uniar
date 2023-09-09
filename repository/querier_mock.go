@@ -319,6 +319,21 @@ func (mr *MockQuerierMockRecorder) GetProducerScenesByGroupId(ctx, db, groupID i
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "GetProducerScenesByGroupId", reflect.TypeOf((*MockQuerier)(nil).GetProducerScenesByGroupId), ctx, db, groupID)
 }
 
+// GetProducerScenesWithProducerId mocks base method.
+func (m *MockQuerier) GetProducerScenesWithProducerId(ctx context.Context, db DBTX, producerID int64) ([]GetProducerScenesWithProducerIdRow, error) {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "GetProducerScenesWithProducerId", ctx, db, producerID)
+	ret0, _ := ret[0].([]GetProducerScenesWithProducerIdRow)
+	ret1, _ := ret[1].(error)
+	return ret0, ret1
+}
+
+// GetProducerScenesWithProducerId indicates an expected call of GetProducerScenesWithProducerId.
+func (mr *MockQuerierMockRecorder) GetProducerScenesWithProducerId(ctx, db, producerID interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "GetProducerScenesWithProducerId", reflect.TypeOf((*MockQuerier)(nil).GetProducerScenesWithProducerId), ctx, db, producerID)
+}
+
 // GetScenesWithColor mocks base method.
 func (m *MockQuerier) GetScenesWithColor(ctx context.Context, db DBTX, arg GetScenesWithColorParams) ([]GetScenesWithColorRow, error) {
 	m.ctrl.T.Helper()

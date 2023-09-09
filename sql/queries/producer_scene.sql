@@ -51,6 +51,18 @@ ORDER BY
     m.first_name
 ;
 
+
+-- name: GetProducerScenesWithProducerId :many
+SELECT
+    ps.photograph_id,
+    ps.member_id,
+    ps.ssr_plus
+FROM
+    producer_scenes ps
+WHERE
+    producer_id = ?
+;
+
 -- name: RegistProducerScene :exec
 INSERT OR REPLACE INTO producer_scenes (
 	producer_id,
