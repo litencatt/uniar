@@ -7,7 +7,11 @@ SELECT
     p.name AS photograph,
     m.name AS member,
     s.ssr_plus,
-    ps.have
+    CASE
+      WHEN ps.have IS NULL then false
+      WHEN ps.have = 0 then false
+      WHEN ps.have = 1 then true
+    end as ps_have
 FROM
     producer_scenes ps
     JOIN scenes s ON ps.photograph_id = s.photograph_id AND ps.member_id = s.member_id AND ps.ssr_plus = s.ssr_plus
@@ -48,12 +52,13 @@ ORDER BY
 ;
 
 -- name: RegistProducerScene :exec
-INSERT OR IGNORE INTO producer_scenes (
+INSERT OR REPLACE INTO producer_scenes (
 	producer_id,
 	photograph_id,
     member_id,
-    ssr_plus
-) VALUES (?, ?, ?, ?)
+    ssr_plus,
+    have
+) VALUES (?, ?, ?, ?, ?)
 ;
 
 -- name: UpdateProducerScene :exec

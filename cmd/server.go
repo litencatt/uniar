@@ -66,6 +66,7 @@ func run(ctx context.Context) error {
 	}
 
 	rs := &handler.RegistScene{
+		SceneService:         &service.Scene{DB: db, Querier: q},
 		ProducerSceneService: &service.ProducerScene{DB: db, Querier: q},
 		MemberService:        &service.Member{DB: db, Querier: q},
 		PhotographService:    &service.Photgraph{DB: db, Querier: q},

@@ -14,8 +14,8 @@ type Querier interface {
 	GetGroup(ctx context.Context, db DBTX) ([]GetGroupRow, error)
 	GetGroupNameById(ctx context.Context, db DBTX, id int64) (string, error)
 	GetLiveList(ctx context.Context, db DBTX) ([]GetLiveListRow, error)
-	GetMemberList(ctx context.Context, db DBTX, groupID int64) ([]GetMemberListRow, error)
 	GetMembers(ctx context.Context, db DBTX) ([]GetMembersRow, error)
+	GetMembersByGroup(ctx context.Context, db DBTX, groupID int64) ([]GetMembersByGroupRow, error)
 	GetMusicList(ctx context.Context, db DBTX) ([]GetMusicListRow, error)
 	GetMusicListWithColor(ctx context.Context, db DBTX, name string) ([]GetMusicListWithColorRow, error)
 	GetPhotographByGroupId(ctx context.Context, db DBTX, groupID int64) ([]GetPhotographByGroupIdRow, error)
@@ -28,6 +28,8 @@ type Querier interface {
 	GetProducerScenes(ctx context.Context, db DBTX, arg GetProducerScenesParams) ([]GetProducerScenesRow, error)
 	GetProducerScenesByGroupId(ctx context.Context, db DBTX, groupID int64) ([]GetProducerScenesByGroupIdRow, error)
 	GetScenesWithColor(ctx context.Context, db DBTX, arg GetScenesWithColorParams) ([]GetScenesWithColorRow, error)
+	GetScenesWithGroupId(ctx context.Context, db DBTX, groupID int64) ([]GetScenesWithGroupIdRow, error)
+	GetSsrPlusReleasedPhotographList(ctx context.Context, db DBTX) ([]int64, error)
 	InitProducerSceneAll(ctx context.Context, db DBTX, arg InitProducerSceneAllParams) error
 	RegistLive(ctx context.Context, db DBTX, name string) error
 	RegistMusic(ctx context.Context, db DBTX, arg RegistMusicParams) error

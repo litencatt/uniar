@@ -59,6 +59,7 @@ CREATE TABLE photograph (
   released_at DATETIME NULL,
   created_at DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
   photo_type_id integer DEFAULT 0,
+  name_for_order varchar(100) NOT NULL DEFAULT '',
   CONSTRAINT Photograph_ibfk_1 FOREIGN KEY (group_id) REFERENCES groups (id) ON DELETE CASCADE ON UPDATE CASCADE
 );
 
@@ -111,7 +112,7 @@ CREATE TABLE producer_scenes (
   photograph_id integer NOT NULL,
   member_id integer NOT NULL,
   ssr_plus integer NOT NULL,
-  have integer NOT NULL DEFAULT 0,
+  have integer DEFAULT NULL,
   created_at DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
   PRIMARY KEY(producer_id, photograph_id, member_id, ssr_plus),
   CONSTRAINT fk_producer_scenes_producer_id FOREIGN KEY (producer_id) REFERENCES producers (id),

@@ -11,6 +11,7 @@ import (
 )
 
 type RegistScene struct {
+	SceneService         SceneService
 	ProducerSceneService ProducerSceneService
 	MemberService        MemberService
 	PhotographService    PhotographService
@@ -31,12 +32,12 @@ func (x *RegistScene) GetRegist(c *gin.Context) {
 		return
 	}
 
-	producerSceneList, err := x.ProducerSceneService.ListScene(ctx, &service.ListProducerSceneRequest{
+	sceneList, err := x.SceneService.ListSceneAll(ctx, &service.ListSceneAllRequest{
 		Photograph: "%",
 		Color:      "%",
 		Member:     "%",
 		FullName:   true,
-		GroupID:    groupId,
+		GroupId:    groupId,
 	})
 	if err != nil {
 		c.String(http.StatusInternalServerError, err.Error())
@@ -60,8 +61,11 @@ func (x *RegistScene) GetRegist(c *gin.Context) {
 			producerScenes[i][j] = -1
 		}
 	}
-	for _, ps := range producerSceneList {
-		producerScenes[ps.PhotographID][ps.MemberID] = ps.Have
+	for _, s := range sceneList {
+		if s.SsrPlus {
+			continue
+		}
+		producerScenes[s.PhotographID][s.MemberID] = s.Have
 	}
 
 	c.HTML(http.StatusOK, "regist/index.go.tmpl", gin.H{
@@ -92,8 +96,19 @@ func (x *RegistScene) PostRegist(c *gin.Context) {
 		return
 	}
 
+	ssrPlusPhotographList, err := x.PhotographService.GetSsrPlusReleasedPhotographList(ctx)
+	if err != nil {
+		c.String(http.StatusInternalServerError, err.Error())
+		return
+	}
+	var ssrPlusPhotographIDs []int
+	for _, sp := range ssrPlusPhotographList {
+		ssrPlusPhotographIDs = append(ssrPlusPhotographIDs, int(sp.ID))
+	}
+
 	c.Request.ParseForm()
 	for _, m := range members {
+		// Update ps.Have = 0
 		if err := x.ProducerSceneService.InitAllScene(ctx, &service.InitProducerSceneRequest{
 			ProducerID: 1,
 			MemberID:   m.ID,
@@ -102,20 +117,49 @@ func (x *RegistScene) PostRegist(c *gin.Context) {
 			return
 		}
 
-		pids := c.Request.Form[fmt.Sprintf("member_%d[]", m.ID)]
-		// fmt.Println(pids)
-		for _, pid := range pids {
-			id, _ := strconv.ParseInt(pid, 10, 64)
+		// POST from form
+		//   member_$member_id[]: $photograph_id
+		// e.g. m.ID = 1
+		//   member_1[]: 1
+		//   member_1[]: 2
+		//   ..
+		// pids = ["1", "2"]
+		photographIDs := c.Request.Form[fmt.Sprintf("member_%d[]", m.ID)]
+		for _, pid := range photographIDs {
+			photoId, _ := strconv.ParseInt(pid, 10, 64)
 			if err := x.ProducerSceneService.RegistScene(ctx, &service.RegistProducerSceneRequest{
 				ProducerID:   1,
-				PhotographID: id,
+				PhotographID: photoId,
 				MemberID:     m.ID,
-				Have:         1,
+				SsrPlus:      int64(0),
+				Have:         int64(1),
 			}); err != nil {
 				c.String(http.StatusInternalServerError, err.Error())
 				return
 			}
+
+			if include(ssrPlusPhotographIDs, int(photoId)) {
+				if err := x.ProducerSceneService.RegistScene(ctx, &service.RegistProducerSceneRequest{
+					ProducerID:   1,
+					PhotographID: photoId,
+					MemberID:     m.ID,
+					SsrPlus:      int64(1),
+					Have:         int64(1),
+				}); err != nil {
+					c.String(http.StatusInternalServerError, err.Error())
+					return
+				}
+			}
 		}
 	}
 	c.Redirect(http.StatusFound, fmt.Sprintf("/auth/regist/%d", groupId))
+}
+
+func include(slice []int, target int) bool {
+	for _, num := range slice {
+		if num == target {
+			return true
+		}
+	}
+	return false
 }

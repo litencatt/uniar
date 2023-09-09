@@ -11,7 +11,7 @@ ORDER BY
 	g.id, m.phase, m.first_name asc
 ;
 
--- name: GetMemberList :many
+-- name: GetMembersByGroup :many
 SELECT
 	m.id,
 	m.name
@@ -20,7 +20,7 @@ FROM
 WHERE
 	group_id = ?
 ORDER BY
-	graduated asc, m.first_name asc
+	m.first_name asc
 ;
 
 -- name: GetAllMembers :many

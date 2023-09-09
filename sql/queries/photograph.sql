@@ -33,7 +33,7 @@ FROM
 WHERE
     group_id = ?
 ORDER BY
-	photo_type_id, released_at
+	name_for_order ASC
 ;
 
 -- name: GetPhotographListByPhotoType :many
@@ -46,4 +46,15 @@ WHERE
     photo_type = ?
 ORDER BY
     group_id, id ASC
+;
+
+-- name: GetSsrPlusReleasedPhotographList :many
+SELECT
+	photograph_id
+FROM
+	scenes
+WHERE
+	ssr_plus = 1
+GROUP BY
+	photograph_id
 ;

@@ -22,6 +22,7 @@ build:
 air-cmd:
 	go mod tidy
 	sqlc generate
+	@$(MAKE) gen-mock
 	go build -o ./tmp/main ./cmd/uniar/main.go
 
 docker-build:
@@ -61,5 +62,6 @@ prerelease:
 	gocredits -skip-missing -w .
 
 release:
+	git tag ${NEXT_VER}
 	git push origin main --tag
 	goreleaser --rm-dist

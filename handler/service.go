@@ -9,6 +9,7 @@ import (
 
 type SceneService interface {
 	ListScene(context.Context, *service.ListSceneRequest) ([]entity.Scene, error)
+	ListSceneAll(context.Context, *service.ListSceneAllRequest) ([]entity.ProducerScene, error)
 }
 type ProducerSceneService interface {
 	ListScene(context.Context, *service.ListProducerSceneRequest) ([]entity.ProducerScene, error)
@@ -24,6 +25,7 @@ type MemberService interface {
 type PhotographService interface {
 	ListPhotograph(context.Context) ([]entity.Photograph, error)
 	GetPhotographByGroup(context.Context, int64) ([]entity.Photograph, error)
+	GetSsrPlusReleasedPhotographList(context.Context) ([]entity.Photograph, error)
 }
 
 type ProducerService interface {

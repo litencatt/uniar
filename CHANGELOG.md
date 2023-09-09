@@ -1,7 +1,30 @@
 # Changelog
 
+## [v0.18.2](https://github.com/litencatt/uniar/compare/v0.18.0...v0.18.2) (2023-05-01)
+
+* Fix photo order match to original game app [#83](https://github.com/litencatt/uniar/pull/83) ([litencatt](https://github.com/litencatt))
+* bump to v0.18.1 [#82](https://github.com/litencatt/uniar/pull/82) ([litencatt](https://github.com/litencatt))
+* Add generate mock command [#81](https://github.com/litencatt/uniar/pull/81) ([litencatt](https://github.com/litencatt))
+* Add phase condition to order by [#80](https://github.com/litencatt/uniar/pull/80) ([litencatt](https://github.com/litencatt))
+
+## [v0.18.0](https://github.com/litencatt/uniar/compare/v0.17.0...v0.18.0) (2023-04-29)
+
+* Bump to v0.18.0 [#79](https://github.com/litencatt/uniar/pull/79) ([litencatt](https://github.com/litencatt))
+* Improve producer_scenes table record insert policy [#78](https://github.com/litencatt/uniar/pull/78) ([litencatt](https://github.com/litencatt))
+
+## [v0.17.0](https://github.com/litencatt/uniar/compare/v0.16.0...v0.17.0) (2023-04-22)
+
+* bump to v0.17.0 [#77](https://github.com/litencatt/uniar/pull/77) ([litencatt](https://github.com/litencatt))
+* 20230422 updates [#76](https://github.com/litencatt/uniar/pull/76) ([litencatt](https://github.com/litencatt))
+
+## [v0.16.0](https://github.com/litencatt/uniar/compare/v0.15.0...v0.16.0) (2023-02-20)
+
+* bump to v0.16.0 [#75](https://github.com/litencatt/uniar/pull/75) ([litencatt](https://github.com/litencatt))
+* 2023-02-13 update [#74](https://github.com/litencatt/uniar/pull/74) ([litencatt](https://github.com/litencatt))
+
 ## [v0.15.0](https://github.com/litencatt/uniar/compare/v0.14.3...v0.15.0) (2023-02-05)
 
+* bump to v0.15.0 [#72](https://github.com/litencatt/uniar/pull/72) ([litencatt](https://github.com/litencatt))
 * 20230201 update [#71](https://github.com/litencatt/uniar/pull/71) ([litencatt](https://github.com/litencatt))
 * Update graduated member [#70](https://github.com/litencatt/uniar/pull/70) ([litencatt](https://github.com/litencatt))
 * Add update producer member page [#69](https://github.com/litencatt/uniar/pull/69) ([litencatt](https://github.com/litencatt))

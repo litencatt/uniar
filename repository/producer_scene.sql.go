@@ -7,6 +7,7 @@ package repository
 
 import (
 	"context"
+	"database/sql"
 )
 
 const getProducerScenes = `-- name: GetProducerScenes :many
@@ -49,7 +50,7 @@ type GetProducerScenesRow struct {
 	Photograph   string
 	Member       string
 	SsrPlus      int64
-	Have         int64
+	Have         sql.NullInt64
 }
 
 func (q *Queries) GetProducerScenes(ctx context.Context, db DBTX, arg GetProducerScenesParams) ([]GetProducerScenesRow, error) {
@@ -93,7 +94,11 @@ SELECT
     p.name AS photograph,
     m.name AS member,
     s.ssr_plus,
-    ps.have
+    CASE
+      WHEN ps.have IS NULL then false
+      WHEN ps.have = 0 then false
+      WHEN ps.have = 1 then true
+    end as ps_have
 FROM
     producer_scenes ps
     JOIN scenes s ON ps.photograph_id = s.photograph_id AND ps.member_id = s.member_id AND ps.ssr_plus = s.ssr_plus
@@ -116,7 +121,7 @@ type GetProducerScenesByGroupIdRow struct {
 	Photograph   string
 	Member       string
 	SsrPlus      int64
-	Have         int64
+	PsHave       interface{}
 }
 
 func (q *Queries) GetProducerScenesByGroupId(ctx context.Context, db DBTX, groupID int64) ([]GetProducerScenesByGroupIdRow, error) {
@@ -136,7 +141,7 @@ func (q *Queries) GetProducerScenesByGroupId(ctx context.Context, db DBTX, group
 			&i.Photograph,
 			&i.Member,
 			&i.SsrPlus,
-			&i.Have,
+			&i.PsHave,
 		); err != nil {
 			return nil, err
 		}
@@ -176,12 +181,13 @@ func (q *Queries) InitProducerSceneAll(ctx context.Context, db DBTX, arg InitPro
 const registProducerScene = `-- name: RegistProducerScene :exec
 ;
 
-INSERT OR IGNORE INTO producer_scenes (
+INSERT OR REPLACE INTO producer_scenes (
 	producer_id,
 	photograph_id,
     member_id,
-    ssr_plus
-) VALUES (?, ?, ?, ?)
+    ssr_plus,
+    have
+) VALUES (?, ?, ?, ?, ?)
 `
 
 type RegistProducerSceneParams struct {
@@ -189,6 +195,7 @@ type RegistProducerSceneParams struct {
 	PhotographID int64
 	MemberID     int64
 	SsrPlus      int64
+	Have         sql.NullInt64
 }
 
 func (q *Queries) RegistProducerScene(ctx context.Context, db DBTX, arg RegistProducerSceneParams) error {
@@ -197,6 +204,7 @@ func (q *Queries) RegistProducerScene(ctx context.Context, db DBTX, arg RegistPr
 		arg.PhotographID,
 		arg.MemberID,
 		arg.SsrPlus,
+		arg.Have,
 	)
 	return err
 }
@@ -215,7 +223,7 @@ WHERE
 `
 
 type UpdateProducerSceneParams struct {
-	Have         int64
+	Have         sql.NullInt64
 	ProducerID   int64
 	PhotographID int64
 	MemberID     int64
