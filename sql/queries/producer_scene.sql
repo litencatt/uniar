@@ -73,10 +73,7 @@ WHERE
 ;
 
 -- name: InitProducerSceneAll :exec
-UPDATE
-    producer_scenes
-SET
-    have = 0
+DELETE FROM producer_scenes
 WHERE
 	producer_id = ?
     AND member_id = ?
