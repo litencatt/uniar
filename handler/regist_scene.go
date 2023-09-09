@@ -106,16 +106,6 @@ func (x *RegistScene) PostRegist(c *gin.Context) {
 		return
 	}
 
-	ssrPlusPhotographList, err := x.PhotographService.GetSsrPlusReleasedPhotographList(ctx)
-	if err != nil {
-		c.String(http.StatusInternalServerError, err.Error())
-		return
-	}
-	var ssrPlusPhotographIDs []int
-	for _, sp := range ssrPlusPhotographList {
-		ssrPlusPhotographIDs = append(ssrPlusPhotographIDs, int(sp.ID))
-	}
-
 	c.Request.ParseForm()
 	for _, m := range members {
 		// Update ps.Have = 0
