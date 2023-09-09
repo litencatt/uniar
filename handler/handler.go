@@ -7,7 +7,6 @@ import (
 	"net/http"
 
 	"github.com/gin-contrib/sessions"
-	"github.com/gin-contrib/sessions/cookie"
 	"github.com/gin-gonic/gin"
 	goauth "google.golang.org/api/oauth2/v2"
 )
@@ -25,23 +24,16 @@ type LoginProducer struct {
 	MemberService   MemberService
 }
 
-func SetupSession(secret []byte, sessionName string) gin.HandlerFunc {
-	store := cookie.NewStore(secret)
-	return sessions.Sessions(sessionName, store)
-}
-
 func RootHandler(c *gin.Context) {
-	if isLoggedIn() {
-		c.Redirect(http.StatusFound, "/auth/members")
-	}
 	c.Redirect(http.StatusFound, "/login")
 }
 
 func LoginCheck() gin.HandlerFunc {
 	return func(c *gin.Context) {
+		fmt.Printf("LoginCheck() start User:%v\n", User)
 		if isLoggedIn() {
 			fmt.Println("LoginCheck() is logged in")
-			c.Redirect(http.StatusFound, "/auth")
+			//c.Redirect(http.StatusFound, "/auth")
 		} else {
 			fmt.Println("LoginCheck() is NOT logged in")
 		}
@@ -51,6 +43,7 @@ func LoginCheck() gin.HandlerFunc {
 // AuthCheck is middleware for checking login status.
 func AuthCheck() gin.HandlerFunc {
 	return func(c *gin.Context) {
+		fmt.Printf("AuthCheck() start User:%v\n", User)
 		if isLoggedIn() {
 			fmt.Println("AuthCheck() is logged in")
 		} else {
@@ -73,7 +66,7 @@ func (x *LoginProducer) AuthHandler(c *gin.Context) {
 			c.Redirect(http.StatusMovedPermanently, "/auth/members")
 			c.Abort()
 		}
-	}
+	} 
 
 	// contextに保存されたGoogle認証情報を取得
 	ctxUser := c.MustGet("user")
@@ -113,6 +106,7 @@ func (x *LoginProducer) AuthHandler(c *gin.Context) {
 }
 
 func LogoutHandler(c *gin.Context) {
+	c.Set("user", "")
 	session := sessions.Default(c)
 	// session key name of zalando/gin-oauth2
 	// https://github.com/zalando/gin-oauth2/blob/master/google/google.go
