@@ -103,7 +103,7 @@ func (x *LoginProducer) AuthHandler(c *gin.Context) {
 		session.Set("uniar_oauth_user", User)
 		session.Save()
 		ts := session.Get("uniar_oauth_user")
-		fmt.Printf("saved session: %+v\n", ts)
+		fmt.Printf("key:uniar_oauth_user value: %+v\n", ts)
 	} else {
 		fmt.Println("Not Authorized")
 		c.Redirect(http.StatusMovedPermanently, "/login")

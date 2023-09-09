@@ -93,24 +93,28 @@ func run(ctx context.Context) error {
 	r.GET("/", handler.RootHandler)
 
 	login := r.Group("/login")
-	login.Use(handler.LoginCheck())
-	login.GET("/", google.LoginHandler)
+	{
+		login.Use(handler.LoginCheck())
+		login.GET("/", google.LoginHandler)
+	}
 
 	// /auth 以下は認証が必要
 	private := r.Group("/auth")
-	private.Use(google.Auth())
-	private.Use(handler.AuthCheck())
-
-	private.GET("/", ah.AuthHandler)
-	private.GET("/logout", handler.LogoutHandler)
-
-	private.GET("/scenes", ls.ListScene)
-
-	private.GET("/regist/:group_id", rs.GetRegist)
-	private.POST("/regist/:group_id", rs.PostRegist)
-
-	private.GET("/members", lm.ListMember)
-	private.POST("/members", lm.UpdateMember)
+	{
+		private.Use(google.Auth())
+		private.Use(handler.AuthCheck())
+	
+		private.GET("/", ah.AuthHandler)
+		private.GET("/logout", handler.LogoutHandler)
+	
+		private.GET("/scenes", ls.ListScene)
+	
+		private.GET("/regist/:group_id", rs.GetRegist)
+		private.POST("/regist/:group_id", rs.PostRegist)
+	
+		private.GET("/members", lm.ListMember)
+		private.POST("/members", lm.UpdateMember)
+	}
 
 	r.Run(":8090")
 	return nil
