@@ -30,30 +30,21 @@ func SetupSession(secret []byte, sessionName string) gin.HandlerFunc {
 	return sessions.Sessions(sessionName, store)
 }
 
-func LoginHandler(c *gin.Context) {
-	c.Redirect(http.StatusFound, "/auth")
-}
-
 func RootHandler(c *gin.Context) {
-	//session := sessions.Default(c)
-	//es := session.Get("uniar_oauth_session")
-	//fmt.Printf("%+v\n", es.(goauth.Userinfo))
+	if isLoggedIn() {
+		c.Redirect(http.StatusFound, "/auth/members")
+	}
 	c.Redirect(http.StatusFound, "/login")
-	// c.HTML(http.StatusOK, "top/index.go.tmpl", gin.H{
-	// 	"title":    "Main Index",
-	// 	"LoggedIn": User.LoggedIn,
-	// 	"EMail":    User.EMail,
-	// })
 }
 
-func LoginAuth() gin.HandlerFunc {
+func LoginCheck() gin.HandlerFunc {
 	return func(c *gin.Context) {
-		fmt.Println("LoginAuth()")
-		user := goauth.Userinfo{
-			Id:    "100",
-			Email: "foo@example.com",
+		if isLoggedIn() {
+			fmt.Println("LoginCheck() is logged in")
+			c.Redirect(http.StatusFound, "/auth")
+		} else {
+			fmt.Println("LoginCheck() is NOT logged in")
 		}
-		c.Set("user", user)
 	}
 }
 
@@ -62,11 +53,6 @@ func AuthCheck() gin.HandlerFunc {
 	return func(c *gin.Context) {
 		if isLoggedIn() {
 			fmt.Println("AuthCheck() is logged in")
-			val := c.MustGet("user")
-			if user, ok := val.(goauth.Userinfo); ok {
-				User.Id = user.Id
-				User.EMail = user.Email
-			}
 		} else {
 			fmt.Println("AuthCheck() is NOT logged in")
 			c.Redirect(http.StatusFound, "/auth")
@@ -99,18 +85,17 @@ func (x *LoginProducer) AuthHandler(c *gin.Context) {
 		p, err := x.ProducerService.FindProducer(ctx, User.Id)
 		switch {
 		case err == sql.ErrNoRows:
-			fmt.Printf("FindProducer record not found. User.Id = %v\n", User.Id)
+			fmt.Printf("producer not found. User.Id = %v\n", User.Id)
 		case err != nil:
-			fmt.Println("FindProducer error")
-			fmt.Printf("%v\n", err)
+			fmt.Printf("find producer error: User.Id = %v err = %v\n", User.Id, err)
 			c.AbortWithError(http.StatusInternalServerError, err)
 		default:
-			fmt.Printf("FindProducer record found. User.Id = %v\n", User.Id)
+			fmt.Printf("producer record found. User.Id = %v\n", User.Id)
 		}
 
 		if p.IdentityId == "" {
 			if err := x.ProducerService.RegistProducer(ctx, User.Id); err != nil {
-				fmt.Printf("UpdateProducer error. User.Id = %v\n", User.Id)
+				fmt.Printf("update producer error. User.Id = %v\n", User.Id)
 				c.AbortWithError(http.StatusInternalServerError, err)
 			}
 		}
@@ -132,6 +117,7 @@ func LogoutHandler(c *gin.Context) {
 	// session key name of zalando/gin-oauth2
 	// https://github.com/zalando/gin-oauth2/blob/master/google/google.go
 	session.Set("ginoauth_google_session", "")
+	session.Set("uniar_oauth_user", "")
 	session.Clear()
 	session.Options(sessions.Options{Path: "/", MaxAge: -1})
 	session.Save()
@@ -140,26 +126,12 @@ func LogoutHandler(c *gin.Context) {
 	c.Redirect(http.StatusMovedPermanently, "/")
 }
 
-func LoginCheck() gin.HandlerFunc {
-	return func(c *gin.Context) {
-		fmt.Println(User)
-		if isLoggedIn() {
-			val := c.MustGet("user")
-			if user, ok := val.(goauth.Userinfo); ok {
-				User.Id = user.Id
-				User.EMail = user.Email
-			}
-		} else {
-			ClearUser()
-		}
-	}
-}
-
 func isLoggedIn() bool {
 	return User.LoggedIn
 }
 
 func ClearUser() {
-	User = UserSession{}
-	User.LoggedIn = false
+	User = UserSession{
+		LoggedIn: false,
+	}
 }

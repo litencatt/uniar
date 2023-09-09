@@ -91,7 +91,10 @@ func run(ctx context.Context) error {
 	r.LoadHTMLGlob("templates/**/*")
 
 	r.GET("/", handler.RootHandler)
-	r.GET("/login", google.LoginHandler)
+
+	login := r.Group("/login")
+	login.Use(handler.LoginCheck())
+	login.GET("/", google.LoginHandler)
 
 	// /auth 以下は認証が必要
 	private := r.Group("/auth")
