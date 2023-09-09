@@ -142,23 +142,9 @@ func (x *RegistScene) PostRegist(c *gin.Context) {
 				PhotographID: photoId,
 				MemberID:     m.ID,
 				SsrPlus:      int64(0),
-				Have:         int64(1),
 			}); err != nil {
 				c.String(http.StatusInternalServerError, err.Error())
 				return
-			}
-
-			if include(ssrPlusPhotographIDs, int(photoId)) {
-				if err := x.ProducerSceneService.RegistScene(ctx, &service.RegistProducerSceneRequest{
-					ProducerID:   User.ProducerId,
-					PhotographID: photoId,
-					MemberID:     m.ID,
-					SsrPlus:      int64(1),
-					Have:         int64(1),
-				}); err != nil {
-					c.String(http.StatusInternalServerError, err.Error())
-					return
-				}
 			}
 		}
 	}
