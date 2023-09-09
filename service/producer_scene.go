@@ -53,7 +53,6 @@ type RegistProducerSceneRequest struct {
 	PhotographID int64
 	MemberID     int64
 	SsrPlus      int64
-	Have         int64
 }
 
 func (x *ProducerScene) RegistScene(ctx context.Context, arg *RegistProducerSceneRequest) error {
