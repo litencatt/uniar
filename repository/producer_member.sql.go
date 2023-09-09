@@ -18,6 +18,8 @@ SELECT
 FROM
     producer_members pm
     JOIN members m ON pm.member_id = m.id
+WHERE
+    pm.producer_id = ?
 ORDER BY
     m.group_id, m.graduated ASC, m.phase, m.first_name
 `
@@ -29,8 +31,8 @@ type GetProducerMemberRow struct {
 	DiscographyDiscTotal int64
 }
 
-func (q *Queries) GetProducerMember(ctx context.Context, db DBTX) ([]GetProducerMemberRow, error) {
-	rows, err := db.QueryContext(ctx, getProducerMember)
+func (q *Queries) GetProducerMember(ctx context.Context, db DBTX, producerID int64) ([]GetProducerMemberRow, error) {
+	rows, err := db.QueryContext(ctx, getProducerMember, producerID)
 	if err != nil {
 		return nil, err
 	}

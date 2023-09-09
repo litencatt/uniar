@@ -2,6 +2,7 @@ package handler
 
 import (
 	"context"
+	"fmt"
 	"net/http"
 
 	"github.com/gin-gonic/gin"
@@ -16,6 +17,8 @@ type ListScene struct {
 
 func (ls *ListScene) ListScene(c *gin.Context) {
 	ctx := context.Background()
+	fmt.Println("ListScene() start")
+	fmt.Printf("User:%+v\n", User)
 
 	var req service.ListSceneRequest
 	// bind request params to object

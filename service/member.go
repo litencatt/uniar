@@ -29,8 +29,8 @@ func (x *Member) ListMember(ctx context.Context) ([]entity.Member, error) {
 	return member, nil
 }
 
-func (x *Member) ListProducerMember(ctx context.Context) ([]entity.ProducerMember, error) {
-	ms, err := x.Querier.GetProducerMember(ctx, x.DB)
+func (x *Member) ListProducerMember(ctx context.Context, producerId int64) ([]entity.ProducerMember, error) {
+	ms, err := x.Querier.GetProducerMember(ctx, x.DB, producerId)
 	if err != nil {
 		return nil, err
 	}

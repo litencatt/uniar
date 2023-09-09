@@ -7,6 +7,8 @@ SELECT
 FROM
     producer_members pm
     JOIN members m ON pm.member_id = m.id
+WHERE
+    pm.producer_id = ?
 ORDER BY
     m.group_id, m.graduated ASC, m.phase, m.first_name
 ;

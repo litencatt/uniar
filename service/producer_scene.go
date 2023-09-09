@@ -24,27 +24,29 @@ type ListProducerSceneRequest struct {
 	Detail     bool   `form:"detail"`
 	FullName   bool   `form:"full_name"`
 	GroupID    int64
+	ProducerId int64
 }
 
-func (x *ProducerScene) ListScene(ctx context.Context, arg *ListProducerSceneRequest) ([]entity.ProducerScene, error) {
-	ss, err := x.Querier.GetScenesWithGroupId(ctx, x.DB, arg.GroupID)
+func (x *ProducerScene) ListScene(ctx context.Context, arg *ListProducerSceneRequest) ([]entity.ProducerScene,  error) {
+	ps, err := x.Querier.GetScenesWithGroupId(ctx, x.DB, repository.GetScenesWithGroupIdParams{
+		GroupID: arg.GroupID,
+		ProducerID: arg.ProducerId,
+	})
 	if err != nil {
 		return nil, err
 	}
-
-	var scenes []entity.ProducerScene
-	for _, s := range ss {
-		fmt.Printf("%+v\n", s)
+	var producerScenes []entity.ProducerScene
+	for _, s := range ps {
 		scene := entity.ProducerScene{
 			PhotographID: s.PhotographID,
 			MemberID:     s.MemberID,
 			SsrPlus:      s.SsrPlus == 1,
 			Have:         s.PsHave.(int64),
 		}
-		scenes = append(scenes, scene)
+		producerScenes = append(producerScenes, scene)
 	}
 
-	return scenes, nil
+	return producerScenes, nil
 }
 
 type RegistProducerSceneRequest struct {

@@ -68,14 +68,16 @@ func initProducerMember(ctx context.Context, db *sql.DB, q *repository.Queries) 
 
 func setupMember(ctx context.Context, db *sql.DB, q *repository.Queries) error {
 	fmt.Printf("== プロデューサーメンバーセットアップ ==\n")
-	pm, err := q.GetProducerMember(ctx, db)
+	// FIXME: passing producerId from command line argument
+	pId := int64(1)
+	pm, err := q.GetProducerMember(ctx, db, pId)
 	if err != nil {
 		return err
 	}
 	if len(pm) == 0 {
 		initProducerMember(ctx, db, q)
 		fmt.Printf("== プロデューサーメンバー初期化完了 ==\n")
-		pm, err = q.GetProducerMember(ctx, db)
+		pm, err = q.GetProducerMember(ctx, db, pId)
 		if err != nil {
 			return err
 		}

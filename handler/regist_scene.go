@@ -23,6 +23,8 @@ type Group struct {
 
 func (x *RegistScene) GetRegist(c *gin.Context) {
 	ctx := context.Background()
+	fmt.Println("GetRegist() start")
+	fmt.Printf("User:%+v\n", User)
 
 	var group Group
 	c.ShouldBindUri(&group)
@@ -32,12 +34,13 @@ func (x *RegistScene) GetRegist(c *gin.Context) {
 		return
 	}
 
-	sceneList, err := x.SceneService.ListSceneAll(ctx, &service.ListSceneAllRequest{
+	ss, ps, err := x.SceneService.ListSceneAll(ctx, &service.ListSceneAllRequest{
 		Photograph: "%",
 		Color:      "%",
 		Member:     "%",
 		FullName:   true,
 		GroupId:    groupId,
+		ProducerID: User.ProducerId,
 	})
 	if err != nil {
 		c.String(http.StatusInternalServerError, err.Error())
@@ -61,13 +64,19 @@ func (x *RegistScene) GetRegist(c *gin.Context) {
 			producerScenes[i][j] = -1
 		}
 	}
-	for _, s := range sceneList {
+	for _, s := range ss {
 		if s.SsrPlus {
 			continue
 		}
-		producerScenes[s.PhotographID][s.MemberID] = s.Have
+		producerScenes[s.PhotographID][s.MemberID] = 0
 	}
-
+	// CheckBox ON if ProducerScene record exists
+	for _, s := range ps {
+		if s.SsrPlus {
+			continue
+		}
+		producerScenes[s.PhotographID][s.MemberID] = 1
+	}
 	c.HTML(http.StatusOK, "regist/index.go.tmpl", gin.H{
 		"title":          "Regist Index",
 		"LoggedIn":       User.LoggedIn,
@@ -81,6 +90,7 @@ func (x *RegistScene) GetRegist(c *gin.Context) {
 
 func (x *RegistScene) PostRegist(c *gin.Context) {
 	ctx := context.Background()
+	fmt.Println("PostRegist() start")
 
 	var group Group
 	c.ShouldBindUri(&group)
@@ -110,7 +120,7 @@ func (x *RegistScene) PostRegist(c *gin.Context) {
 	for _, m := range members {
 		// Update ps.Have = 0
 		if err := x.ProducerSceneService.InitAllScene(ctx, &service.InitProducerSceneRequest{
-			ProducerID: 1,
+			ProducerID: User.ProducerId,
 			MemberID:   m.ID,
 		}); err != nil {
 			c.String(http.StatusInternalServerError, err.Error())
@@ -128,7 +138,7 @@ func (x *RegistScene) PostRegist(c *gin.Context) {
 		for _, pid := range photographIDs {
 			photoId, _ := strconv.ParseInt(pid, 10, 64)
 			if err := x.ProducerSceneService.RegistScene(ctx, &service.RegistProducerSceneRequest{
-				ProducerID:   1,
+				ProducerID:   User.ProducerId,
 				PhotographID: photoId,
 				MemberID:     m.ID,
 				SsrPlus:      int64(0),
@@ -140,7 +150,7 @@ func (x *RegistScene) PostRegist(c *gin.Context) {
 
 			if include(ssrPlusPhotographIDs, int(photoId)) {
 				if err := x.ProducerSceneService.RegistScene(ctx, &service.RegistProducerSceneRequest{
-					ProducerID:   1,
+					ProducerID:   User.ProducerId,
 					PhotographID: photoId,
 					MemberID:     m.ID,
 					SsrPlus:      int64(1),

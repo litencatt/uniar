@@ -37,25 +37,42 @@ type ListSceneAllRequest struct {
 	Detail     bool   `form:"detail"`
 	FullName   bool   `form:"full_name"`
 	GroupId    int64
+	ProducerID int64
 }
 
-func (x *Scene) ListSceneAll(ctx context.Context, arg *ListSceneAllRequest) ([]entity.ProducerScene, error) {
-	ss, err := x.Querier.GetScenesWithGroupId(ctx, x.DB, arg.GroupId)
+func (x *Scene) ListSceneAll(ctx context.Context, arg *ListSceneAllRequest) ([]entity.Scene, []entity.ProducerScene, error) {
+	as, err := x.Querier.GetAllScenesWithGroupId(ctx, x.DB, arg.GroupId)
 	if err != nil {
-		return nil, err
+		return nil, nil, err
+	}
+	gs, err := x.Querier.GetScenesWithGroupId(ctx, x.DB, repository.GetScenesWithGroupIdParams{
+		GroupID:    arg.GroupId,
+		ProducerID: arg.ProducerID,
+	})
+	if err != nil {
+		return nil, nil, err
 	}
 
-	var scenes []entity.ProducerScene
-	for _, s := range ss {
+	var ss []entity.Scene
+	for _, s := range as {
+		scene := entity.Scene{
+			PhotographID: s.PhotographID,
+			MemberID:     s.MemberID,
+			SsrPlus:      s.SsrPlus == 1,
+		}
+		ss = append(ss, scene)
+	}
+
+	var ps []entity.ProducerScene
+	for _, s := range gs {
 		scene := entity.ProducerScene{
 			PhotographID: s.PhotographID,
 			MemberID:     s.MemberID,
 			SsrPlus:      s.SsrPlus == 1,
-			Have:         s.PsHave.(int64),
 		}
-		scenes = append(scenes, scene)
+		ps = append(ps, scene)
 	}
-	return scenes, nil
+	return ss, ps, nil
 }
 
 func (x *Scene) ListScene(ctx context.Context, arg *ListSceneRequest) ([]entity.Scene, error) {

@@ -7,6 +7,18 @@ FROM
 	scenes s
 ;
 
+-- name: GetAllScenesWithGroupId :many
+SELECT
+	s.photograph_id,
+	s.member_id,
+	s.ssr_plus
+FROM
+	scenes s
+	JOIN members m ON s.member_id = m.id
+WHERE
+	m.group_id = ?
+;
+
 -- name: GetScenesWithColor :many
 SELECT
 	s.id,
@@ -61,9 +73,12 @@ FROM
 	JOIN photograph p ON s.photograph_id = p.id
 	JOIN members m ON s.member_id = m.id
 	LEFT OUTER JOIN producer_scenes ps
-		ON s.photograph_id = ps.photograph_id AND s.member_id = ps.member_id AND s.ssr_plus = ps.ssr_plus
+		ON s.photograph_id = ps.photograph_id
+		AND s.member_id = ps.member_id
+		AND s.ssr_plus = ps.ssr_plus
 WHERE
     m.group_id = ?
+	AND ps.producer_id = ?
 ORDER BY
     p.id,
     m.phase,

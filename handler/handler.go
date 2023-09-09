@@ -14,7 +14,8 @@ import (
 var User UserSession
 
 type UserSession struct {
-	Id       string
+	ProducerId       int64
+	IdentityId	   string
 	EMail    string
 	LoggedIn bool
 }
@@ -30,7 +31,7 @@ func RootHandler(c *gin.Context) {
 
 func LoginCheck() gin.HandlerFunc {
 	return func(c *gin.Context) {
-		fmt.Printf("LoginCheck() start User:%v\n", User)
+		fmt.Printf("LoginCheck() start User:%+v\n", User)
 		if isLoggedIn() {
 			fmt.Println("LoginCheck() is logged in")
 			//c.Redirect(http.StatusFound, "/auth")
@@ -43,7 +44,7 @@ func LoginCheck() gin.HandlerFunc {
 // AuthCheck is middleware for checking login status.
 func AuthCheck() gin.HandlerFunc {
 	return func(c *gin.Context) {
-		fmt.Printf("AuthCheck() start User:%v\n", User)
+		fmt.Printf("AuthCheck() start User:%+v\n", User)
 		if isLoggedIn() {
 			fmt.Println("AuthCheck() is logged in")
 		} else {
@@ -71,27 +72,40 @@ func (x *LoginProducer) AuthHandler(c *gin.Context) {
 	// contextに保存されたGoogle認証情報を取得
 	ctxUser := c.MustGet("user")
 	if user, ok := ctxUser.(goauth.Userinfo); ok {
-		User.Id = user.Id
+		p, err := x.ProducerService.FindProducer(ctx, User.IdentityId)
+		switch {
+		case err == sql.ErrNoRows:
+			fmt.Printf("producer not found. User.Id = %v\n", User.IdentityId)
+		case err != nil:
+			fmt.Printf("find producer error: User.Id = %v err = %v\n", User.IdentityId, err)
+			c.AbortWithError(http.StatusInternalServerError, err)
+		default:
+			fmt.Printf("producer record found. User.Id = %v\n", User.IdentityId)
+		}
+		User.IdentityId = user.Id
 		User.EMail = user.Email
 		User.LoggedIn = true
 
-		p, err := x.ProducerService.FindProducer(ctx, User.Id)
-		switch {
-		case err == sql.ErrNoRows:
-			fmt.Printf("producer not found. User.Id = %v\n", User.Id)
-		case err != nil:
-			fmt.Printf("find producer error: User.Id = %v err = %v\n", User.Id, err)
-			c.AbortWithError(http.StatusInternalServerError, err)
-		default:
-			fmt.Printf("producer record found. User.Id = %v\n", User.Id)
-		}
-
 		if p.IdentityId == "" {
-			if err := x.ProducerService.RegistProducer(ctx, User.Id); err != nil {
-				fmt.Printf("update producer error. User.Id = %v\n", User.Id)
+			if err := x.ProducerService.RegistProducer(ctx, User.IdentityId); err != nil {
+				fmt.Printf("update producer error. User.Id = %v\n", User.IdentityId)
 				c.AbortWithError(http.StatusInternalServerError, err)
 			}
+			p, err := x.ProducerService.FindProducer(ctx, User.IdentityId)
+			switch {
+			case err == sql.ErrNoRows:
+				fmt.Printf("producer not found. User.Id = %v\n", User.IdentityId)
+			case err != nil:
+				fmt.Printf("find producer error: User.Id = %v err = %v\n", User.IdentityId, err)
+				c.AbortWithError(http.StatusInternalServerError, err)
+			default:
+				fmt.Printf("producer record found. User.Id = %v\n", User.IdentityId)
+			}
+			User.ProducerId = p.ID
+		} else {
+			User.ProducerId = p.ID
 		}
+		fmt.Printf("User:%+v\n", User)
 
 		session.Set("uniar_oauth_user", User)
 		session.Save()

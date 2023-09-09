@@ -7,8 +7,10 @@ import (
 type Scene struct {
 	Color       string
 	Photograph  string
+	PhotographID int64
 	SsrPlus     bool
 	Member      string
+	MemberID    int64
 	Expect      float32
 	Total       int64
 	All35Score  int64

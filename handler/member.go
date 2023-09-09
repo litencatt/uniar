@@ -18,8 +18,10 @@ type ListMember struct {
 
 func (ls *ListMember) ListMember(c *gin.Context) {
 	ctx := context.Background()
+	fmt.Println("ListMember() start")
+	fmt.Printf("User:%+v\n", User)
 
-	ms, err := ls.MemberService.ListProducerMember(ctx)
+	ms, err := ls.MemberService.ListProducerMember(ctx, User.ProducerId)
 	if err != nil {
 		c.String(http.StatusInternalServerError, err.Error())
 		return
@@ -36,7 +38,7 @@ func (ls *ListMember) ListMember(c *gin.Context) {
 func (ls *ListMember) UpdateMember(c *gin.Context) {
 	ctx := context.Background()
 
-	pms, err := ls.MemberService.ListProducerMember(ctx)
+	pms, err := ls.MemberService.ListProducerMember(ctx, User.ProducerId)
 	if err != nil {
 		c.String(http.StatusInternalServerError, err.Error())
 		return

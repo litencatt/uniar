@@ -48,6 +48,49 @@ func (q *Queries) GetAllScenes(ctx context.Context, db DBTX) ([]GetAllScenesRow,
 	return items, nil
 }
 
+const getAllScenesWithGroupId = `-- name: GetAllScenesWithGroupId :many
+;
+
+SELECT
+	s.photograph_id,
+	s.member_id,
+	s.ssr_plus
+FROM
+	scenes s
+	JOIN members m ON s.member_id = m.id
+WHERE
+	m.group_id = ?
+`
+
+type GetAllScenesWithGroupIdRow struct {
+	PhotographID int64
+	MemberID     int64
+	SsrPlus      int64
+}
+
+func (q *Queries) GetAllScenesWithGroupId(ctx context.Context, db DBTX, groupID int64) ([]GetAllScenesWithGroupIdRow, error) {
+	rows, err := db.QueryContext(ctx, getAllScenesWithGroupId, groupID)
+	if err != nil {
+		return nil, err
+	}
+	defer rows.Close()
+	var items []GetAllScenesWithGroupIdRow
+	for rows.Next() {
+		var i GetAllScenesWithGroupIdRow
+		if err := rows.Scan(&i.PhotographID, &i.MemberID, &i.SsrPlus); err != nil {
+			return nil, err
+		}
+		items = append(items, i)
+	}
+	if err := rows.Close(); err != nil {
+		return nil, err
+	}
+	if err := rows.Err(); err != nil {
+		return nil, err
+	}
+	return items, nil
+}
+
 const getScenesWithColor = `-- name: GetScenesWithColor :many
 ;
 
@@ -167,14 +210,22 @@ FROM
 	JOIN photograph p ON s.photograph_id = p.id
 	JOIN members m ON s.member_id = m.id
 	LEFT OUTER JOIN producer_scenes ps
-		ON s.photograph_id = ps.photograph_id AND s.member_id = ps.member_id AND s.ssr_plus = ps.ssr_plus
+		ON s.photograph_id = ps.photograph_id
+		AND s.member_id = ps.member_id
+		AND s.ssr_plus = ps.ssr_plus
 WHERE
     m.group_id = ?
+	AND ps.producer_id = ?
 ORDER BY
     p.id,
     m.phase,
     m.first_name
 `
+
+type GetScenesWithGroupIdParams struct {
+	GroupID    int64
+	ProducerID int64
+}
 
 type GetScenesWithGroupIdRow struct {
 	PhotographID int64
@@ -183,8 +234,8 @@ type GetScenesWithGroupIdRow struct {
 	PsHave       interface{}
 }
 
-func (q *Queries) GetScenesWithGroupId(ctx context.Context, db DBTX, groupID int64) ([]GetScenesWithGroupIdRow, error) {
-	rows, err := db.QueryContext(ctx, getScenesWithGroupId, groupID)
+func (q *Queries) GetScenesWithGroupId(ctx context.Context, db DBTX, arg GetScenesWithGroupIdParams) ([]GetScenesWithGroupIdRow, error) {
+	rows, err := db.QueryContext(ctx, getScenesWithGroupId, arg.GroupID, arg.ProducerID)
 	if err != nil {
 		return nil, err
 	}
