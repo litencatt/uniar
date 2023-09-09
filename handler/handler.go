@@ -35,6 +35,9 @@ func LoginHandler(c *gin.Context) {
 }
 
 func RootHandler(c *gin.Context) {
+	//session := sessions.Default(c)
+	//es := session.Get("uniar_oauth_session")
+	//fmt.Printf("%+v\n", es.(goauth.Userinfo))
 	c.Redirect(http.StatusFound, "/login")
 	// c.HTML(http.StatusOK, "top/index.go.tmpl", gin.H{
 	// 	"title":    "Main Index",
@@ -54,20 +57,41 @@ func LoginAuth() gin.HandlerFunc {
 	}
 }
 
+// AuthCheck is middleware for checking login status.
+func AuthCheck() gin.HandlerFunc {
+	return func(c *gin.Context) {
+		if isLoggedIn() {
+			fmt.Println("AuthCheck() is logged in")
+			val := c.MustGet("user")
+			if user, ok := val.(goauth.Userinfo); ok {
+				User.Id = user.Id
+				User.EMail = user.Email
+			}
+		} else {
+			fmt.Println("AuthCheck() is NOT logged in")
+			c.Redirect(http.StatusFound, "/auth")
+		}
+	}
+}
+
 func (x *LoginProducer) AuthHandler(c *gin.Context) {
 	ctx := context.Background()
-	fmt.Println("AuthHandler()")
+	session := sessions.Default(c)
+	fmt.Println("AuthHandler() start")
+
 	// ログイン済みならトップにリダイレクト
-	if User.LoggedIn {
-		fmt.Println("リダイレクted")
-		c.Redirect(http.StatusMovedPermanently, "/auth/members")
-		c.Abort()
+	sessionUser := session.Get("uniar_oauth_user")
+	if sessionUser != nil {
+		if sessionUser.(UserSession).LoggedIn {
+			fmt.Println("already Loggedin. redirect to /auth/members")
+			c.Redirect(http.StatusMovedPermanently, "/auth/members")
+			c.Abort()
+		}
 	}
 
-	// 未ログイン時はOAuth認証後のリダイレクト時のパラメータより
-	// ログイン処理を実行
-	val := c.MustGet("user")
-	if user, ok := val.(goauth.Userinfo); ok {
+	// contextに保存されたGoogle認証情報を取得
+	ctxUser := c.MustGet("user")
+	if user, ok := ctxUser.(goauth.Userinfo); ok {
 		User.Id = user.Id
 		User.EMail = user.Email
 		User.LoggedIn = true
@@ -78,25 +102,26 @@ func (x *LoginProducer) AuthHandler(c *gin.Context) {
 			fmt.Printf("FindProducer record not found. User.Id = %v\n", User.Id)
 		case err != nil:
 			fmt.Println("FindProducer error")
+			fmt.Printf("%v\n", err)
 			c.AbortWithError(http.StatusInternalServerError, err)
 		default:
 			fmt.Printf("FindProducer record found. User.Id = %v\n", User.Id)
 		}
 
 		if p.IdentityId == "" {
-			if err := x.ProducerService.RegistProducer(ctx, User.Id, ""); err != nil {
+			if err := x.ProducerService.RegistProducer(ctx, User.Id); err != nil {
 				fmt.Printf("UpdateProducer error. User.Id = %v\n", User.Id)
 				c.AbortWithError(http.StatusInternalServerError, err)
 			}
 		}
 
-		session := sessions.Default(c)
-		session.Set("ProducerId", &User.Id)
-		// session.Set("Email", &User.EMail)
+		session.Set("uniar_oauth_user", User)
 		session.Save()
-		// fmt.Println("Saved session")
+		ts := session.Get("uniar_oauth_user")
+		fmt.Printf("saved session: %+v\n", ts)
 	} else {
 		fmt.Println("Not Authorized")
+		c.Redirect(http.StatusMovedPermanently, "/login")
 	}
 
 	c.Redirect(http.StatusMovedPermanently, "/auth/members")
@@ -126,23 +151,6 @@ func LoginCheck() gin.HandlerFunc {
 			}
 		} else {
 			ClearUser()
-		}
-	}
-}
-
-func AuthCheck() gin.HandlerFunc {
-	return func(c *gin.Context) {
-		fmt.Println("AuthCheck()")
-		if isLoggedIn() {
-			fmt.Println("AuthCheck() is logged in")
-			val := c.MustGet("user")
-			if user, ok := val.(goauth.Userinfo); ok {
-				User.Id = user.Id
-				User.EMail = user.Email
-			}
-		} else {
-			fmt.Println("AuthCheck() is NOT logged in")
-			c.Redirect(http.StatusFound, "/auth")
 		}
 	}
 }

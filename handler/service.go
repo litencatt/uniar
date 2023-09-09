@@ -28,5 +28,5 @@ type PhotographService interface {
 
 type ProducerService interface {
 	FindProducer(context.Context, string) (entity.Producer, error)
-	RegistProducer(context.Context, string, string) error
+	RegistProducer(context.Context, string) error
 }

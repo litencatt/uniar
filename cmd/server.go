@@ -35,6 +35,7 @@ import (
 )
 
 const (
+	// session name for CookieStore
 	sessionName = "uniar_oauth_session"
 )
 
@@ -92,6 +93,7 @@ func run(ctx context.Context) error {
 	r.GET("/", handler.RootHandler)
 	r.GET("/login", google.LoginHandler)
 
+	// /auth 以下は認証が必要
 	private := r.Group("/auth")
 	private.Use(google.Auth())
 	private.Use(handler.AuthCheck())

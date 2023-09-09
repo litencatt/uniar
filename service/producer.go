@@ -25,16 +25,15 @@ func (x *Producer) FindProducer(ctx context.Context, identityId string) (entity.
 
 	return entity.Producer{
 		ID:          p.ID,
+		ProviderID:  p.ProviderID,
 		IdentityId:  p.IdentityID,
-		DisplayName: p.DisplayName.String,
 	}, nil
 }
 
-func (x *Producer) RegistProducer(ctx context.Context, identityId, displayName string) error {
+func (x *Producer) RegistProducer(ctx context.Context, identityId string) error {
 	err := x.Querier.RegistProducer(ctx, x.DB, repository.RegistProducerParams{
 		ProviderID:  IDProviderGoogle,
 		IdentityID:  identityId,
-		DisplayName: sql.NullString{String: displayName, Valid: true},
 	})
 	if err != nil {
 		return err

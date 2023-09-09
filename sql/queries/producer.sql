@@ -9,15 +9,6 @@ WHERE
 
 -- name: RegistProducer :exec
 INSERT OR REPLACE INTO producers
-    (provider_id, identity_id, display_name)
+    (provider_id, identity_id)
 VALUES
-    (?, ?, ?);
-
--- name: UpdateProducer :exec
-UPDATE
-    producers
-SET
-    display_name = ?
-WHERE
-    id = ?
-;
+    (?, ?);
