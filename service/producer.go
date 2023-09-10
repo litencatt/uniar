@@ -38,5 +38,21 @@ func (x *Producer) RegistProducer(ctx context.Context, identityId string) error 
 	if err != nil {
 		return err
 	}
+
+	// Regist porducer members
+	p, err := x.Querier.GetProducer(ctx, x.DB, identityId)
+	if err != nil {
+		return err
+	}
+	members, err := x.Querier.GetAllMembers(ctx, x.DB)
+	if err != nil {
+		return err
+	}
+	for _, m := range members {
+		x.Querier.RegistProducerMember(ctx, x.DB, repository.RegistProducerMemberParams{
+			ProducerID: p.ID,
+			MemberID:   m.ID,
+		})
+	}
 	return nil
 }
