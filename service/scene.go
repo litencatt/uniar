@@ -92,7 +92,7 @@ func (x *Scene) ListScene(ctx context.Context, arg *ListSceneRequest) ([]entity.
 		fmt.Println("GetProducerScenesWithProducerId error.")
 		return nil, err
 	}
-	fmt.Printf("%+v\n", ps)
+	//fmt.Printf("%+v\n", ps)
 
 	var scenes []entity.Scene
 	for _, s := range ss {
