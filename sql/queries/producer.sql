@@ -8,7 +8,7 @@ WHERE
 ;
 
 -- name: RegistProducer :exec
-INSERT OR REPLACE INTO producers
+INSERT OR IGNORE INTO producers
     (provider_id, identity_id)
 VALUES
     (?, ?);

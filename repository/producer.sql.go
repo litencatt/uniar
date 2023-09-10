@@ -33,7 +33,7 @@ func (q *Queries) GetProducer(ctx context.Context, db DBTX, identityID string) (
 const registProducer = `-- name: RegistProducer :exec
 ;
 
-INSERT OR REPLACE INTO producers
+INSERT OR IGNORE INTO producers
     (provider_id, identity_id)
 VALUES
     (?, ?)
