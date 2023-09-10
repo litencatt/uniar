@@ -18,7 +18,7 @@ type ListScene struct {
 func (ls *ListScene) ListScene(c *gin.Context) {
 	ctx := context.Background()
 	fmt.Println("ListScene() start")
-	us := getUserSession(c)
+	us, _ := getUserSession(c)
 
 	var req service.ListSceneRequest
 	// bind request params to object
