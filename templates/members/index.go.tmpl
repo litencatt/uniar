@@ -1,6 +1,6 @@
 {{ define "members/index.go.tmpl" }}
-{{ template "header" }}
-<form action="/members" method="POST">
+{{ template "header" . }}
+<form action="/auth/members" method="POST">
   <input type="submit" />    
   <div>
     <table border="1">
@@ -23,5 +23,5 @@
     </table>
   </div>
 </form>
-{{ template "footer" }}
+{{ template "footer" . }}
 {{ end }}

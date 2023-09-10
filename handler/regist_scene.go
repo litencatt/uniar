@@ -23,6 +23,13 @@ type Group struct {
 
 func (x *RegistScene) GetRegist(c *gin.Context) {
 	ctx := context.Background()
+	fmt.Println("GetRegist() start")
+	us, err := getUserSession(c)
+	if err != nil {
+		fmt.Printf("GetRegist() user session not found: %+v\n", err)
+		c.String(http.StatusInternalServerError, err.Error())
+		return
+	}
 
 	var group Group
 	c.ShouldBindUri(&group)
@@ -32,12 +39,13 @@ func (x *RegistScene) GetRegist(c *gin.Context) {
 		return
 	}
 
-	sceneList, err := x.SceneService.ListSceneAll(ctx, &service.ListSceneAllRequest{
+	ss, ps, err := x.SceneService.ListSceneAll(ctx, &service.ListSceneAllRequest{
 		Photograph: "%",
 		Color:      "%",
 		Member:     "%",
 		FullName:   true,
 		GroupId:    groupId,
+		ProducerID: us.ProducerId,
 	})
 	if err != nil {
 		c.String(http.StatusInternalServerError, err.Error())
@@ -61,15 +69,23 @@ func (x *RegistScene) GetRegist(c *gin.Context) {
 			producerScenes[i][j] = -1
 		}
 	}
-	for _, s := range sceneList {
+	for _, s := range ss {
 		if s.SsrPlus {
 			continue
 		}
-		producerScenes[s.PhotographID][s.MemberID] = s.Have
+		producerScenes[s.PhotographID][s.MemberID] = 0
 	}
-
+	// CheckBox ON if ProducerScene record exists
+	for _, s := range ps {
+		if s.SsrPlus {
+			continue
+		}
+		producerScenes[s.PhotographID][s.MemberID] = 1
+	}
 	c.HTML(http.StatusOK, "regist/index.go.tmpl", gin.H{
 		"title":          "Regist Index",
+		"LoggedIn":       us.LoggedIn,
+		"EMail":          us.EMail,
 		"groupId":        groupId,
 		"photos":         photos,
 		"members":        members,
@@ -79,6 +95,13 @@ func (x *RegistScene) GetRegist(c *gin.Context) {
 
 func (x *RegistScene) PostRegist(c *gin.Context) {
 	ctx := context.Background()
+	fmt.Println("PostRegist() start")
+	us, err := getUserSession(c)
+	if err != nil {
+		fmt.Printf("PostRegist() user session not found: %+v\n", err)
+		c.String(http.StatusInternalServerError, err.Error())
+		return
+	}
 
 	var group Group
 	c.ShouldBindUri(&group)
@@ -94,21 +117,12 @@ func (x *RegistScene) PostRegist(c *gin.Context) {
 		return
 	}
 
-	ssrPlusPhotographList, err := x.PhotographService.GetSsrPlusReleasedPhotographList(ctx)
-	if err != nil {
-		c.String(http.StatusInternalServerError, err.Error())
-		return
-	}
-	var ssrPlusPhotographIDs []int
-	for _, sp := range ssrPlusPhotographList {
-		ssrPlusPhotographIDs = append(ssrPlusPhotographIDs, int(sp.ID))
-	}
-
 	c.Request.ParseForm()
+	// Delete a member's all producer_scenes once.
+	// And then, insert only checkbox ON producer_scenes.
 	for _, m := range members {
-		// Update ps.Have = 0
 		if err := x.ProducerSceneService.InitAllScene(ctx, &service.InitProducerSceneRequest{
-			ProducerID: 1,
+			ProducerID: us.ProducerId,
 			MemberID:   m.ID,
 		}); err != nil {
 			c.String(http.StatusInternalServerError, err.Error())
@@ -126,31 +140,17 @@ func (x *RegistScene) PostRegist(c *gin.Context) {
 		for _, pid := range photographIDs {
 			photoId, _ := strconv.ParseInt(pid, 10, 64)
 			if err := x.ProducerSceneService.RegistScene(ctx, &service.RegistProducerSceneRequest{
-				ProducerID:   1,
+				ProducerID:   us.ProducerId,
 				PhotographID: photoId,
 				MemberID:     m.ID,
 				SsrPlus:      int64(0),
-				Have:         int64(1),
 			}); err != nil {
 				c.String(http.StatusInternalServerError, err.Error())
 				return
 			}
-
-			if include(ssrPlusPhotographIDs, int(photoId)) {
-				if err := x.ProducerSceneService.RegistScene(ctx, &service.RegistProducerSceneRequest{
-					ProducerID:   1,
-					PhotographID: photoId,
-					MemberID:     m.ID,
-					SsrPlus:      int64(1),
-					Have:         int64(1),
-				}); err != nil {
-					c.String(http.StatusInternalServerError, err.Error())
-					return
-				}
-			}
 		}
 	}
-	c.Redirect(http.StatusFound, fmt.Sprintf("/regist/%d", groupId))
+	c.Redirect(http.StatusFound, fmt.Sprintf("/auth/regist/%d", groupId))
 }
 
 func include(slice []int, target int) bool {

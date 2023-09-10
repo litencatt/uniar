@@ -1,6 +1,6 @@
 {{ define "scenes/index.go.tmpl" }}
-{{ template "header" }}
-<form action="/scenes" method="GET">
+{{ template "header" . }}
+<form action="/auth/scenes" method="GET">
   <select name="photograph" id="photo-select">
     <option value="">All photograph</option>
     {{range $p := .photograph}}
@@ -87,5 +87,5 @@
   {{end}}
   </tbody>
 </table>
-{{ template "footer" }}
+{{ template "footer" . }}
 {{ end }}

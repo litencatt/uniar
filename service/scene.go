@@ -3,6 +3,7 @@ package service
 import (
 	"context"
 	"database/sql"
+	"fmt"
 	"sort"
 	"strconv"
 
@@ -24,6 +25,7 @@ type ListSceneRequest struct {
 	NotHave    bool   `form:"not_have"`
 	Detail     bool   `form:"detail"`
 	FullName   bool   `form:"full_name"`
+	ProducerID int64
 }
 
 type ListSceneAllRequest struct {
@@ -36,25 +38,42 @@ type ListSceneAllRequest struct {
 	Detail     bool   `form:"detail"`
 	FullName   bool   `form:"full_name"`
 	GroupId    int64
+	ProducerID int64
 }
 
-func (x *Scene) ListSceneAll(ctx context.Context, arg *ListSceneAllRequest) ([]entity.ProducerScene, error) {
-	ss, err := x.Querier.GetScenesWithGroupId(ctx, x.DB, arg.GroupId)
+func (x *Scene) ListSceneAll(ctx context.Context, arg *ListSceneAllRequest) ([]entity.Scene, []entity.ProducerScene, error) {
+	as, err := x.Querier.GetAllScenesWithGroupId(ctx, x.DB, arg.GroupId)
 	if err != nil {
-		return nil, err
+		return nil, nil, err
+	}
+	gs, err := x.Querier.GetScenesWithGroupId(ctx, x.DB, repository.GetScenesWithGroupIdParams{
+		GroupID:    arg.GroupId,
+		ProducerID: arg.ProducerID,
+	})
+	if err != nil {
+		return nil, nil, err
 	}
 
-	var scenes []entity.ProducerScene
-	for _, s := range ss {
+	var ss []entity.Scene
+	for _, s := range as {
+		scene := entity.Scene{
+			PhotographID: s.PhotographID,
+			MemberID:     s.MemberID,
+			SsrPlus:      s.SsrPlus == 1,
+		}
+		ss = append(ss, scene)
+	}
+
+	var ps []entity.ProducerScene
+	for _, s := range gs {
 		scene := entity.ProducerScene{
 			PhotographID: s.PhotographID,
 			MemberID:     s.MemberID,
 			SsrPlus:      s.SsrPlus == 1,
-			Have:         s.PsHave.(int64),
 		}
-		scenes = append(scenes, scene)
+		ps = append(ps, scene)
 	}
-	return scenes, nil
+	return ss, ps, nil
 }
 
 func (x *Scene) ListScene(ctx context.Context, arg *ListSceneRequest) ([]entity.Scene, error) {
@@ -64,18 +83,33 @@ func (x *Scene) ListScene(ctx context.Context, arg *ListSceneRequest) ([]entity.
 		Name_3: arg.Photograph,
 	})
 	if err != nil {
+		fmt.Println("GetScenesWithColor error.")
 		return nil, err
 	}
 
+	ps, err := x.Querier.GetProducerScenesWithProducerId(ctx, x.DB, arg.ProducerID)
+	if err != nil {
+		fmt.Println("GetProducerScenesWithProducerId error.")
+		return nil, err
+	}
+	//fmt.Printf("%+v\n", ps)
+
 	var scenes []entity.Scene
 	for _, s := range ss {
+		have := false
+		for _, p := range ps {
+			if s.PhotographID == p.PhotographID && s.MemberID == p.MemberID {
+				have = true
+				break
+			}
+		}
 		// Show only scene you have
-		if arg.Have && s.PsHave.(int64) == 0 {
+		if arg.Have && !have {
 			continue
 		}
 
 		// Show only scene you not have
-		if arg.NotHave && s.PsHave.(int64) == 1 {
+		if arg.NotHave && have {
 			continue
 		}
 

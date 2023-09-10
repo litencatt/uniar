@@ -23,6 +23,7 @@ package cmd
 
 import (
 	"context"
+	"encoding/gob"
 	"log"
 	"os"
 
@@ -31,6 +32,12 @@ import (
 	"github.com/litencatt/uniar/repository"
 	"github.com/litencatt/uniar/service"
 	"github.com/spf13/cobra"
+	"github.com/zalando/gin-oauth2/google"
+)
+
+const (
+	// session name for CookieStore
+	sessionName = "uniar_oauth_session"
 )
 
 var serverCmd = &cobra.Command{
@@ -47,25 +54,17 @@ var serverCmd = &cobra.Command{
 }
 
 func run(ctx context.Context) error {
-	r := gin.Default()
-	r.LoadHTMLGlob("templates/**/*")
-
 	db, err := repository.NewConnection(GetDbPath())
 	if err != nil {
 		return err
 	}
 	q := repository.New()
 
-	r.Static("/assets", "./assets")
-
-	r.GET("/", handler.Top)
-
 	ls := &handler.ListScene{
 		SceneService:      &service.Scene{DB: db, Querier: q},
 		MemberService:     &service.Member{DB: db, Querier: q},
 		PhotographService: &service.Photgraph{DB: db, Querier: q},
 	}
-	r.GET("/scenes", ls.ListScene)
 
 	rs := &handler.RegistScene{
 		SceneService:         &service.Scene{DB: db, Querier: q},
@@ -73,14 +72,54 @@ func run(ctx context.Context) error {
 		MemberService:        &service.Member{DB: db, Querier: q},
 		PhotographService:    &service.Photgraph{DB: db, Querier: q},
 	}
-	r.GET("/regist/:group_id", rs.GetRegist)
-	r.POST("/regist/:group_id", rs.PostRegist)
 
 	lm := &handler.ListMember{
 		MemberService: &service.Member{DB: db, Querier: q},
 	}
-	r.GET("/members", lm.ListMember)
-	r.POST("/members", lm.UpdateMember)
+	ah := &handler.LoginProducer{
+		ProducerService: &service.Producer{DB: db, Querier: q},
+	}
+
+	// Register type for save original struct to session
+	gob.Register(&handler.UserSession{})
+
+	redirectURL := "http://127.0.0.1:8090/auth"
+	credFile := "./cred.json"
+	scopes := []string{"https://www.googleapis.com/auth/userinfo.email"}
+	secret := []byte("secret")
+
+	r := gin.Default()
+	google.Setup(redirectURL, credFile, scopes, secret)
+	r.Use(google.Session(sessionName))
+
+	r.Static("/assets", "./assets")
+	r.LoadHTMLGlob("templates/**/*")
+
+	r.GET("/", handler.RootHandler)
+
+	login := r.Group("/login")
+	{
+		login.Use(handler.LoginCheck())
+		login.GET("/", google.LoginHandler)
+	}
+
+	// /auth 以下は認証が必要
+	private := r.Group("/auth")
+	{
+		private.Use(google.Auth())
+		private.Use(handler.AuthCheck())
+		private.GET("/", ah.AuthHandler)
+	
+		private.GET("/scenes", ls.ListScene)
+	
+		private.GET("/regist/:group_id", rs.GetRegist)
+		private.POST("/regist/:group_id", rs.PostRegist)
+	
+		private.GET("/members", lm.ListMember)
+		private.POST("/members", lm.UpdateMember)
+
+		private.GET("/logout", handler.LogoutHandler)
+	}
 
 	r.Run(":8090")
 	return nil

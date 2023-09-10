@@ -2,6 +2,7 @@ package handler
 
 import (
 	"context"
+	"fmt"
 	"net/http"
 
 	"github.com/gin-gonic/gin"
@@ -16,6 +17,8 @@ type ListScene struct {
 
 func (ls *ListScene) ListScene(c *gin.Context) {
 	ctx := context.Background()
+	fmt.Println("ListScene() start")
+	us, _ := getUserSession(c)
 
 	var req service.ListSceneRequest
 	// bind request params to object
@@ -31,6 +34,7 @@ func (ls *ListScene) ListScene(c *gin.Context) {
 		req.Member = "%"
 	}
 	req.FullName = true
+	req.ProducerID = us.ProducerId
 
 	ss, err := ls.SceneService.ListScene(ctx, &req)
 	if err != nil {
@@ -50,6 +54,8 @@ func (ls *ListScene) ListScene(c *gin.Context) {
 	}
 	c.HTML(http.StatusOK, "scenes/index.go.tmpl", gin.H{
 		"title":              "Scenes Index",
+		"LoggedIn":           us.LoggedIn,
+		"EMail":              us.EMail,
 		"photograph":         ps,
 		"selectedPhotograph": req.Photograph,
 		"color":              []string{"Red", "Blue", "Green", "Yellow", "Purple"},

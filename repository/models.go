@@ -27,6 +27,12 @@ type Group struct {
 	CreatedAt time.Time
 }
 
+type IDProvider struct {
+	ID        int64
+	Name      sql.NullString
+	CreatedAt time.Time
+}
+
 type Life struct {
 	ID        int64
 	Name      string
@@ -77,8 +83,10 @@ type Photograph struct {
 }
 
 type Producer struct {
-	ID        int64
-	CreatedAt time.Time
+	ID         int64
+	ProviderID int64
+	IdentityID string
+	CreatedAt  time.Time
 }
 
 type ProducerMember struct {

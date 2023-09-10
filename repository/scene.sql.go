@@ -48,14 +48,59 @@ func (q *Queries) GetAllScenes(ctx context.Context, db DBTX) ([]GetAllScenesRow,
 	return items, nil
 }
 
+const getAllScenesWithGroupId = `-- name: GetAllScenesWithGroupId :many
+;
+
+SELECT
+	s.photograph_id,
+	s.member_id,
+	s.ssr_plus
+FROM
+	scenes s
+	JOIN members m ON s.member_id = m.id
+WHERE
+	m.group_id = ?
+`
+
+type GetAllScenesWithGroupIdRow struct {
+	PhotographID int64
+	MemberID     int64
+	SsrPlus      int64
+}
+
+func (q *Queries) GetAllScenesWithGroupId(ctx context.Context, db DBTX, groupID int64) ([]GetAllScenesWithGroupIdRow, error) {
+	rows, err := db.QueryContext(ctx, getAllScenesWithGroupId, groupID)
+	if err != nil {
+		return nil, err
+	}
+	defer rows.Close()
+	var items []GetAllScenesWithGroupIdRow
+	for rows.Next() {
+		var i GetAllScenesWithGroupIdRow
+		if err := rows.Scan(&i.PhotographID, &i.MemberID, &i.SsrPlus); err != nil {
+			return nil, err
+		}
+		items = append(items, i)
+	}
+	if err := rows.Close(); err != nil {
+		return nil, err
+	}
+	if err := rows.Err(); err != nil {
+		return nil, err
+	}
+	return items, nil
+}
+
 const getScenesWithColor = `-- name: GetScenesWithColor :many
 ;
 
 SELECT
 	s.id,
 	p.name AS photograph,
+	p.id AS photograph_id,
 	p.abbreviation,
 	m.name AS member,
+	m.id AS member_id,
 	c.name AS color,
 	s.vocal_max + s.dance_max + s.performance_max + 430 AS total,
 	s.vocal_max,
@@ -64,20 +109,16 @@ SELECT
 	s.expected_value,
 	s.ssr_plus,
 	pm.bond_level_curent AS bonds,
-	pm.discography_disc_total AS discography,
-	case
-		when ps.have = 1 then true
-		when ps.have != 1 then false
-		when ps.have is NULL then false
-	end as ps_have
+	pm.discography_disc_total AS discography
 FROM
 	scenes s
 	JOIN photograph p ON s.photograph_id = p.id
 	JOIN color_types c ON s.color_type_id = c.id
 	JOIN members m ON s.member_id = m.id
 	LEFT OUTER JOIN producer_members pm ON s.member_id = pm.member_id
-	LEFT OUTER JOIN producer_scenes ps
-		ON s.photograph_id = ps.photograph_id AND s.member_id = ps.member_id AND s.ssr_plus = ps.ssr_plus
+	LEFT OUTER JOIN producer_scenes ps ON s.photograph_id = ps.photograph_id
+		AND s.member_id = ps.member_id
+		AND s.ssr_plus = ps.ssr_plus
 WHERE
 	c.name LIKE ?
 	AND m.name LIKE ?
@@ -95,8 +136,10 @@ type GetScenesWithColorParams struct {
 type GetScenesWithColorRow struct {
 	ID             int64
 	Photograph     string
+	PhotographID   int64
 	Abbreviation   string
 	Member         string
+	MemberID       int64
 	Color          string
 	Total          int64
 	VocalMax       int64
@@ -106,7 +149,6 @@ type GetScenesWithColorRow struct {
 	SsrPlus        int64
 	Bonds          int64
 	Discography    int64
-	PsHave         interface{}
 }
 
 func (q *Queries) GetScenesWithColor(ctx context.Context, db DBTX, arg GetScenesWithColorParams) ([]GetScenesWithColorRow, error) {
@@ -121,8 +163,10 @@ func (q *Queries) GetScenesWithColor(ctx context.Context, db DBTX, arg GetScenes
 		if err := rows.Scan(
 			&i.ID,
 			&i.Photograph,
+			&i.PhotographID,
 			&i.Abbreviation,
 			&i.Member,
+			&i.MemberID,
 			&i.Color,
 			&i.Total,
 			&i.VocalMax,
@@ -132,7 +176,6 @@ func (q *Queries) GetScenesWithColor(ctx context.Context, db DBTX, arg GetScenes
 			&i.SsrPlus,
 			&i.Bonds,
 			&i.Discography,
-			&i.PsHave,
 		); err != nil {
 			return nil, err
 		}
@@ -154,35 +197,38 @@ const getScenesWithGroupId = `-- name: GetScenesWithGroupId :many
 SELECT
 	p.id as photograph_id,
 	m.id as member_id,
-	s.ssr_plus,
-	case
-		when ps.have = 1 then true
-		when ps.have != 1 then false
-		when ps.have is NULL then false
-	end as ps_have
+	s.ssr_plus
+
 FROM
 	scenes s
 	JOIN photograph p ON s.photograph_id = p.id
 	JOIN members m ON s.member_id = m.id
 	LEFT OUTER JOIN producer_scenes ps
-		ON s.photograph_id = ps.photograph_id AND s.member_id = ps.member_id AND s.ssr_plus = ps.ssr_plus
+		ON s.photograph_id = ps.photograph_id
+		AND s.member_id = ps.member_id
+		AND s.ssr_plus = ps.ssr_plus
 WHERE
     m.group_id = ?
+	AND ps.producer_id = ?
 ORDER BY
     p.id,
     m.phase,
     m.first_name
 `
 
+type GetScenesWithGroupIdParams struct {
+	GroupID    int64
+	ProducerID int64
+}
+
 type GetScenesWithGroupIdRow struct {
 	PhotographID int64
 	MemberID     int64
 	SsrPlus      int64
-	PsHave       interface{}
 }
 
-func (q *Queries) GetScenesWithGroupId(ctx context.Context, db DBTX, groupID int64) ([]GetScenesWithGroupIdRow, error) {
-	rows, err := db.QueryContext(ctx, getScenesWithGroupId, groupID)
+func (q *Queries) GetScenesWithGroupId(ctx context.Context, db DBTX, arg GetScenesWithGroupIdParams) ([]GetScenesWithGroupIdRow, error) {
+	rows, err := db.QueryContext(ctx, getScenesWithGroupId, arg.GroupID, arg.ProducerID)
 	if err != nil {
 		return nil, err
 	}
@@ -190,12 +236,7 @@ func (q *Queries) GetScenesWithGroupId(ctx context.Context, db DBTX, groupID int
 	var items []GetScenesWithGroupIdRow
 	for rows.Next() {
 		var i GetScenesWithGroupIdRow
-		if err := rows.Scan(
-			&i.PhotographID,
-			&i.MemberID,
-			&i.SsrPlus,
-			&i.PsHave,
-		); err != nil {
+		if err := rows.Scan(&i.PhotographID, &i.MemberID, &i.SsrPlus); err != nil {
 			return nil, err
 		}
 		items = append(items, i)
