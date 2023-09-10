@@ -67,7 +67,7 @@ func (x *Member) GetMemberByGroup(ctx context.Context, groupId int64) ([]entity.
 
 func (x *Member) UpdateProducerMember(ctx context.Context, pm entity.ProducerMember) error {
 	err := x.Querier.UpdateProducerMember(ctx, x.DB, repository.UpdateProducerMemberParams{
-		ProducerID:           1,
+		ProducerID:           pm.ProducerID,
 		MemberID:             pm.MemberID,
 		BondLevelCurent:      pm.BondLevel,
 		DiscographyDiscTotal: pm.Discography,

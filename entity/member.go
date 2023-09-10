@@ -6,6 +6,7 @@ type Member struct {
 }
 
 type ProducerMember struct {
+	ProducerID  int64
 	MemberID    int64
 	Name        string
 	BondLevel   int64

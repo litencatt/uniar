@@ -55,6 +55,7 @@ func (ls *ListMember) UpdateMember(c *gin.Context) {
 		discoInt, _ := strconv.ParseInt(disco[0], 10, 64)
 
 		ls.MemberService.UpdateProducerMember(ctx, entity.ProducerMember{
+			ProducerID:  us.ProducerId,
 			MemberID:    pm.MemberID,
 			BondLevel:   bondInt,
 			Discography: discoInt,
