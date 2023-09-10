@@ -23,6 +23,7 @@ package cmd
 
 import (
 	"context"
+	"encoding/gob"
 	"log"
 	"os"
 
@@ -78,6 +79,9 @@ func run(ctx context.Context) error {
 	ah := &handler.LoginProducer{
 		ProducerService: &service.Producer{DB: db, Querier: q},
 	}
+
+	// Register type for save original struct to session
+	gob.Register(&handler.UserSession{})
 
 	redirectURL := "http://127.0.0.1:8090/auth"
 	credFile := "./cred.json"
