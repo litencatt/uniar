@@ -24,7 +24,12 @@ type Group struct {
 func (x *RegistScene) GetRegist(c *gin.Context) {
 	ctx := context.Background()
 	fmt.Println("GetRegist() start")
-	fmt.Printf("User:%+v\n", User)
+	us, err := getUserSession(c)
+	if err != nil {
+		fmt.Printf("GetRegist() user session not found: %+v\n", err)
+		c.String(http.StatusInternalServerError, err.Error())
+		return
+	}
 
 	var group Group
 	c.ShouldBindUri(&group)
@@ -40,7 +45,7 @@ func (x *RegistScene) GetRegist(c *gin.Context) {
 		Member:     "%",
 		FullName:   true,
 		GroupId:    groupId,
-		ProducerID: User.ProducerId,
+		ProducerID: us.ProducerId,
 	})
 	if err != nil {
 		c.String(http.StatusInternalServerError, err.Error())
@@ -79,8 +84,8 @@ func (x *RegistScene) GetRegist(c *gin.Context) {
 	}
 	c.HTML(http.StatusOK, "regist/index.go.tmpl", gin.H{
 		"title":          "Regist Index",
-		"LoggedIn":       User.LoggedIn,
-		"EMail":          User.EMail,
+		"LoggedIn":       us.LoggedIn,
+		"EMail":          us.EMail,
 		"groupId":        groupId,
 		"photos":         photos,
 		"members":        members,
@@ -91,6 +96,12 @@ func (x *RegistScene) GetRegist(c *gin.Context) {
 func (x *RegistScene) PostRegist(c *gin.Context) {
 	ctx := context.Background()
 	fmt.Println("PostRegist() start")
+	us, err := getUserSession(c)
+	if err != nil {
+		fmt.Printf("PostRegist() user session not found: %+v\n", err)
+		c.String(http.StatusInternalServerError, err.Error())
+		return
+	}
 
 	var group Group
 	c.ShouldBindUri(&group)
@@ -111,7 +122,7 @@ func (x *RegistScene) PostRegist(c *gin.Context) {
 	// And then, insert only checkbox ON producer_scenes.
 	for _, m := range members {
 		if err := x.ProducerSceneService.InitAllScene(ctx, &service.InitProducerSceneRequest{
-			ProducerID: User.ProducerId,
+			ProducerID: us.ProducerId,
 			MemberID:   m.ID,
 		}); err != nil {
 			c.String(http.StatusInternalServerError, err.Error())
@@ -129,7 +140,7 @@ func (x *RegistScene) PostRegist(c *gin.Context) {
 		for _, pid := range photographIDs {
 			photoId, _ := strconv.ParseInt(pid, 10, 64)
 			if err := x.ProducerSceneService.RegistScene(ctx, &service.RegistProducerSceneRequest{
-				ProducerID:   User.ProducerId,
+				ProducerID:   us.ProducerId,
 				PhotographID: photoId,
 				MemberID:     m.ID,
 				SsrPlus:      int64(0),

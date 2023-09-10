@@ -19,9 +19,9 @@ type ListMember struct {
 func (ls *ListMember) ListMember(c *gin.Context) {
 	ctx := context.Background()
 	fmt.Println("ListMember() start")
-	fmt.Printf("User:%+v\n", User)
+	us, _ := getUserSession(c)
 
-	ms, err := ls.MemberService.ListProducerMember(ctx, User.ProducerId)
+	ms, err := ls.MemberService.ListProducerMember(ctx, us.ProducerId)
 	if err != nil {
 		c.String(http.StatusInternalServerError, err.Error())
 		return
@@ -29,16 +29,18 @@ func (ls *ListMember) ListMember(c *gin.Context) {
 
 	c.HTML(http.StatusOK, "members/index.go.tmpl", gin.H{
 		"title":    "Members",
-		"LoggedIn": User.LoggedIn,
-		"EMail":    User.EMail,
+		"LoggedIn": us.LoggedIn,
+		"EMail":    us.EMail,
 		"members":  ms,
 	})
 }
 
 func (ls *ListMember) UpdateMember(c *gin.Context) {
 	ctx := context.Background()
+	fmt.Println("UpdateMember() start")
+	us, _ := getUserSession(c)
 
-	pms, err := ls.MemberService.ListProducerMember(ctx, User.ProducerId)
+	pms, err := ls.MemberService.ListProducerMember(ctx, us.ProducerId)
 	if err != nil {
 		c.String(http.StatusInternalServerError, err.Error())
 		return

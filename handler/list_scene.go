@@ -18,7 +18,7 @@ type ListScene struct {
 func (ls *ListScene) ListScene(c *gin.Context) {
 	ctx := context.Background()
 	fmt.Println("ListScene() start")
-	fmt.Printf("User:%+v\n", User)
+	us := getUserSession(c)
 
 	var req service.ListSceneRequest
 	// bind request params to object
@@ -34,7 +34,7 @@ func (ls *ListScene) ListScene(c *gin.Context) {
 		req.Member = "%"
 	}
 	req.FullName = true
-	req.ProducerID = User.ProducerId
+	req.ProducerID = us.ProducerId
 
 	ss, err := ls.SceneService.ListScene(ctx, &req)
 	if err != nil {
@@ -54,8 +54,8 @@ func (ls *ListScene) ListScene(c *gin.Context) {
 	}
 	c.HTML(http.StatusOK, "scenes/index.go.tmpl", gin.H{
 		"title":              "Scenes Index",
-		"LoggedIn":           User.LoggedIn,
-		"EMail":              User.EMail,
+		"LoggedIn":           us.LoggedIn,
+		"EMail":              us.EMail,
 		"photograph":         ps,
 		"selectedPhotograph": req.Photograph,
 		"color":              []string{"Red", "Blue", "Green", "Yellow", "Purple"},

@@ -98,6 +98,7 @@ func run(ctx context.Context) error {
 		login.Use(handler.LoginCheck())
 		login.GET("/", google.LoginHandler)
 	}
+	r.GET("/logout", handler.LogoutHandler)
 
 	// /auth 以下は認証が必要
 	private := r.Group("/auth")
@@ -106,7 +107,6 @@ func run(ctx context.Context) error {
 		private.Use(handler.AuthCheck())
 	
 		private.GET("/", ah.AuthHandler)
-		private.GET("/logout", handler.LogoutHandler)
 	
 		private.GET("/scenes", ls.ListScene)
 	
