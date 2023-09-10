@@ -102,14 +102,12 @@ func run(ctx context.Context) error {
 		login.Use(handler.LoginCheck())
 		login.GET("/", google.LoginHandler)
 	}
-	r.GET("/logout", handler.LogoutHandler)
 
 	// /auth 以下は認証が必要
 	private := r.Group("/auth")
 	{
 		private.Use(google.Auth())
 		private.Use(handler.AuthCheck())
-	
 		private.GET("/", ah.AuthHandler)
 	
 		private.GET("/scenes", ls.ListScene)
@@ -119,6 +117,8 @@ func run(ctx context.Context) error {
 	
 		private.GET("/members", lm.ListMember)
 		private.POST("/members", lm.UpdateMember)
+
+		private.GET("/logout", handler.LogoutHandler)
 	}
 
 	r.Run(":8090")

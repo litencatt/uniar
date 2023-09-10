@@ -26,6 +26,7 @@ type LoginProducer struct {
 }
 
 func RootHandler(c *gin.Context) {
+	fmt.Printf("RootHandler() request path: %s\n", c.Request.URL.Path)
 	c.Redirect(http.StatusFound, "/login")
 }
 
@@ -41,7 +42,7 @@ func LoginCheck() gin.HandlerFunc {
 
 		if us.LoggedIn {
 			fmt.Println("LoginCheck() is logged in")
-			c.Redirect(http.StatusFound, "/auth")
+			c.Redirect(http.StatusFound, "/auth/members")
 		} else {
 			fmt.Println("LoginCheck() is NOT logged in")
 		}
