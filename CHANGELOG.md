@@ -1,5 +1,9 @@
 # Changelog
 
+## [v0.18.3](https://github.com/litencatt/uniar/compare/v0.18.2...v0.18.3) - 2023-09-10
+- tagpr by @litencatt in https://github.com/litencatt/uniar/pull/85
+- Auth and login by @litencatt in https://github.com/litencatt/uniar/pull/73
+
 ## [v0.18.2](https://github.com/litencatt/uniar/compare/v0.18.0...v0.18.2) (2023-05-01)
 
 * Fix photo order match to original game app [#83](https://github.com/litencatt/uniar/pull/83) ([litencatt](https://github.com/litencatt))
