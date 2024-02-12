@@ -123,6 +123,8 @@ WHERE
 	c.name LIKE ?
 	AND m.name LIKE ?
 	AND p.name LIKE ?
+GROUP BY
+	p.id, m.id, ps.ssr_plus
 ORDER BY
 	s.expected_value desc, total desc
 `

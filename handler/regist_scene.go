@@ -62,8 +62,8 @@ func (x *RegistScene) GetRegist(c *gin.Context) {
 		return
 	}
 
-	producerScenes := make([][]int64, 120)
-	for i := 0; i < 120; i++ {
+	producerScenes := make([][]int64, 150)
+	for i := 0; i < 150; i++ {
 		producerScenes[i] = make([]int64, 100)
 		for j := 0; j < 100; j++ {
 			producerScenes[i][j] = -1

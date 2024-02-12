@@ -110,7 +110,7 @@ FROM
 WHERE
 	group_id = ?
 ORDER BY
-	m.first_name asc
+	m.phase, m.first_name asc
 `
 
 type GetMembersByGroupRow struct {

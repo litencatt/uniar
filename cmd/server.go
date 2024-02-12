@@ -109,12 +109,12 @@ func run(ctx context.Context) error {
 		private.Use(google.Auth())
 		private.Use(handler.AuthCheck())
 		private.GET("/", ah.AuthHandler)
-	
+
 		private.GET("/scenes", ls.ListScene)
-	
+
 		private.GET("/regist/:group_id", rs.GetRegist)
 		private.POST("/regist/:group_id", rs.PostRegist)
-	
+
 		private.GET("/members", lm.ListMember)
 		private.POST("/members", lm.UpdateMember)
 
