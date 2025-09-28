@@ -3,7 +3,7 @@
 
 `uniar` is database and management your scene collections CLI tool for [UNI'S ON AIR](https://keyahina-unisonair.com/).
 
-## Usage		
+## Usage
 
 ```
 uniar is UNI'S ON AIR music and scene cards database and manage your scene cards collection tool.
@@ -36,6 +36,67 @@ $ brew tap litencatt/tap
 $ brew install litencatt/tap/uniar
 ```
 
+## Configuration
+
+### Database
+
+`uniar` uses SQLite for data storage. The database file is stored at:
+- **Default location**: `~/.uniar/uniar.db`
+- **Config file**: `~/.uniar.yaml` (optional)
+
+### First-time Setup
+
+Before using `uniar`, run the setup command to initialize the database:
+
+```bash
+$ uniar setup
+```
+
+This will create the necessary database schema and initial data.
+
+## Server Mode
+
+`uniar` can run as a web server with a web UI for managing your scene collections.
+
+### Starting the Server
+
+```bash
+$ uniar server
+```
+
+This starts a web server on port 8090 with the following features:
+
+- **Web UI**: Browser-based interface for viewing and managing scene collections
+- **Google OAuth Authentication**: Secure login using Google accounts
+- **Scene Management**: View, filter, and register scene cards through the web interface
+- **Member Management**: Manage member information and preferences
+- **Producer Registration**: Automatic user registration and session management
+
+### Server Configuration
+
+The server requires a `cred.json` file for Google OAuth authentication. This file should contain your Google OAuth2 credentials and is automatically excluded from version control.
+
+**cred.json format:**
+```json
+{
+    "clientid": "xxx...",
+    "secret": "xxx..."
+}
+```
+
+Place this file in the same directory as the `uniar` binary when running the server.
+
+**Server endpoints:**
+- `/` - Root redirect to login
+- `/login` - Google OAuth login
+- `/auth` - Authenticated routes (requires login)
+  - `/auth/scenes` - Scene card listing and management
+  - `/auth/regist/:group_id` - Scene registration
+  - `/auth/members` - Member management
+  - `/auth/logout` - Logout
+
+**Port:** 8090 (default)
+
 ## Commands
 
 ### List
@@ -65,8 +126,22 @@ Use "uniar [command] --help" for more information about a command.
 
 ```
 
-### Usage
+### Scene Listing Examples
 
+The following examples demonstrate various ways to filter and display scene card data:
+
+**Key Options:**
+- `-f, --full-name`: Show full photograph names instead of abbreviated versions
+- `-c, --color`: Filter by card color (Red, Blue, Green, Yellow, Purple)
+- `-m, --member`: Filter by member name
+- `-p, --photograph`: Filter by photograph name
+- `-d, --detail`: Show detailed stats including individual VO/DA/PE values
+- `--ignore-columns`: Hide specific columns from the display
+- `--have`: Show only cards you own
+- `--not-have`: Show only cards you don't own
+- `-s, --sort`: Sort by specific ranking criteria
+
+#### Basic scene listing with full photograph names
 ```
 $ uniar list scene -h
 Show scene card list
@@ -94,6 +169,7 @@ Global Flags:
 
 ```
 
+#### Display all scenes with full photograph names (top 10 results)
 ```
 $ uniar list scene -f | head
 +--------+------------------------------------+---------+------------+--------+-------+-------+--------+--------+--------+------+------+------+-------+
@@ -109,6 +185,7 @@ $ uniar list scene -f | head
 
 ```
 
+#### Filter scenes by color (Blue cards only)
 ```
 $ uniar list scene -f -c Blue
 +-------+------------------------------------+---------+------------+--------+-------+-------+--------+--------+--------+------+------+------+-------+
@@ -124,6 +201,7 @@ $ uniar list scene -f -c Blue
 
 ```
 
+#### Filter scenes by member (加藤史帆's cards only)
 ```
 $ uniar list scene -f -m 加藤史帆
 +--------+------------------------------------+---------+----------+--------+-------+-------+--------+--------+--------+------+------+------+-------+
@@ -139,6 +217,7 @@ $ uniar list scene -f -m 加藤史帆
 
 ```
 
+#### Filter scenes by photograph name (キュン cards only)
 ```
 $ uniar list scene -f -p キュン
 +--------+------------+---------+------------+--------+-------+-------+--------+--------+--------+------+------+------+-------+
@@ -154,6 +233,7 @@ $ uniar list scene -f -p キュン
 
 ```
 
+#### Combined filters (Blue + 加藤史帆 + キュン)
 ```
 $ uniar list scene -f -c Blue -m 加藤史帆 -p キュン
 +-------+------------+---------+----------+--------+-------+-------+--------+--------+--------+------+------+------+-------+
@@ -165,6 +245,7 @@ $ uniar list scene -f -c Blue -m 加藤史帆 -p キュン
 
 ```
 
+#### Hide specific columns from display
 ```
 $ uniar list scene --ignore-columns All35,VoDa50,DaPe50,VoPe50 | head
 +--------+--------------------------------+---------+------------+--------+-------+------+------+------+-------+
@@ -180,6 +261,7 @@ $ uniar list scene --ignore-columns All35,VoDa50,DaPe50,VoPe50 | head
 
 ```
 
+#### Show detailed stats with hidden columns
 ```
 $ uniar list scene -d --ignore-columns All35,VoDa50,DaPe50,VoPe50 | head
 +--------+--------------------------------+---------+------------+--------+-------+------+------+------+------+------+------+-------+
@@ -194,3 +276,35 @@ $ uniar list scene -d --ignore-columns All35,VoDa50,DaPe50,VoPe50 | head
 | Red    | アザカワ                       | true    | 佐々木美玲 |   3.72 | 13324 |   19 |   20 |    1 | 3023 | 3036 | 6835 | false |
 
 ```
+
+### Other List Commands
+
+- `uniar list member` - List all members
+- `uniar list music` - List music tracks
+- `uniar list photograph` - List photographs
+- `uniar list live` - List live performances
+- `uniar list group` - List groups
+
+### Registration Commands
+
+Register new data into the database:
+
+- `uniar regist scene` - Register scene cards
+- `uniar regist music` - Register music tracks
+- `uniar regist photograph` - Register photographs
+- `uniar regist live` - Register live performances
+
+### Setup Commands
+
+Initialize and configure the database:
+
+- `uniar setup` - Initial setup wizard
+- `uniar setup scene` - Setup scene data
+- `uniar setup member` - Setup member data
+- `uniar setup office` - Setup office/group data
+- `uniar setup migrate` - Run database migrations
+
+### Other Commands
+
+- `uniar doc` - Generate documentation
+- `uniar completion` - Generate shell completion scripts
