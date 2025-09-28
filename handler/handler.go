@@ -5,6 +5,8 @@ import (
 	"database/sql"
 	"fmt"
 	"net/http"
+	"os"
+	"strings"
 
 	"github.com/gin-contrib/sessions"
 	"github.com/gin-gonic/gin"
@@ -55,6 +57,14 @@ func AuthCheck() gin.HandlerFunc {
 	return func(c *gin.Context) {
 		fmt.Println("AuthCheck() start")
 		fmt.Printf("AuthCheck() request path: %s\n", c.Request.URL.Path)
+
+		// DEBUG: 環境変数でadmin認証を回避（adminページアクセス時のみ）
+		if os.Getenv("ADMIN_DEBUG") == "true" && strings.HasPrefix(c.Request.URL.Path, "/admin") {
+			fmt.Println("AuthCheck() DEBUG mode: auth check bypassed for admin pages")
+			c.Next()
+			return
+		}
+
 		if c.Request.URL.Path == "/auth/" {
 			fmt.Println("AuthCheck() request path is /auth/")
 			return
@@ -175,6 +185,14 @@ func LogoutHandler(c *gin.Context) {
 func AdminCheck() gin.HandlerFunc {
 	return func(c *gin.Context) {
 		fmt.Println("AdminCheck() start")
+
+		// DEBUG: 環境変数でadmin認証を回避
+		if os.Getenv("ADMIN_DEBUG") == "true" {
+			fmt.Println("AdminCheck() DEBUG mode: admin access granted without authentication")
+			c.Next()
+			return
+		}
+
 		us, err := getUserSession(c)
 		if err != nil {
 			fmt.Println("AdminCheck() user session not found")

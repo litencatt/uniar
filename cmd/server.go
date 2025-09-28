@@ -109,8 +109,7 @@ func run(ctx context.Context) error {
 	r.Use(google.Session(sessionName))
 
 	r.Static("/assets", "./assets")
-	r.LoadHTMLGlob("templates/*/*.go.tmpl")
-	r.LoadHTMLGlob("templates/*/*/*.go.tmpl")
+	r.LoadHTMLGlob("templates/**/*.go.tmpl")
 
 	r.GET("/", handler.RootHandler)
 
@@ -141,12 +140,15 @@ func run(ctx context.Context) error {
 	// /admin 以下は管理者権限が必要
 	admin := r.Group("/admin")
 	{
-		admin.Use(google.Auth())
+		if os.Getenv("ADMIN_DEBUG") != "true" {
+			admin.Use(google.Auth())
+		}
 		admin.Use(handler.AuthCheck())
 		admin.Use(handler.AdminCheck())
 
 		// ダッシュボード
 		admin.GET("/", adminDashboard.Dashboard)
+
 
 		// 楽曲管理
 		admin.GET("/music", adminMusic.ListMusic)
