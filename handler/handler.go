@@ -103,11 +103,15 @@ func (x *LoginProducer) AuthHandler(c *gin.Context) {
 			fmt.Printf("AuthHandler() producer not found. goauthUser.Id = %v\n", goauthUser.Id)
 			if err := x.ProducerService.RegistProducer(ctx, goauthUser.Id); err != nil {
 				fmt.Printf("regist producer error. goauthUser.Id = %v\n", goauthUser.Id)
-				c.AbortWithError(http.StatusInternalServerError, err)
+				if err := c.AbortWithError(http.StatusInternalServerError, err); err != nil {
+				fmt.Printf("AbortWithError failed: %v\n", err)
+			}
 			}
 		case err != nil:
 			fmt.Printf("find producer error: goauthUser.Id = %v err = %v\n", goauthUser.Id, err)
-			c.AbortWithError(http.StatusInternalServerError, err)
+			if err := c.AbortWithError(http.StatusInternalServerError, err); err != nil {
+				fmt.Printf("AbortWithError failed: %v\n", err)
+			}
 		default:
 			fmt.Printf("AuthHandler() producer record found. goauthUser.Id = %v\n", goauthUser.Id)
 		}
@@ -121,7 +125,9 @@ func (x *LoginProducer) AuthHandler(c *gin.Context) {
 		session.Set("uniar_session", &userSession)
 		if err := session.Save(); err != nil {
 			fmt.Printf("AuthHandler() session save error: %+v\n", err)
-			c.AbortWithError(http.StatusInternalServerError, err)
+			if err := c.AbortWithError(http.StatusInternalServerError, err); err != nil {
+				fmt.Printf("AbortWithError failed: %v\n", err)
+			}
 		}
 
 		us := session.Get("uniar_session")
@@ -147,7 +153,9 @@ func LogoutHandler(c *gin.Context) {
 	session.Delete("uniar_session")
 	session.Clear()
 	session.Options(sessions.Options{Path: "/", MaxAge: -1})
-	session.Save()
+	if err := session.Save(); err != nil {
+		fmt.Printf("LogoutHandler() session save error: %v\n", err)
+	}
 	c.Redirect(http.StatusMovedPermanently, "/")
 }
 

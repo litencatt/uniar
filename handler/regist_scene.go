@@ -32,7 +32,10 @@ func (x *RegistScene) GetRegist(c *gin.Context) {
 	}
 
 	var group Group
-	c.ShouldBindUri(&group)
+	if err := c.ShouldBindUri(&group); err != nil {
+		c.String(http.StatusBadRequest, err.Error())
+		return
+	}
 	groupId, err := strconv.ParseInt(group.GroupID, 10, 64)
 	if err != nil {
 		c.String(http.StatusInternalServerError, err.Error())
@@ -104,7 +107,10 @@ func (x *RegistScene) PostRegist(c *gin.Context) {
 	}
 
 	var group Group
-	c.ShouldBindUri(&group)
+	if err := c.ShouldBindUri(&group); err != nil {
+		c.String(http.StatusBadRequest, err.Error())
+		return
+	}
 	groupId, err := strconv.ParseInt(group.GroupID, 10, 64)
 	if err != nil {
 		c.String(http.StatusInternalServerError, err.Error())

@@ -22,7 +22,10 @@ func (ls *ListScene) ListScene(c *gin.Context) {
 
 	var req service.ListSceneRequest
 	// bind request params to object
-	c.ShouldBind(&req)
+	if err := c.ShouldBind(&req); err != nil {
+		c.String(http.StatusBadRequest, err.Error())
+		return
+	}
 	// fmt.Printf("%+v\n", req)
 	if req.Photograph == "" {
 		req.Photograph = "%"
