@@ -97,10 +97,10 @@ const getScenesWithColor = `-- name: GetScenesWithColor :many
 SELECT
 	s.id,
 	p.name AS photograph,
-	p.id AS PhotographID,
+	p.id as photograph_id,
 	p.abbreviation,
 	m.name AS member,
-	m.id AS MemberID,
+	m.id as member_id,
 	c.name AS color,
 	s.vocal_max + s.dance_max + s.performance_max + 430 AS total,
 	s.vocal_max,
@@ -197,8 +197,8 @@ const getScenesWithGroupId = `-- name: GetScenesWithGroupId :many
 
 
 SELECT
-	p.id AS PhotographID,
-	m.id AS MemberID,
+	p.id as photograph_id,
+	m.id as member_id,
 	s.ssr_plus
 
 FROM
