@@ -22,7 +22,7 @@ func (h *AdminSceneHandler) ListScene(c *gin.Context) {
 
 	scenes, err := h.SceneService.ListForAdmin(ctx, perPage, offset)
 	if err != nil {
-		c.HTML(http.StatusInternalServerError, "error/500.go.tmpl", gin.H{
+		c.HTML(http.StatusInternalServerError, "500.go.tmpl", gin.H{
 			"error": err.Error(),
 		})
 		return
@@ -30,7 +30,7 @@ func (h *AdminSceneHandler) ListScene(c *gin.Context) {
 
 	total, err := h.SceneService.CountForAdmin(ctx)
 	if err != nil {
-		c.HTML(http.StatusInternalServerError, "error/500.go.tmpl", gin.H{
+		c.HTML(http.StatusInternalServerError, "500.go.tmpl", gin.H{
 			"error": err.Error(),
 		})
 		return
@@ -57,7 +57,7 @@ func (h *AdminSceneHandler) ShowScene(c *gin.Context) {
 	idParam := c.Param("id")
 	id, err := strconv.ParseInt(idParam, 10, 64)
 	if err != nil {
-		c.HTML(http.StatusBadRequest, "error/400.go.tmpl", gin.H{
+		c.HTML(http.StatusBadRequest, "400.go.tmpl", gin.H{
 			"error": "Invalid scene ID",
 		})
 		return
@@ -65,7 +65,7 @@ func (h *AdminSceneHandler) ShowScene(c *gin.Context) {
 
 	scene, err := h.SceneService.GetByID(ctx, id)
 	if err != nil {
-		c.HTML(http.StatusNotFound, "error/404.go.tmpl", gin.H{
+		c.HTML(http.StatusNotFound, "404.go.tmpl", gin.H{
 			"error": "Scene not found",
 		})
 		return
@@ -82,7 +82,7 @@ func (h *AdminSceneHandler) EditScene(c *gin.Context) {
 	idParam := c.Param("id")
 	id, err := strconv.ParseInt(idParam, 10, 64)
 	if err != nil {
-		c.HTML(http.StatusBadRequest, "error/400.go.tmpl", gin.H{
+		c.HTML(http.StatusBadRequest, "400.go.tmpl", gin.H{
 			"error": "Invalid scene ID",
 		})
 		return
@@ -90,7 +90,7 @@ func (h *AdminSceneHandler) EditScene(c *gin.Context) {
 
 	scene, err := h.SceneService.GetByID(ctx, id)
 	if err != nil {
-		c.HTML(http.StatusNotFound, "error/404.go.tmpl", gin.H{
+		c.HTML(http.StatusNotFound, "404.go.tmpl", gin.H{
 			"error": "Scene not found",
 		})
 		return
@@ -107,7 +107,7 @@ func (h *AdminSceneHandler) UpdateScene(c *gin.Context) {
 	idParam := c.Param("id")
 	id, err := strconv.ParseInt(idParam, 10, 64)
 	if err != nil {
-		c.HTML(http.StatusBadRequest, "error/400.go.tmpl", gin.H{
+		c.HTML(http.StatusBadRequest, "400.go.tmpl", gin.H{
 			"error": "Invalid scene ID",
 		})
 		return
@@ -137,7 +137,7 @@ func (h *AdminSceneHandler) UpdateScene(c *gin.Context) {
 
 	err = h.SceneService.Update(ctx, id, params)
 	if err != nil {
-		c.HTML(http.StatusInternalServerError, "error/500.go.tmpl", gin.H{
+		c.HTML(http.StatusInternalServerError, "500.go.tmpl", gin.H{
 			"error": err.Error(),
 		})
 		return
@@ -152,7 +152,7 @@ func (h *AdminSceneHandler) DeleteScene(c *gin.Context) {
 	idParam := c.Param("id")
 	id, err := strconv.ParseInt(idParam, 10, 64)
 	if err != nil {
-		c.HTML(http.StatusBadRequest, "error/400.go.tmpl", gin.H{
+		c.HTML(http.StatusBadRequest, "400.go.tmpl", gin.H{
 			"error": "Invalid scene ID",
 		})
 		return
@@ -160,7 +160,7 @@ func (h *AdminSceneHandler) DeleteScene(c *gin.Context) {
 
 	err = h.SceneService.Delete(ctx, id)
 	if err != nil {
-		c.HTML(http.StatusInternalServerError, "error/500.go.tmpl", gin.H{
+		c.HTML(http.StatusInternalServerError, "500.go.tmpl", gin.H{
 			"error": err.Error(),
 		})
 		return
