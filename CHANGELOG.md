@@ -1,5 +1,10 @@
 # Changelog
 
+## [v0.19.5](https://github.com/litencatt/uniar/compare/v0.19.4...v0.19.5) - 2025-09-28
+- Update README by @litencatt in https://github.com/litencatt/uniar/pull/102
+- Add abount language guideline for claude by @litencatt in https://github.com/litencatt/uniar/pull/104
+- 新規ユーザー登録時のProducerID取得問題修正・Goバージョン統一・CI/CD効率化 by @litencatt in https://github.com/litencatt/uniar/pull/105
+
 ## [v0.19.4](https://github.com/litencatt/uniar/compare/v0.19.3...v0.19.4) - 2025-09-28
 - Fix GoReleaser settings for Homebrew tap by @litencatt in https://github.com/litencatt/uniar/pull/100
 
