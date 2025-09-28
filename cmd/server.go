@@ -83,7 +83,7 @@ func run(ctx context.Context) error {
 	// Register type for save original struct to session
 	gob.Register(&handler.UserSession{})
 
-	redirectURL := "http://127.0.0.1:8090/auth"
+	redirectURL := "http://localhost:8090/auth"
 	credFile := "./cred.json"
 	scopes := []string{"https://www.googleapis.com/auth/userinfo.email"}
 	secret := []byte("secret")
