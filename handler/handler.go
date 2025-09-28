@@ -18,6 +18,7 @@ type UserSession struct {
 	IdentityId	   string
 	EMail    string
 	LoggedIn bool
+	IsAdmin  bool
 }
 
 type LoginProducer struct {
@@ -130,6 +131,7 @@ func (x *LoginProducer) AuthHandler(c *gin.Context) {
 			EMail:      goauthUser.Email,
 			LoggedIn:   true,
 			ProducerId: p.ID,
+			IsAdmin:    p.IsAdmin == 1,
 		}
 		fmt.Printf("AuthHandler() save uniar_session value:%+v\n", userSession)
 		session.Set("uniar_session", &userSession)
@@ -167,6 +169,34 @@ func LogoutHandler(c *gin.Context) {
 		fmt.Printf("LogoutHandler() session save error: %v\n", err)
 	}
 	c.Redirect(http.StatusMovedPermanently, "/")
+}
+
+// AdminCheck is middleware for checking admin privileges.
+func AdminCheck() gin.HandlerFunc {
+	return func(c *gin.Context) {
+		fmt.Println("AdminCheck() start")
+		us, err := getUserSession(c)
+		if err != nil {
+			fmt.Println("AdminCheck() user session not found")
+			c.HTML(http.StatusForbidden, "error/403.html", gin.H{
+				"message": "管理者権限が必要です",
+			})
+			c.Abort()
+			return
+		}
+
+		if !us.IsAdmin {
+			fmt.Printf("AdminCheck() user is not admin: %+v\n", us)
+			c.HTML(http.StatusForbidden, "error/403.html", gin.H{
+				"message": "管理者権限が必要です",
+			})
+			c.Abort()
+			return
+		}
+
+		fmt.Println("AdminCheck() admin access granted")
+		c.Next()
+	}
 }
 
 func getUserSession(c *gin.Context) (*UserSession, error) {

@@ -80,6 +80,22 @@ func run(ctx context.Context) error {
 		ProducerService: &service.Producer{DB: db, Querier: q},
 	}
 
+	// Admin handlers
+	adminDashboard := &handler.AdminDashboardHandler{
+		MusicService:      &service.Music{DB: db, Querier: q},
+		PhotographService: &service.Photgraph{DB: db, Querier: q},
+		SceneService:      &service.Scene{DB: db, Querier: q},
+	}
+	adminMusic := &handler.AdminMusicHandler{
+		MusicService: &service.Music{DB: db, Querier: q},
+	}
+	adminPhotograph := &handler.AdminPhotographHandler{
+		PhotographService: &service.Photgraph{DB: db, Querier: q},
+	}
+	adminScene := &handler.AdminSceneHandler{
+		SceneService: &service.Scene{DB: db, Querier: q},
+	}
+
 	// Register type for save original struct to session
 	gob.Register(&handler.UserSession{})
 
@@ -119,6 +135,44 @@ func run(ctx context.Context) error {
 		private.POST("/members", lm.UpdateMember)
 
 		private.GET("/logout", handler.LogoutHandler)
+	}
+
+	// /admin 以下は管理者権限が必要
+	admin := r.Group("/admin")
+	{
+		admin.Use(google.Auth())
+		admin.Use(handler.AuthCheck())
+		admin.Use(handler.AdminCheck())
+
+		// ダッシュボード
+		admin.GET("/", adminDashboard.Dashboard)
+
+		// 楽曲管理
+		admin.GET("/music", adminMusic.ListMusic)
+		admin.GET("/music/:id", adminMusic.ShowMusic)
+		admin.GET("/music/:id/edit", adminMusic.EditMusic)
+		admin.PUT("/music/:id", adminMusic.UpdateMusic)
+		admin.POST("/music/:id", adminMusic.UpdateMusic) // HTML forms use POST
+		admin.DELETE("/music/:id", adminMusic.DeleteMusic)
+		admin.POST("/music/:id/delete", adminMusic.DeleteMusic) // HTML forms use POST
+
+		// 撮影管理
+		admin.GET("/photograph", adminPhotograph.ListPhotograph)
+		admin.GET("/photograph/:id", adminPhotograph.ShowPhotograph)
+		admin.GET("/photograph/:id/edit", adminPhotograph.EditPhotograph)
+		admin.PUT("/photograph/:id", adminPhotograph.UpdatePhotograph)
+		admin.POST("/photograph/:id", adminPhotograph.UpdatePhotograph)
+		admin.DELETE("/photograph/:id", adminPhotograph.DeletePhotograph)
+		admin.POST("/photograph/:id/delete", adminPhotograph.DeletePhotograph)
+
+		// シーンカード管理
+		admin.GET("/scene", adminScene.ListScene)
+		admin.GET("/scene/:id", adminScene.ShowScene)
+		admin.GET("/scene/:id/edit", adminScene.EditScene)
+		admin.PUT("/scene/:id", adminScene.UpdateScene)
+		admin.POST("/scene/:id", adminScene.UpdateScene)
+		admin.DELETE("/scene/:id", adminScene.DeleteScene)
+		admin.POST("/scene/:id/delete", adminScene.DeleteScene)
 	}
 
 	return r.Run(":8090")
