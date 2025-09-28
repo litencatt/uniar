@@ -15,6 +15,17 @@ make air-cmd                  # Build with hot reload dependencies (for developm
 make docker-build            # Build Docker image
 ```
 
+### Docker Development
+```bash
+docker compose up -d          # Start development environment
+docker compose down           # Stop and remove containers
+docker compose restart app    # Restart application container
+
+# NOTE: Code changes are automatically reflected due to volume mounting (.:/app)
+# No need to rebuild Docker image after code changes
+docker compose exec app go run cmd/uniar/main.go [command]  # Run commands in container
+```
+
 ### Database
 ```bash
 make db-init                 # Remove the database file (reset)
@@ -85,7 +96,7 @@ make release             # Create and push release
 - **repository/** - Database layer using sqlc
   - Auto-generated from SQL queries in sql/queries/
   - Mock interfaces generated for testing
-  - Uses SQLite with go-sqlite3 driver
+  - Uses SQLite with modernc.org/sqlite driver (pure Go, CGO-free)
 
 - **service/** - Business logic layer
   - Handles scene cards, members, photographs, producers
@@ -117,7 +128,7 @@ The application manages UNI'S ON AIR game data including:
 - Cobra for CLI commands
 - Gin for HTTP server
 - sqlc for SQL code generation (with field rename configuration)
-- sqlite3 as database
+- modernc.org/sqlite as pure Go SQLite driver (CGO-free for cross-compilation)
 - Air for hot reload during development
 - mockgen for test mocks
 - sqlmock for database testing
