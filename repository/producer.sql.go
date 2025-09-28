@@ -11,7 +11,7 @@ import (
 
 const getProducer = `-- name: GetProducer :one
 SELECT
-    id, provider_id, identity_id, created_at
+    id, provider_id, identity_id, is_admin, created_at
 FROM
     producers p
 WHERE
@@ -25,6 +25,29 @@ func (q *Queries) GetProducer(ctx context.Context, db DBTX, identityID string) (
 		&i.ID,
 		&i.ProviderID,
 		&i.IdentityID,
+		&i.IsAdmin,
+		&i.CreatedAt,
+	)
+	return i, err
+}
+
+const getProducerWithAdmin = `-- name: GetProducerWithAdmin :one
+SELECT
+    id, provider_id, identity_id, is_admin, created_at
+FROM
+    producers p
+WHERE
+    p.identity_id = ? AND p.is_admin = 1
+`
+
+func (q *Queries) GetProducerWithAdmin(ctx context.Context, db DBTX, identityID string) (Producer, error) {
+	row := db.QueryRowContext(ctx, getProducerWithAdmin, identityID)
+	var i Producer
+	err := row.Scan(
+		&i.ID,
+		&i.ProviderID,
+		&i.IdentityID,
+		&i.IsAdmin,
 		&i.CreatedAt,
 	)
 	return i, err

@@ -92,3 +92,33 @@ INSERT INTO scenes (
 	ssr_plus
 ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)
 ;
+
+-- name: GetSceneById :one
+SELECT s.*, p.name as photograph_name, m.name as member_name, c.name as color_name
+FROM scenes s
+JOIN photograph p ON s.photograph_id = p.id
+JOIN members m ON s.member_id = m.id
+JOIN color_types c ON s.color_type_id = c.id
+WHERE s.id = ?;
+
+-- name: GetSceneListForAdmin :many
+SELECT s.*, p.name as photograph_name, m.name as member_name, c.name as color_name
+FROM scenes s
+JOIN photograph p ON s.photograph_id = p.id
+JOIN members m ON s.member_id = m.id
+JOIN color_types c ON s.color_type_id = c.id
+ORDER BY s.id DESC
+LIMIT ? OFFSET ?;
+
+-- name: UpdateScene :exec
+UPDATE scenes
+SET photograph_id = ?, member_id = ?, color_type_id = ?,
+    vocal_max = ?, dance_max = ?, performance_max = ?,
+    center_skill = ?, expected_value = ?, ssr_plus = ?
+WHERE id = ?;
+
+-- name: DeleteScene :exec
+DELETE FROM scenes WHERE id = ?;
+
+-- name: CountScenesForAdmin :one
+SELECT COUNT(*) as total FROM scenes;

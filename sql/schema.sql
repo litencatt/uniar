@@ -98,6 +98,7 @@ CREATE TABLE producers (
   id integer PRIMARY KEY AUTOINCREMENT,
   provider_id integer NOT NULL DEFAULT '1',
   identity_id varchar(255) NOT NULL DEFAULT '',
+  is_admin integer NOT NULL DEFAULT '0',
   created_at DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP
 );
 

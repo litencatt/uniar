@@ -12,3 +12,11 @@ INSERT OR IGNORE INTO producers
     (provider_id, identity_id)
 VALUES
     (?, ?);
+
+-- name: GetProducerWithAdmin :one
+SELECT
+    *
+FROM
+    producers p
+WHERE
+    p.identity_id = ? AND p.is_admin = 1;

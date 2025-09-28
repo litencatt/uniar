@@ -42,3 +42,25 @@ INSERT INTO music (
 	color_type_id,
 	live_id
 ) VALUES (?, ?, ?, ?, ?, ?, ?);
+
+-- name: GetMusicById :one
+SELECT * FROM music WHERE id = ?;
+
+-- name: GetMusicListAll :many
+SELECT
+	m.*,
+	l.name AS live_name,
+	c.name AS color_name
+FROM music m
+JOIN lives l ON m.live_id = l.id
+JOIN color_types c ON m.color_type_id = c.id
+ORDER BY m.id DESC;
+
+-- name: UpdateMusic :exec
+UPDATE music
+SET name = ?, normal = ?, pro = ?, master = ?,
+    length = ?, color_type_id = ?, live_id = ?, music_bonus = ?
+WHERE id = ?;
+
+-- name: DeleteMusic :exec
+DELETE FROM music WHERE id = ?;

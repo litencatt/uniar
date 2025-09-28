@@ -8,7 +8,28 @@ package repository
 import (
 	"context"
 	"database/sql"
+	"time"
 )
+
+const countScenesForAdmin = `-- name: CountScenesForAdmin :one
+SELECT COUNT(*) as total FROM scenes
+`
+
+func (q *Queries) CountScenesForAdmin(ctx context.Context, db DBTX) (int64, error) {
+	row := db.QueryRowContext(ctx, countScenesForAdmin)
+	var total int64
+	err := row.Scan(&total)
+	return total, err
+}
+
+const deleteScene = `-- name: DeleteScene :exec
+DELETE FROM scenes WHERE id = ?
+`
+
+func (q *Queries) DeleteScene(ctx context.Context, db DBTX, id int64) error {
+	_, err := db.ExecContext(ctx, deleteScene, id)
+	return err
+}
 
 const getAllScenes = `-- name: GetAllScenes :many
 SELECT
@@ -78,6 +99,134 @@ func (q *Queries) GetAllScenesWithGroupId(ctx context.Context, db DBTX, groupID 
 	for rows.Next() {
 		var i GetAllScenesWithGroupIdRow
 		if err := rows.Scan(&i.PhotographID, &i.MemberID, &i.SsrPlus); err != nil {
+			return nil, err
+		}
+		items = append(items, i)
+	}
+	if err := rows.Close(); err != nil {
+		return nil, err
+	}
+	if err := rows.Err(); err != nil {
+		return nil, err
+	}
+	return items, nil
+}
+
+const getSceneById = `-- name: GetSceneById :one
+;
+
+SELECT s.id, s.photograph_id, s.member_id, s.color_type_id, s.vocal_max, s.dance_max, s.performance_max, s.life, s.luck, s.center_skill, s.expected_value, s.ssr_plus, s.created_at, p.name as photograph_name, m.name as member_name, c.name as color_name
+FROM scenes s
+JOIN photograph p ON s.photograph_id = p.id
+JOIN members m ON s.member_id = m.id
+JOIN color_types c ON s.color_type_id = c.id
+WHERE s.id = ?
+`
+
+type GetSceneByIdRow struct {
+	ID             int64
+	PhotographID   int64
+	MemberID       int64
+	ColorTypeID    int64
+	VocalMax       int64
+	DanceMax       int64
+	PerformanceMax int64
+	Life           int64
+	Luck           int64
+	CenterSkill    sql.NullString
+	ExpectedValue  sql.NullString
+	SsrPlus        int64
+	CreatedAt      time.Time
+	PhotographName string
+	MemberName     string
+	ColorName      string
+}
+
+func (q *Queries) GetSceneById(ctx context.Context, db DBTX, id int64) (GetSceneByIdRow, error) {
+	row := db.QueryRowContext(ctx, getSceneById, id)
+	var i GetSceneByIdRow
+	err := row.Scan(
+		&i.ID,
+		&i.PhotographID,
+		&i.MemberID,
+		&i.ColorTypeID,
+		&i.VocalMax,
+		&i.DanceMax,
+		&i.PerformanceMax,
+		&i.Life,
+		&i.Luck,
+		&i.CenterSkill,
+		&i.ExpectedValue,
+		&i.SsrPlus,
+		&i.CreatedAt,
+		&i.PhotographName,
+		&i.MemberName,
+		&i.ColorName,
+	)
+	return i, err
+}
+
+const getSceneListForAdmin = `-- name: GetSceneListForAdmin :many
+SELECT s.id, s.photograph_id, s.member_id, s.color_type_id, s.vocal_max, s.dance_max, s.performance_max, s.life, s.luck, s.center_skill, s.expected_value, s.ssr_plus, s.created_at, p.name as photograph_name, m.name as member_name, c.name as color_name
+FROM scenes s
+JOIN photograph p ON s.photograph_id = p.id
+JOIN members m ON s.member_id = m.id
+JOIN color_types c ON s.color_type_id = c.id
+ORDER BY s.id DESC
+LIMIT ? OFFSET ?
+`
+
+type GetSceneListForAdminParams struct {
+	Limit  int64
+	Offset int64
+}
+
+type GetSceneListForAdminRow struct {
+	ID             int64
+	PhotographID   int64
+	MemberID       int64
+	ColorTypeID    int64
+	VocalMax       int64
+	DanceMax       int64
+	PerformanceMax int64
+	Life           int64
+	Luck           int64
+	CenterSkill    sql.NullString
+	ExpectedValue  sql.NullString
+	SsrPlus        int64
+	CreatedAt      time.Time
+	PhotographName string
+	MemberName     string
+	ColorName      string
+}
+
+func (q *Queries) GetSceneListForAdmin(ctx context.Context, db DBTX, arg GetSceneListForAdminParams) ([]GetSceneListForAdminRow, error) {
+	rows, err := db.QueryContext(ctx, getSceneListForAdmin, arg.Limit, arg.Offset)
+	if err != nil {
+		return nil, err
+	}
+	defer rows.Close()
+	var items []GetSceneListForAdminRow
+	for rows.Next() {
+		var i GetSceneListForAdminRow
+		if err := rows.Scan(
+			&i.ID,
+			&i.PhotographID,
+			&i.MemberID,
+			&i.ColorTypeID,
+			&i.VocalMax,
+			&i.DanceMax,
+			&i.PerformanceMax,
+			&i.Life,
+			&i.Luck,
+			&i.CenterSkill,
+			&i.ExpectedValue,
+			&i.SsrPlus,
+			&i.CreatedAt,
+			&i.PhotographName,
+			&i.MemberName,
+			&i.ColorName,
+		); err != nil {
 			return nil, err
 		}
 		items = append(items, i)
@@ -291,6 +440,43 @@ func (q *Queries) RegistScene(ctx context.Context, db DBTX, arg RegistSceneParam
 		arg.CenterSkill,
 		arg.ExpectedValue,
 		arg.SsrPlus,
+	)
+	return err
+}
+
+const updateScene = `-- name: UpdateScene :exec
+UPDATE scenes
+SET photograph_id = ?, member_id = ?, color_type_id = ?,
+    vocal_max = ?, dance_max = ?, performance_max = ?,
+    center_skill = ?, expected_value = ?, ssr_plus = ?
+WHERE id = ?
+`
+
+type UpdateSceneParams struct {
+	PhotographID   int64
+	MemberID       int64
+	ColorTypeID    int64
+	VocalMax       int64
+	DanceMax       int64
+	PerformanceMax int64
+	CenterSkill    sql.NullString
+	ExpectedValue  sql.NullString
+	SsrPlus        int64
+	ID             int64
+}
+
+func (q *Queries) UpdateScene(ctx context.Context, db DBTX, arg UpdateSceneParams) error {
+	_, err := db.ExecContext(ctx, updateScene,
+		arg.PhotographID,
+		arg.MemberID,
+		arg.ColorTypeID,
+		arg.VocalMax,
+		arg.DanceMax,
+		arg.PerformanceMax,
+		arg.CenterSkill,
+		arg.ExpectedValue,
+		arg.SsrPlus,
+		arg.ID,
 	)
 	return err
 }

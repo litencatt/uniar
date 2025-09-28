@@ -86,6 +86,7 @@ type Producer struct {
 	ID         int64
 	ProviderID int64
 	IdentityID string
+	IsAdmin    int64
 	CreatedAt  time.Time
 }
 
