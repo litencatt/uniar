@@ -196,3 +196,134 @@ func (x *Scene) ListScene(ctx context.Context, arg *ListSceneRequest) ([]entity.
 
 	return scenes, nil
 }
+
+type UpdateSceneParams struct {
+	PhotographID   int64
+	MemberID       int64
+	ColorTypeID    int64
+	VocalMax       int64
+	DanceMax       int64
+	PerformanceMax int64
+	CenterSkill    string
+	ExpectedValue  string
+	SsrPlus        int64
+}
+
+func (x *Scene) GetByID(ctx context.Context, id int64) (*entity.SceneWithDetails, error) {
+	s, err := x.Querier.GetSceneById(ctx, x.DB, id)
+	if err != nil {
+		return nil, err
+	}
+
+	centerSkill := ""
+	if s.CenterSkill.Valid {
+		centerSkill = s.CenterSkill.String
+	}
+
+	expectedValue := ""
+	if s.ExpectedValue.Valid {
+		expectedValue = s.ExpectedValue.String
+	}
+
+	return &entity.SceneWithDetails{
+		ID:             s.ID,
+		PhotographID:   s.PhotographID,
+		MemberID:       s.MemberID,
+		ColorTypeID:    s.ColorTypeID,
+		VocalMax:       s.VocalMax,
+		DanceMax:       s.DanceMax,
+		PerformanceMax: s.PerformanceMax,
+		CenterSkill:    centerSkill,
+		ExpectedValue:  expectedValue,
+		SsrPlus:        s.SsrPlus,
+		PhotographName: s.PhotographName,
+		MemberName:     s.MemberName,
+		ColorName:      s.ColorName,
+	}, nil
+}
+
+func (x *Scene) ListForAdmin(ctx context.Context, limit, offset int64) ([]entity.SceneWithDetails, error) {
+	ss, err := x.Querier.GetSceneListForAdmin(ctx, x.DB, repository.GetSceneListForAdminParams{
+		Limit:  limit,
+		Offset: offset,
+	})
+	if err != nil {
+		return nil, err
+	}
+
+	var scenes []entity.SceneWithDetails
+	for _, s := range ss {
+		centerSkill := ""
+		if s.CenterSkill.Valid {
+			centerSkill = s.CenterSkill.String
+		}
+
+		expectedValue := ""
+		if s.ExpectedValue.Valid {
+			expectedValue = s.ExpectedValue.String
+		}
+
+		scene := entity.SceneWithDetails{
+			ID:             s.ID,
+			PhotographID:   s.PhotographID,
+			MemberID:       s.MemberID,
+			ColorTypeID:    s.ColorTypeID,
+			VocalMax:       s.VocalMax,
+			DanceMax:       s.DanceMax,
+			PerformanceMax: s.PerformanceMax,
+			CenterSkill:    centerSkill,
+			ExpectedValue:  expectedValue,
+			SsrPlus:        s.SsrPlus,
+			PhotographName: s.PhotographName,
+			MemberName:     s.MemberName,
+			ColorName:      s.ColorName,
+		}
+		scenes = append(scenes, scene)
+	}
+	return scenes, nil
+}
+
+func (x *Scene) CountForAdmin(ctx context.Context) (int64, error) {
+	count, err := x.Querier.CountScenesForAdmin(ctx, x.DB)
+	if err != nil {
+		return 0, err
+	}
+	return count, nil
+}
+
+func (x *Scene) Update(ctx context.Context, id int64, params UpdateSceneParams) error {
+	centerSkill := sql.NullString{
+		String: params.CenterSkill,
+		Valid:  params.CenterSkill != "",
+	}
+
+	expectedValue := sql.NullString{
+		String: params.ExpectedValue,
+		Valid:  params.ExpectedValue != "",
+	}
+
+	err := x.Querier.UpdateScene(ctx, x.DB, repository.UpdateSceneParams{
+		ID:             id,
+		PhotographID:   params.PhotographID,
+		MemberID:       params.MemberID,
+		ColorTypeID:    params.ColorTypeID,
+		VocalMax:       params.VocalMax,
+		DanceMax:       params.DanceMax,
+		PerformanceMax: params.PerformanceMax,
+		CenterSkill:    centerSkill,
+		ExpectedValue:  expectedValue,
+		SsrPlus:        params.SsrPlus,
+	})
+	if err != nil {
+		return err
+	}
+	return nil
+}
+
+func (x *Scene) Delete(ctx context.Context, id int64) error {
+	err := x.Querier.DeleteScene(ctx, x.DB, id)
+	if err != nil {
+		return err
+	}
+	return nil
+}
