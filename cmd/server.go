@@ -109,7 +109,8 @@ func run(ctx context.Context) error {
 	r.Use(google.Session(sessionName))
 
 	r.Static("/assets", "./assets")
-	r.LoadHTMLGlob("templates/**/*.go.tmpl")
+	r.LoadHTMLGlob("templates/*/*.go.tmpl")
+	r.LoadHTMLGlob("templates/*/*/*.go.tmpl")
 
 	r.GET("/", handler.RootHandler)
 

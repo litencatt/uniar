@@ -28,7 +28,7 @@
             <strong>Performance最大値:</strong> {{ .scene.PerformanceMax }}
         </div>
         <div>
-            <strong>総合力:</strong> {{ add .scene.VocalMax .scene.DanceMax .scene.PerformanceMax }}
+            <strong>総合力:</strong> {{ .scene.VocalMax }} + {{ .scene.DanceMax }} + {{ .scene.PerformanceMax }}
         </div>
         <div>
             <strong>センタースキル:</strong> {{ .scene.CenterSkill }}
