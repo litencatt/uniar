@@ -28,12 +28,7 @@ checksum:
 snapshot:
   name_template: "{{ .Version }}-next"
 changelog:
-  skip: true
-  sort: asc
-  filters:
-    exclude:
-      - "^docs:"
-      - "^test:"
+  disable: true
 brews:
   - name: uniar
     repository:
