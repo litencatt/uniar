@@ -18,17 +18,31 @@ jobs:
       with:
         go-version: '1.24.7'
 
+    - name: Cache Go tools
+      uses: actions/cache@v4
+      with:
+        path: ~/go/bin
+        key: ${{ runner.os }}-go-tools-${{ hashFiles('**/.github/workflows/ci.yml') }}
+        restore-keys: |
+          ${{ runner.os }}-go-tools-
+
     - name: Download dependencies
       run: go mod download
 
     - name: Install sqlc
-      run: go install github.com/sqlc-dev/sqlc/cmd/sqlc@latest
+      run: |
+        if ! command -v sqlc &> /dev/null; then
+          go install github.com/sqlc-dev/sqlc/cmd/sqlc@latest
+        fi
 
     - name: Generate sqlc code
       run: sqlc generate
 
     - name: Install gomock
-      run: go install github.com/golang/mock/mockgen@latest
+      run: |
+        if ! command -v mockgen &> /dev/null; then
+          go install github.com/golang/mock/mockgen@latest
+        fi
 
     - name: Generate mocks
       run: go generate ./...
