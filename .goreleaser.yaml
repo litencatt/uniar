@@ -28,7 +28,7 @@ checksum:
 snapshot:
   name_template: "{{ .Version }}-next"
 changelog:
-  skip: true
+  disable: true
   sort: asc
   filters:
     exclude:
