@@ -1,5 +1,8 @@
 # Changelog
 
+## [v0.20.0](https://github.com/litencatt/uniar/compare/v0.19.5...v0.20.0) - 2025-09-28
+- Add Admin Panel with CRUD Operations for Music, Photograph, and Scene Management by @litencatt in https://github.com/litencatt/uniar/pull/107
+
 ## [v0.19.5](https://github.com/litencatt/uniar/compare/v0.19.4...v0.19.5) - 2025-09-28
 - Update README by @litencatt in https://github.com/litencatt/uniar/pull/102
 - Add abount language guideline for claude by @litencatt in https://github.com/litencatt/uniar/pull/104
