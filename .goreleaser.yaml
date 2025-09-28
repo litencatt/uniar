@@ -29,6 +29,11 @@ snapshot:
   name_template: "{{ .Version }}-next"
 changelog:
   disable: true
+  sort: asc
+  filters:
+    exclude:
+      - "^docs:"
+      - "^test:"
 brews:
   - name: uniar
     repository:
