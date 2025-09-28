@@ -1,5 +1,8 @@
 # Changelog
 
+## [v0.19.2](https://github.com/litencatt/uniar/compare/v0.19.1...v0.19.2) - 2025-09-28
+- SQLiteドライバーの純Go実装への移行とクロスコンパイル対応 by @litencatt in https://github.com/litencatt/uniar/pull/96
+
 ## [v0.19.1](https://github.com/litencatt/uniar/compare/v0.19.0...v0.19.1) - 2025-09-28
 - GoReleaserによるHomebrew Formula自動更新の修正 by @litencatt in https://github.com/litencatt/uniar/pull/94
 
