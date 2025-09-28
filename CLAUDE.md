@@ -53,6 +53,13 @@ go test -race -coverprofile=coverage.out ./...  # Run tests with race detection 
 docker compose exec app go test -v ./...  # Run tests in Docker container
 ```
 
+### Linting
+```bash
+make lint                 # Run golangci-lint locally
+make lint-docker          # Run golangci-lint in Docker container
+golangci-lint run         # Run linter directly
+```
+
 ### Documentation & Release
 ```bash
 make doc                  # Generate README from command documentation

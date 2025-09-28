@@ -123,7 +123,10 @@ func (x *RegistScene) PostRegist(c *gin.Context) {
 		return
 	}
 
-	c.Request.ParseForm()
+	if err := c.Request.ParseForm(); err != nil {
+		c.String(http.StatusBadRequest, err.Error())
+		return
+	}
 	// Delete a member's all producer_scenes once.
 	// And then, insert only checkbox ON producer_scenes.
 	for _, m := range members {
@@ -159,11 +162,12 @@ func (x *RegistScene) PostRegist(c *gin.Context) {
 	c.Redirect(http.StatusFound, fmt.Sprintf("/auth/regist/%d", groupId))
 }
 
-func include(slice []int, target int) bool {
-	for _, num := range slice {
-		if num == target {
-			return true
-		}
-	}
-	return false
-}
+// include function is commented out as unused
+// func include(slice []int, target int) bool {
+// 	for _, num := range slice {
+// 		if num == target {
+// 			return true
+// 		}
+// 	}
+// 	return false
+// }

@@ -58,10 +58,12 @@ func initProducerMember(ctx context.Context, db *sql.DB, q *repository.Queries) 
 		return err
 	}
 	for _, m := range members {
-		q.RegistProducerMember(ctx, db, repository.RegistProducerMemberParams{
+		if err := q.RegistProducerMember(ctx, db, repository.RegistProducerMemberParams{
 			ProducerID: 1,
 			MemberID:   m.ID,
-		})
+		}); err != nil {
+			return err
+		}
 	}
 	return nil
 }
@@ -75,7 +77,9 @@ func setupMember(ctx context.Context, db *sql.DB, q *repository.Queries) error {
 		return err
 	}
 	if len(pm) == 0 {
-		initProducerMember(ctx, db, q)
+		if err := initProducerMember(ctx, db, q); err != nil {
+			return err
+		}
 		fmt.Printf("== プロデューサーメンバー初期化完了 ==\n")
 		pm, err = q.GetProducerMember(ctx, db, pId)
 		if err != nil {

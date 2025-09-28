@@ -121,8 +121,7 @@ func run(ctx context.Context) error {
 		private.GET("/logout", handler.LogoutHandler)
 	}
 
-	r.Run(":8090")
-	return nil
+	return r.Run(":8090")
 }
 
 func init() {

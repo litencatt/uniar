@@ -84,7 +84,9 @@ func setupIfNotSetup() {
 	// Check db migration
 	result, err := db.Exec("SELECT id FROM groups limit 1;")
 	if result == nil {
-		setup()
+		if err := setup(); err != nil {
+			fmt.Printf("Setup failed: %v\n", err)
+		}
 		return
 	}
 	if err != nil {
