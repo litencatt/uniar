@@ -1,5 +1,38 @@
+# Binary
+/uniar
+
+# Build directories
 tmp/
 dist/
-/uniar
+
+# Credentials and secrets
 cred.json
+
+# Test coverage
+coverage.out
+*.cover
+
+# Logs
+*.log
+logs/
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Development
+.env
+.env.local
+.env.development
+.env.test
+.env.production
+
+# Claude
 .claude/*
