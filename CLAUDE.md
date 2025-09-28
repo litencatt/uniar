@@ -153,3 +153,56 @@ rename:
 ```
 
 This ensures proper Go naming conventions (PascalCase) for generated struct fields.
+
+## Templates Structure
+
+### Template Directory Organization
+
+Templates are organized in the `templates/` directory with the following structure:
+```
+templates/
+├── admin/           # Admin panel templates
+├── define/          # Template definitions and common components
+├── error/           # Error page templates
+├── members/         # Member-related templates
+├── regist/          # Registration templates
+├── scenes/          # Scene-related templates
+└── top/             # Top page templates
+```
+
+### Template Loading Configuration
+
+The server loads templates using the pattern `templates/**/*.go.tmpl` (two levels deep) in `cmd/server.go`:
+```go
+r.LoadHTMLGlob("templates/**/*.go.tmpl")
+```
+
+**IMPORTANT NOTES:**
+
+1. **Template File Placement**: All template files MUST be placed in subdirectories under `templates/`, not directly in the `templates/` root directory.
+
+2. **File Naming Convention**: Template files use the `.go.tmpl` extension and should follow the naming pattern `[prefix_]description.go.tmpl`.
+
+3. **Server Restart for Template Changes**: After adding new templates or modifying existing ones, restart the server for changes to take effect. Binary rebuild is only required when Go source code (.go files) changes:
+   ```bash
+   # For template changes only - restart server
+   docker compose restart app
+
+   # For Go code changes - rebuild binary
+   docker compose exec app go build -o uniar cmd/uniar/main.go
+   ```
+
+4. **Template Loading Issues**: If you encounter template loading errors like `pattern matches no files`, ensure:
+   - All templates are in proper subdirectories (not root `templates/`)
+   - The glob pattern matches your file structure
+   - The server has been restarted after template changes
+
+### Admin Templates
+
+Admin panel templates are located in `templates/admin/` and include:
+- `admin_dashboard.go.tmpl` - Admin dashboard
+- `admin_music_*.go.tmpl` - Music management templates
+- `admin_photograph_*.go.tmpl` - Photograph management templates
+- `admin_scene_*.go.tmpl` - Scene management templates
+
+Admin templates support CRUD operations with simplified HTTP methods (GET for read/forms, POST for all actions).
