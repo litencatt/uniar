@@ -17,7 +17,7 @@ func (h *AdminMusicHandler) ListMusic(c *gin.Context) {
 
 	musics, err := h.MusicService.ListAll(ctx)
 	if err != nil {
-		c.HTML(http.StatusInternalServerError, "error/500.html", gin.H{
+		c.HTML(http.StatusInternalServerError, "error/500.go.tmpl", gin.H{
 			"error": err.Error(),
 		})
 		return
@@ -34,7 +34,7 @@ func (h *AdminMusicHandler) ShowMusic(c *gin.Context) {
 	idParam := c.Param("id")
 	id, err := strconv.ParseInt(idParam, 10, 64)
 	if err != nil {
-		c.HTML(http.StatusBadRequest, "error/400.html", gin.H{
+		c.HTML(http.StatusBadRequest, "error/400.go.tmpl", gin.H{
 			"error": "Invalid music ID",
 		})
 		return
@@ -42,7 +42,7 @@ func (h *AdminMusicHandler) ShowMusic(c *gin.Context) {
 
 	music, err := h.MusicService.GetByID(ctx, id)
 	if err != nil {
-		c.HTML(http.StatusNotFound, "error/404.html", gin.H{
+		c.HTML(http.StatusNotFound, "error/404.go.tmpl", gin.H{
 			"error": "Music not found",
 		})
 		return
@@ -59,7 +59,7 @@ func (h *AdminMusicHandler) EditMusic(c *gin.Context) {
 	idParam := c.Param("id")
 	id, err := strconv.ParseInt(idParam, 10, 64)
 	if err != nil {
-		c.HTML(http.StatusBadRequest, "error/400.html", gin.H{
+		c.HTML(http.StatusBadRequest, "error/400.go.tmpl", gin.H{
 			"error": "Invalid music ID",
 		})
 		return
@@ -67,7 +67,7 @@ func (h *AdminMusicHandler) EditMusic(c *gin.Context) {
 
 	music, err := h.MusicService.GetByID(ctx, id)
 	if err != nil {
-		c.HTML(http.StatusNotFound, "error/404.html", gin.H{
+		c.HTML(http.StatusNotFound, "error/404.go.tmpl", gin.H{
 			"error": "Music not found",
 		})
 		return
@@ -84,7 +84,7 @@ func (h *AdminMusicHandler) UpdateMusic(c *gin.Context) {
 	idParam := c.Param("id")
 	id, err := strconv.ParseInt(idParam, 10, 64)
 	if err != nil {
-		c.HTML(http.StatusBadRequest, "error/400.html", gin.H{
+		c.HTML(http.StatusBadRequest, "error/400.go.tmpl", gin.H{
 			"error": "Invalid music ID",
 		})
 		return
@@ -112,7 +112,7 @@ func (h *AdminMusicHandler) UpdateMusic(c *gin.Context) {
 
 	err = h.MusicService.Update(ctx, id, params)
 	if err != nil {
-		c.HTML(http.StatusInternalServerError, "error/500.html", gin.H{
+		c.HTML(http.StatusInternalServerError, "error/500.go.tmpl", gin.H{
 			"error": err.Error(),
 		})
 		return
@@ -127,7 +127,7 @@ func (h *AdminMusicHandler) DeleteMusic(c *gin.Context) {
 	idParam := c.Param("id")
 	id, err := strconv.ParseInt(idParam, 10, 64)
 	if err != nil {
-		c.HTML(http.StatusBadRequest, "error/400.html", gin.H{
+		c.HTML(http.StatusBadRequest, "error/400.go.tmpl", gin.H{
 			"error": "Invalid music ID",
 		})
 		return
@@ -135,7 +135,7 @@ func (h *AdminMusicHandler) DeleteMusic(c *gin.Context) {
 
 	err = h.MusicService.Delete(ctx, id)
 	if err != nil {
-		c.HTML(http.StatusInternalServerError, "error/500.html", gin.H{
+		c.HTML(http.StatusInternalServerError, "error/500.go.tmpl", gin.H{
 			"error": err.Error(),
 		})
 		return

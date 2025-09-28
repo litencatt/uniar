@@ -17,7 +17,7 @@ func (h *AdminPhotographHandler) ListPhotograph(c *gin.Context) {
 
 	photographs, err := h.PhotographService.ListAllForAdmin(ctx)
 	if err != nil {
-		c.HTML(http.StatusInternalServerError, "error/500.html", gin.H{
+		c.HTML(http.StatusInternalServerError, "error/500.go.tmpl", gin.H{
 			"error": err.Error(),
 		})
 		return
@@ -34,7 +34,7 @@ func (h *AdminPhotographHandler) ShowPhotograph(c *gin.Context) {
 	idParam := c.Param("id")
 	id, err := strconv.ParseInt(idParam, 10, 64)
 	if err != nil {
-		c.HTML(http.StatusBadRequest, "error/400.html", gin.H{
+		c.HTML(http.StatusBadRequest, "error/400.go.tmpl", gin.H{
 			"error": "Invalid photograph ID",
 		})
 		return
@@ -42,7 +42,7 @@ func (h *AdminPhotographHandler) ShowPhotograph(c *gin.Context) {
 
 	photograph, err := h.PhotographService.GetByID(ctx, id)
 	if err != nil {
-		c.HTML(http.StatusNotFound, "error/404.html", gin.H{
+		c.HTML(http.StatusNotFound, "error/404.go.tmpl", gin.H{
 			"error": "Photograph not found",
 		})
 		return
@@ -59,7 +59,7 @@ func (h *AdminPhotographHandler) EditPhotograph(c *gin.Context) {
 	idParam := c.Param("id")
 	id, err := strconv.ParseInt(idParam, 10, 64)
 	if err != nil {
-		c.HTML(http.StatusBadRequest, "error/400.html", gin.H{
+		c.HTML(http.StatusBadRequest, "error/400.go.tmpl", gin.H{
 			"error": "Invalid photograph ID",
 		})
 		return
@@ -67,7 +67,7 @@ func (h *AdminPhotographHandler) EditPhotograph(c *gin.Context) {
 
 	photograph, err := h.PhotographService.GetByID(ctx, id)
 	if err != nil {
-		c.HTML(http.StatusNotFound, "error/404.html", gin.H{
+		c.HTML(http.StatusNotFound, "error/404.go.tmpl", gin.H{
 			"error": "Photograph not found",
 		})
 		return
@@ -84,7 +84,7 @@ func (h *AdminPhotographHandler) UpdatePhotograph(c *gin.Context) {
 	idParam := c.Param("id")
 	id, err := strconv.ParseInt(idParam, 10, 64)
 	if err != nil {
-		c.HTML(http.StatusBadRequest, "error/400.html", gin.H{
+		c.HTML(http.StatusBadRequest, "error/400.go.tmpl", gin.H{
 			"error": "Invalid photograph ID",
 		})
 		return
@@ -106,7 +106,7 @@ func (h *AdminPhotographHandler) UpdatePhotograph(c *gin.Context) {
 
 	err = h.PhotographService.Update(ctx, id, params)
 	if err != nil {
-		c.HTML(http.StatusInternalServerError, "error/500.html", gin.H{
+		c.HTML(http.StatusInternalServerError, "error/500.go.tmpl", gin.H{
 			"error": err.Error(),
 		})
 		return
@@ -121,7 +121,7 @@ func (h *AdminPhotographHandler) DeletePhotograph(c *gin.Context) {
 	idParam := c.Param("id")
 	id, err := strconv.ParseInt(idParam, 10, 64)
 	if err != nil {
-		c.HTML(http.StatusBadRequest, "error/400.html", gin.H{
+		c.HTML(http.StatusBadRequest, "error/400.go.tmpl", gin.H{
 			"error": "Invalid photograph ID",
 		})
 		return
@@ -129,7 +129,7 @@ func (h *AdminPhotographHandler) DeletePhotograph(c *gin.Context) {
 
 	err = h.PhotographService.Delete(ctx, id)
 	if err != nil {
-		c.HTML(http.StatusInternalServerError, "error/500.html", gin.H{
+		c.HTML(http.StatusInternalServerError, "error/500.go.tmpl", gin.H{
 			"error": err.Error(),
 		})
 		return

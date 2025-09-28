@@ -178,7 +178,7 @@ func AdminCheck() gin.HandlerFunc {
 		us, err := getUserSession(c)
 		if err != nil {
 			fmt.Println("AdminCheck() user session not found")
-			c.HTML(http.StatusForbidden, "error/403.html", gin.H{
+			c.HTML(http.StatusForbidden, "error/403.go.tmpl", gin.H{
 				"message": "管理者権限が必要です",
 			})
 			c.Abort()
@@ -187,7 +187,7 @@ func AdminCheck() gin.HandlerFunc {
 
 		if !us.IsAdmin {
 			fmt.Printf("AdminCheck() user is not admin: %+v\n", us)
-			c.HTML(http.StatusForbidden, "error/403.html", gin.H{
+			c.HTML(http.StatusForbidden, "error/403.go.tmpl", gin.H{
 				"message": "管理者権限が必要です",
 			})
 			c.Abort()

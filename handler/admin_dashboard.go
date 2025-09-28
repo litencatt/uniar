@@ -19,7 +19,7 @@ func (h *AdminDashboardHandler) Dashboard(c *gin.Context) {
 	// 各エンティティの統計情報を取得
 	musics, err := h.MusicService.ListAll(ctx)
 	if err != nil {
-		c.HTML(http.StatusInternalServerError, "error/500.html", gin.H{
+		c.HTML(http.StatusInternalServerError, "error/500.go.tmpl", gin.H{
 			"error": err.Error(),
 		})
 		return
@@ -27,7 +27,7 @@ func (h *AdminDashboardHandler) Dashboard(c *gin.Context) {
 
 	photographs, err := h.PhotographService.ListAllForAdmin(ctx)
 	if err != nil {
-		c.HTML(http.StatusInternalServerError, "error/500.html", gin.H{
+		c.HTML(http.StatusInternalServerError, "error/500.go.tmpl", gin.H{
 			"error": err.Error(),
 		})
 		return
@@ -35,7 +35,7 @@ func (h *AdminDashboardHandler) Dashboard(c *gin.Context) {
 
 	sceneCount, err := h.SceneService.CountForAdmin(ctx)
 	if err != nil {
-		c.HTML(http.StatusInternalServerError, "error/500.html", gin.H{
+		c.HTML(http.StatusInternalServerError, "error/500.go.tmpl", gin.H{
 			"error": err.Error(),
 		})
 		return
@@ -44,7 +44,7 @@ func (h *AdminDashboardHandler) Dashboard(c *gin.Context) {
 	// 最新のシーンカードを数件取得
 	recentScenes, err := h.SceneService.ListForAdmin(ctx, 5, 0)
 	if err != nil {
-		c.HTML(http.StatusInternalServerError, "error/500.html", gin.H{
+		c.HTML(http.StatusInternalServerError, "error/500.go.tmpl", gin.H{
 			"error": err.Error(),
 		})
 		return
