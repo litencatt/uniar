@@ -27,7 +27,9 @@ docker compose up -d          # Start development environment
 docker compose down           # Stop and remove containers
 docker compose restart app    # Restart application container
 
-# NOTE: Code changes are automatically reflected due to volume mounting (.:/app)
+# NOTE: Container automatically starts with 'uniar server' command on startup
+# Server will be accessible at http://localhost:8090
+# Code changes are automatically reflected due to volume mounting (.:/app)
 # No need to rebuild Docker image after code changes
 docker compose exec app go run cmd/uniar/main.go [command]  # Run commands in container
 ```
