@@ -2,6 +2,12 @@
 
 This file provides guidance to Claude Code (claude.ai/code) when working with code in this repository.
 
+**Language Guidelines:**
+
+- All content in CLAUDE.md should be written in English for consistency
+- Chat responses should be in Japanese for user communication
+- Think in English when analyzing problems and solutions
+
 ## Project Overview
 
 `uniar` is a CLI tool and web server for managing UNI'S ON AIR scene card collections and database. It uses SQLite for data storage and is written in Go with Cobra for CLI commands and Gin for the web server.
