@@ -1,6 +1,6 @@
 # Changelog
 
-## [0.19.2](https://github.com/litencatt/uniar/compare/v0.19.2...0.19.2) (2025-09-28)
+## [0.19.3](https://github.com/litencatt/uniar/compare/v0.19.2...0.19.3) (2025-09-28)
 
 
 ## [v0.19.2](https://github.com/litencatt/uniar/compare/v0.19.1...v0.19.2) (2025-09-28)
