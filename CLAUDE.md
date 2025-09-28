@@ -206,3 +206,76 @@ Admin panel templates are located in `templates/admin/` and include:
 - `admin_scene_*.go.tmpl` - Scene management templates
 
 Admin templates support CRUD operations with simplified HTTP methods (GET for read/forms, POST for all actions).
+
+## GitHub Integration Guidelines
+
+### Working with GitHub URLs
+
+When provided with GitHub URLs from the `github.com/litencatt/*` repository, use the GitHub CLI (`gh`) for all operations instead of web-based tools.
+
+#### Examples:
+
+```bash
+# View issue
+gh issue view 106 --repo litencatt/uniar
+
+# View pull request
+gh pr view 107 --repo litencatt/uniar
+
+# Get PR diff
+gh pr diff https://github.com/litencatt/uniar/pull/107
+
+# Update PR description
+gh pr edit https://github.com/litencatt/uniar/pull/107 --body "..."
+
+# Add issue comment
+gh issue comment 106 --repo litencatt/uniar --body "..."
+
+# View PR comments
+gh api repos/litencatt/uniar/pulls/123/comments
+```
+
+### Best Practices
+
+1. **Always use `gh` CLI** for GitHub operations when working with litencatt repositories
+2. **Avoid WebFetch** for GitHub URLs - use native `gh` commands instead
+3. **Include repo flag** when not in the repository directory: `--repo litencatt/uniar`
+4. **Use structured output** with `--json` flag when needed for parsing
+
+### Common GitHub Operations
+
+#### Issue Management
+```bash
+# List issues
+gh issue list --repo litencatt/uniar
+
+# Create issue
+gh issue create --repo litencatt/uniar --title "..." --body "..."
+
+# Close issue
+gh issue close 106 --repo litencatt/uniar
+```
+
+#### Pull Request Management
+```bash
+# Create PR
+gh pr create --title "..." --body "..."
+
+# Review PR
+gh pr review 107 --approve --body "LGTM"
+
+# Merge PR
+gh pr merge 107 --squash
+```
+
+#### Repository Information
+```bash
+# Get repo info
+gh repo view litencatt/uniar
+
+# List releases
+gh release list --repo litencatt/uniar
+
+# View specific release
+gh release view v1.0.0 --repo litencatt/uniar
+```
