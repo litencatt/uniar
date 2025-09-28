@@ -23,10 +23,10 @@ WHERE
 SELECT
 	s.id,
 	p.name AS photograph,
-	p.id AS photograph_id,
+	p.id AS PhotographID,
 	p.abbreviation,
 	m.name AS member,
-	m.id AS member_id,
+	m.id AS MemberID,
 	c.name AS color,
 	s.vocal_max + s.dance_max + s.performance_max + 430 AS total,
 	s.vocal_max,
@@ -58,8 +58,8 @@ ORDER BY
 
 -- name: GetScenesWithGroupId :many
 SELECT
-	p.id as photograph_id,
-	m.id as member_id,
+	p.id AS PhotographID,
+	m.id AS MemberID,
 	s.ssr_plus
 
 FROM

@@ -25,7 +25,7 @@ ORDER BY
 `
 
 type GetProducerMemberRow struct {
-	Memberid             int64
+	MemberID             int64
 	Name                 string
 	BondLevelCurent      int64
 	DiscographyDiscTotal int64
@@ -41,7 +41,7 @@ func (q *Queries) GetProducerMember(ctx context.Context, db DBTX, producerID int
 	for rows.Next() {
 		var i GetProducerMemberRow
 		if err := rows.Scan(
-			&i.Memberid,
+			&i.MemberID,
 			&i.Name,
 			&i.BondLevelCurent,
 			&i.DiscographyDiscTotal,

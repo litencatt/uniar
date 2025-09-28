@@ -9,3 +9,11 @@ sql:
         out: "repository"
         emit_interface: true
         emit_methods_with_db_argument: true
+        rename:
+          memberid: "MemberID"
+          photographid: "PhotographID"
+          producerid: "ProducerID"
+          sceneid: "SceneID"
+          groupid: "GroupID"
+          musicid: "MusicID"
+          liveid: "LiveID"
