@@ -107,6 +107,16 @@ func (x *LoginProducer) AuthHandler(c *gin.Context) {
 				fmt.Printf("AbortWithError failed: %v\n", err)
 			}
 			}
+			// 新規登録後に再度プロデューサー情報を取得
+			p, err = x.ProducerService.FindProducer(ctx, goauthUser.Id)
+			if err != nil {
+				fmt.Printf("AuthHandler() find producer after regist error: %v\n", err)
+				if err := c.AbortWithError(http.StatusInternalServerError, err); err != nil {
+					fmt.Printf("AbortWithError failed: %v\n", err)
+				}
+				return
+			}
+			fmt.Printf("AuthHandler() producer found after regist: %+v\n", p)
 		case err != nil:
 			fmt.Printf("find producer error: goauthUser.Id = %v err = %v\n", goauthUser.Id, err)
 			if err := c.AbortWithError(http.StatusInternalServerError, err); err != nil {
