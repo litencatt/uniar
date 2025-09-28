@@ -28,30 +28,6 @@ func (h *AdminMusicHandler) ListMusic(c *gin.Context) {
 	})
 }
 
-func (h *AdminMusicHandler) ShowMusic(c *gin.Context) {
-	ctx := c.Request.Context()
-
-	idParam := c.Param("id")
-	id, err := strconv.ParseInt(idParam, 10, 64)
-	if err != nil {
-		c.HTML(http.StatusBadRequest, "400.go.tmpl", gin.H{
-			"error": "Invalid music ID",
-		})
-		return
-	}
-
-	music, err := h.MusicService.GetByID(ctx, id)
-	if err != nil {
-		c.HTML(http.StatusNotFound, "404.go.tmpl", gin.H{
-			"error": "Music not found",
-		})
-		return
-	}
-
-	c.HTML(http.StatusOK, "admin/music_show.go.tmpl", gin.H{
-		"music": music,
-	})
-}
 
 func (h *AdminMusicHandler) EditMusic(c *gin.Context) {
 	ctx := c.Request.Context()

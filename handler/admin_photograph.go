@@ -28,30 +28,6 @@ func (h *AdminPhotographHandler) ListPhotograph(c *gin.Context) {
 	})
 }
 
-func (h *AdminPhotographHandler) ShowPhotograph(c *gin.Context) {
-	ctx := c.Request.Context()
-
-	idParam := c.Param("id")
-	id, err := strconv.ParseInt(idParam, 10, 64)
-	if err != nil {
-		c.HTML(http.StatusBadRequest, "400.go.tmpl", gin.H{
-			"error": "Invalid photograph ID",
-		})
-		return
-	}
-
-	photograph, err := h.PhotographService.GetByID(ctx, id)
-	if err != nil {
-		c.HTML(http.StatusNotFound, "404.go.tmpl", gin.H{
-			"error": "Photograph not found",
-		})
-		return
-	}
-
-	c.HTML(http.StatusOK, "admin/photograph_show.go.tmpl", gin.H{
-		"photograph": photograph,
-	})
-}
 
 func (h *AdminPhotographHandler) EditPhotograph(c *gin.Context) {
 	ctx := c.Request.Context()

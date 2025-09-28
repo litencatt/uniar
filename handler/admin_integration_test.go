@@ -69,13 +69,10 @@ func TestAdminTemplateNames(t *testing.T) {
 		"admin/dashboard.go.tmpl",
 		"admin/music_list.go.tmpl",
 		"admin/music_edit.go.tmpl",
-		"admin/music_show.go.tmpl",
 		"admin/photograph_list.go.tmpl",
 		"admin/photograph_edit.go.tmpl",
-		"admin/photograph_show.go.tmpl",
 		"admin/scene_list.go.tmpl",
 		"admin/scene_edit.go.tmpl",
-		"admin/scene_show.go.tmpl",
 	}
 
 	for _, name := range templateNames {
