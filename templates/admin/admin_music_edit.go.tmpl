@@ -1,0 +1,54 @@
+{{ define "admin/music_edit.go.tmpl" }}
+{{ template "admin_header" . }}
+
+<h2>楽曲編集</h2>
+
+<form method="post" action="/admin/music/{{ .music.ID }}">
+    <div class="form-group">
+        <label for="name">楽曲名</label>
+        <input type="text" class="form-control" id="name" name="name" value="{{ .music.Name }}" required>
+    </div>
+
+    <div class="form-group">
+        <label for="normal">Normal</label>
+        <input type="number" class="form-control" id="normal" name="normal" value="{{ .music.Normal }}" required>
+    </div>
+
+    <div class="form-group">
+        <label for="pro">Pro</label>
+        <input type="number" class="form-control" id="pro" name="pro" value="{{ .music.Pro }}" required>
+    </div>
+
+    <div class="form-group">
+        <label for="master">Master</label>
+        <input type="number" class="form-control" id="master" name="master" value="{{ .music.Master }}" required>
+    </div>
+
+    <div class="form-group">
+        <label for="length">長さ</label>
+        <input type="number" class="form-control" id="length" name="length" value="{{ .music.Length }}" required>
+    </div>
+
+    <div class="form-group">
+        <label for="color_type_id">カラータイプID</label>
+        <input type="number" class="form-control" id="color_type_id" name="color_type_id" value="{{ .music.ColorTypeID }}" required>
+    </div>
+
+    <div class="form-group">
+        <label for="live_id">ライブID</label>
+        <input type="number" class="form-control" id="live_id" name="live_id" value="{{ .music.LiveID }}" required>
+    </div>
+
+    <div class="form-group">
+        <label for="music_bonus">楽曲ボーナス</label>
+        <input type="number" class="form-control" id="music_bonus" name="music_bonus" value="{{ .music.MusicBonus }}">
+    </div>
+
+    <div style="margin-top: 2rem;">
+        <button type="submit" class="btn">更新</button>
+        <a href="/admin/music" class="btn btn-secondary">キャンセル</a>
+    </div>
+</form>
+
+{{ template "admin_footer" . }}
+{{ end }}

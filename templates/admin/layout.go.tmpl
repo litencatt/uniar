@@ -1,0 +1,129 @@
+{{ define "admin_header" }}
+<!DOCTYPE html>
+<html>
+<head>
+    <title>{{ .title }} - Admin</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <style type="text/css" media="screen">
+        @import url("/assets/css/regist.css");
+        .admin-header {
+            background-color: #f8f9fa;
+            padding: 1rem;
+            border-bottom: 1px solid #dee2e6;
+            margin-bottom: 2rem;
+        }
+        .admin-nav {
+            display: flex;
+            gap: 1rem;
+            margin-top: 1rem;
+        }
+        .admin-nav a {
+            padding: 0.5rem 1rem;
+            background-color: #007bff;
+            color: white;
+            text-decoration: none;
+            border-radius: 4px;
+        }
+        .admin-nav a:hover {
+            background-color: #0056b3;
+        }
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 1rem;
+        }
+        .table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 1rem;
+        }
+        .table th, .table td {
+            padding: 0.75rem;
+            border-bottom: 1px solid #dee2e6;
+            text-align: left;
+        }
+        .table th {
+            background-color: #f8f9fa;
+            font-weight: bold;
+        }
+        .btn {
+            padding: 0.375rem 0.75rem;
+            margin: 0.25rem;
+            border: 1px solid #007bff;
+            background-color: #007bff;
+            color: white;
+            text-decoration: none;
+            border-radius: 4px;
+            display: inline-block;
+        }
+        .btn:hover {
+            background-color: #0056b3;
+        }
+        .btn-danger {
+            background-color: #dc3545;
+            border-color: #dc3545;
+        }
+        .btn-danger:hover {
+            background-color: #c82333;
+        }
+        .btn-secondary {
+            background-color: #6c757d;
+            border-color: #6c757d;
+        }
+        .btn-secondary:hover {
+            background-color: #5a6268;
+        }
+        .form-group {
+            margin-bottom: 1rem;
+        }
+        .form-group label {
+            display: block;
+            margin-bottom: 0.5rem;
+            font-weight: bold;
+        }
+        .form-control {
+            width: 100%;
+            padding: 0.375rem 0.75rem;
+            border: 1px solid #ced4da;
+            border-radius: 4px;
+        }
+        .pagination {
+            display: flex;
+            gap: 0.5rem;
+            margin-top: 2rem;
+            justify-content: center;
+        }
+        .pagination a {
+            padding: 0.5rem 1rem;
+            border: 1px solid #dee2e6;
+            text-decoration: none;
+            border-radius: 4px;
+        }
+        .pagination a:hover {
+            background-color: #f8f9fa;
+        }
+    </style>
+</head>
+<body>
+    <div class="admin-header">
+        <div class="container">
+            <h1>UNI'S ON AIR Admin</h1>
+            <div class="admin-nav">
+                <a href="/admin/">ダッシュボード</a>
+                <a href="/admin/music">楽曲管理</a>
+                <a href="/admin/photograph">撮影管理</a>
+                <a href="/admin/scene">シーンカード管理</a>
+                <a href="/auth/scenes">ユーザー画面</a>
+                <a href="/auth/logout">ログアウト</a>
+            </div>
+        </div>
+    </div>
+    <div class="container">
+{{ end }}
+
+{{ define "admin_footer" }}
+    </div>
+</body>
+</html>
+{{ end }}

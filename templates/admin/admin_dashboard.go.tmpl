@@ -1,0 +1,56 @@
+{{ define "admin/dashboard.go.tmpl" }}
+{{ template "admin_header" . }}
+
+<h2>管理ダッシュボード</h2>
+
+<div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 1rem; margin: 2rem 0;">
+    <div style="background: #f8f9fa; padding: 1.5rem; border-radius: 8px; border: 1px solid #dee2e6;">
+        <h3>楽曲</h3>
+        <p style="font-size: 2rem; font-weight: bold; margin: 0.5rem 0;">{{ .musicCount }}</p>
+        <a href="/admin/music" class="btn">楽曲管理</a>
+    </div>
+
+    <div style="background: #f8f9fa; padding: 1.5rem; border-radius: 8px; border: 1px solid #dee2e6;">
+        <h3>撮影</h3>
+        <p style="font-size: 2rem; font-weight: bold; margin: 0.5rem 0;">{{ .photographCount }}</p>
+        <a href="/admin/photograph" class="btn">撮影管理</a>
+    </div>
+
+    <div style="background: #f8f9fa; padding: 1.5rem; border-radius: 8px; border: 1px solid #dee2e6;">
+        <h3>シーンカード</h3>
+        <p style="font-size: 2rem; font-weight: bold; margin: 0.5rem 0;">{{ .sceneCount }}</p>
+        <a href="/admin/scene" class="btn">シーンカード管理</a>
+    </div>
+</div>
+
+<h3>最新のシーンカード</h3>
+<table class="table">
+    <thead>
+        <tr>
+            <th>ID</th>
+            <th>撮影</th>
+            <th>メンバー</th>
+            <th>カラー</th>
+            <th>SSR+</th>
+            <th>操作</th>
+        </tr>
+    </thead>
+    <tbody>
+        {{ range .recentScenes }}
+        <tr>
+            <td>{{ .ID }}</td>
+            <td>{{ .PhotographName }}</td>
+            <td>{{ .MemberName }}</td>
+            <td>{{ .ColorName }}</td>
+            <td>{{ if eq .SsrPlus 1 }}Yes{{ else }}No{{ end }}</td>
+            <td>
+                <a href="/admin/scene/{{ .ID }}" class="btn btn-secondary">詳細</a>
+                <a href="/admin/scene/{{ .ID }}/edit" class="btn">編集</a>
+            </td>
+        </tr>
+        {{ end }}
+    </tbody>
+</table>
+
+{{ template "admin_footer" . }}
+{{ end }}

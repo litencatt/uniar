@@ -44,6 +44,22 @@ type SceneTotal struct {
 	Pe85   int64
 }
 
+type SceneWithDetails struct {
+	ID             int64
+	PhotographID   int64
+	MemberID       int64
+	ColorTypeID    int64
+	VocalMax       int64
+	DanceMax       int64
+	PerformanceMax int64
+	CenterSkill    string
+	ExpectedValue  string
+	SsrPlus        int64
+	PhotographName string
+	MemberName     string
+	ColorName      string
+}
+
 type OfficeBonus struct {
 	Vocal       int64
 	Dance       int64

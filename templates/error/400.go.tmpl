@@ -1,0 +1,10 @@
+{{ template "admin_header" . }}
+
+<div style="text-align: center; padding: 4rem 0;">
+    <h1 style="color: #dc3545; font-size: 4rem; margin-bottom: 1rem;">400</h1>
+    <h2>不正なリクエスト</h2>
+    <p style="font-size: 1.2rem; margin: 1rem 0;">{{ .error }}</p>
+    <a href="/admin/" class="btn">ダッシュボードに戻る</a>
+</div>
+
+{{ template "admin_footer" . }}

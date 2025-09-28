@@ -5,6 +5,8 @@ import (
 	"database/sql"
 	"fmt"
 	"net/http"
+	"os"
+	"strings"
 
 	"github.com/gin-contrib/sessions"
 	"github.com/gin-gonic/gin"
@@ -18,6 +20,7 @@ type UserSession struct {
 	IdentityId	   string
 	EMail    string
 	LoggedIn bool
+	IsAdmin  bool
 }
 
 type LoginProducer struct {
@@ -54,6 +57,14 @@ func AuthCheck() gin.HandlerFunc {
 	return func(c *gin.Context) {
 		fmt.Println("AuthCheck() start")
 		fmt.Printf("AuthCheck() request path: %s\n", c.Request.URL.Path)
+
+		// DEBUG: 環境変数でadmin認証を回避（adminページアクセス時のみ）
+		if os.Getenv("ADMIN_DEBUG") == "true" && strings.HasPrefix(c.Request.URL.Path, "/admin") {
+			fmt.Println("AuthCheck() DEBUG mode: auth check bypassed for admin pages")
+			c.Next()
+			return
+		}
+
 		if c.Request.URL.Path == "/auth/" {
 			fmt.Println("AuthCheck() request path is /auth/")
 			return
@@ -130,6 +141,7 @@ func (x *LoginProducer) AuthHandler(c *gin.Context) {
 			EMail:      goauthUser.Email,
 			LoggedIn:   true,
 			ProducerId: p.ID,
+			IsAdmin:    p.IsAdmin,
 		}
 		fmt.Printf("AuthHandler() save uniar_session value:%+v\n", userSession)
 		session.Set("uniar_session", &userSession)
@@ -167,6 +179,42 @@ func LogoutHandler(c *gin.Context) {
 		fmt.Printf("LogoutHandler() session save error: %v\n", err)
 	}
 	c.Redirect(http.StatusMovedPermanently, "/")
+}
+
+// AdminCheck is middleware for checking admin privileges.
+func AdminCheck() gin.HandlerFunc {
+	return func(c *gin.Context) {
+		fmt.Println("AdminCheck() start")
+
+		// DEBUG: 環境変数でadmin認証を回避
+		if os.Getenv("ADMIN_DEBUG") == "true" {
+			fmt.Println("AdminCheck() DEBUG mode: admin access granted without authentication")
+			c.Next()
+			return
+		}
+
+		us, err := getUserSession(c)
+		if err != nil {
+			fmt.Println("AdminCheck() user session not found")
+			c.HTML(http.StatusForbidden, "403.go.tmpl", gin.H{
+				"message": "管理者権限が必要です",
+			})
+			c.Abort()
+			return
+		}
+
+		if !us.IsAdmin {
+			fmt.Printf("AdminCheck() user is not admin: %+v\n", us)
+			c.HTML(http.StatusForbidden, "403.go.tmpl", gin.H{
+				"message": "管理者権限が必要です",
+			})
+			c.Abort()
+			return
+		}
+
+		fmt.Println("AdminCheck() admin access granted")
+		c.Next()
+	}
 }
 
 func getUserSession(c *gin.Context) (*UserSession, error) {

@@ -1,0 +1,44 @@
+{{ define "admin/photograph_list.go.tmpl" }}
+{{ template "admin_header" . }}
+
+<h2>撮影管理</h2>
+
+<div class="mb-3">
+    <a href="/admin/photograph/new" class="btn btn-primary">新規撮影追加</a>
+</div>
+
+<table class="table">
+    <thead>
+        <tr>
+            <th>ID</th>
+            <th>撮影名</th>
+            <th>グループ</th>
+            <th>撮影タイプ</th>
+            <th>略称</th>
+            <th>並び順名</th>
+            <th>操作</th>
+        </tr>
+    </thead>
+    <tbody>
+        {{ range .photographs }}
+        <tr>
+            <td>{{ .ID }}</td>
+            <td>{{ .Name }}</td>
+            <td>{{ .GroupName }}</td>
+            <td>{{ .PhotoType }}</td>
+            <td>{{ .Abbreviation }}</td>
+            <td>{{ .NameForOrder }}</td>
+            <td>
+                <a href="/admin/photograph/{{ .ID }}/edit" class="btn">編集</a>
+                <form method="post" action="/admin/photograph/{{ .ID }}/delete" style="display: inline;"
+                      onsubmit="return confirm('この撮影を削除しますか？')">
+                    <button type="submit" class="btn btn-danger">削除</button>
+                </form>
+            </td>
+        </tr>
+        {{ end }}
+    </tbody>
+</table>
+
+{{ template "admin_footer" . }}
+{{ end }}

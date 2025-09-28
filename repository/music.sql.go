@@ -8,7 +8,41 @@ package repository
 import (
 	"context"
 	"database/sql"
+	"time"
 )
+
+const deleteMusic = `-- name: DeleteMusic :exec
+DELETE FROM music WHERE id = ?
+`
+
+func (q *Queries) DeleteMusic(ctx context.Context, db DBTX, id int64) error {
+	_, err := db.ExecContext(ctx, deleteMusic, id)
+	return err
+}
+
+const getMusicById = `-- name: GetMusicById :one
+SELECT id, name, normal, pro, master, length, color_type_id, live_id, pro_plus, music_bonus, setlist_id, created_at FROM music WHERE id = ?
+`
+
+func (q *Queries) GetMusicById(ctx context.Context, db DBTX, id int64) (Music, error) {
+	row := db.QueryRowContext(ctx, getMusicById, id)
+	var i Music
+	err := row.Scan(
+		&i.ID,
+		&i.Name,
+		&i.Normal,
+		&i.Pro,
+		&i.Master,
+		&i.Length,
+		&i.ColorTypeID,
+		&i.LiveID,
+		&i.ProPlus,
+		&i.MusicBonus,
+		&i.SetlistID,
+		&i.CreatedAt,
+	)
+	return i, err
+}
 
 const getMusicList = `-- name: GetMusicList :many
 SELECT
@@ -51,6 +85,72 @@ func (q *Queries) GetMusicList(ctx context.Context, db DBTX) ([]GetMusicListRow,
 			&i.Length,
 			&i.Bonus,
 			&i.Master,
+		); err != nil {
+			return nil, err
+		}
+		items = append(items, i)
+	}
+	if err := rows.Close(); err != nil {
+		return nil, err
+	}
+	if err := rows.Err(); err != nil {
+		return nil, err
+	}
+	return items, nil
+}
+
+const getMusicListAll = `-- name: GetMusicListAll :many
+SELECT
+	m.id, m.name, m.normal, m.pro, m.master, m.length, m.color_type_id, m.live_id, m.pro_plus, m.music_bonus, m.setlist_id, m.created_at,
+	l.name AS live_name,
+	c.name AS color_name
+FROM music m
+JOIN lives l ON m.live_id = l.id
+JOIN color_types c ON m.color_type_id = c.id
+ORDER BY m.id DESC
+`
+
+type GetMusicListAllRow struct {
+	ID          int64
+	Name        string
+	Normal      int64
+	Pro         int64
+	Master      int64
+	Length      int64
+	ColorTypeID int64
+	LiveID      int64
+	ProPlus     sql.NullInt64
+	MusicBonus  sql.NullInt64
+	SetlistID   sql.NullInt64
+	CreatedAt   time.Time
+	LiveName    string
+	ColorName   string
+}
+
+func (q *Queries) GetMusicListAll(ctx context.Context, db DBTX) ([]GetMusicListAllRow, error) {
+	rows, err := db.QueryContext(ctx, getMusicListAll)
+	if err != nil {
+		return nil, err
+	}
+	defer rows.Close()
+	var items []GetMusicListAllRow
+	for rows.Next() {
+		var i GetMusicListAllRow
+		if err := rows.Scan(
+			&i.ID,
+			&i.Name,
+			&i.Normal,
+			&i.Pro,
+			&i.Master,
+			&i.Length,
+			&i.ColorTypeID,
+			&i.LiveID,
+			&i.ProPlus,
+			&i.MusicBonus,
+			&i.SetlistID,
+			&i.CreatedAt,
+			&i.LiveName,
+			&i.ColorName,
 		); err != nil {
 			return nil, err
 		}
@@ -157,6 +257,40 @@ func (q *Queries) RegistMusic(ctx context.Context, db DBTX, arg RegistMusicParam
 		arg.Length,
 		arg.ColorTypeID,
 		arg.LiveID,
+	)
+	return err
+}
+
+const updateMusic = `-- name: UpdateMusic :exec
+UPDATE music
+SET name = ?, normal = ?, pro = ?, master = ?,
+    length = ?, color_type_id = ?, live_id = ?, music_bonus = ?
+WHERE id = ?
+`
+
+type UpdateMusicParams struct {
+	Name        string
+	Normal      int64
+	Pro         int64
+	Master      int64
+	Length      int64
+	ColorTypeID int64
+	LiveID      int64
+	MusicBonus  sql.NullInt64
+	ID          int64
+}
+
+func (q *Queries) UpdateMusic(ctx context.Context, db DBTX, arg UpdateMusicParams) error {
+	_, err := db.ExecContext(ctx, updateMusic,
+		arg.Name,
+		arg.Normal,
+		arg.Pro,
+		arg.Master,
+		arg.Length,
+		arg.ColorTypeID,
+		arg.LiveID,
+		arg.MusicBonus,
+		arg.ID,
 	)
 	return err
 }

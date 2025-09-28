@@ -1,0 +1,29 @@
+{{ define "admin/photograph_new.go.tmpl" }}
+{{ template "admin_header" . }}
+
+<h2>新規撮影追加</h2>
+
+<form method="post" action="/admin/photograph">
+    <div class="form-group">
+        <label for="name">撮影名</label>
+        <input type="text" class="form-control" id="name" name="name" required>
+    </div>
+
+    <div class="form-group">
+        <label for="group_id">グループID</label>
+        <input type="number" class="form-control" id="group_id" name="group_id" required>
+    </div>
+
+    <div class="form-group">
+        <label for="photo_type">撮影タイプ</label>
+        <input type="text" class="form-control" id="photo_type" name="photo_type" required>
+    </div>
+
+    <div style="margin-top: 2rem;">
+        <button type="submit" class="btn btn-primary">作成</button>
+        <a href="/admin/photograph" class="btn btn-secondary">キャンセル</a>
+    </div>
+</form>
+
+{{ template "admin_footer" . }}
+{{ end }}

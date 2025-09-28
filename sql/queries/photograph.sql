@@ -58,3 +58,22 @@ WHERE
 GROUP BY
 	photograph_id
 ;
+
+-- name: GetPhotographById :one
+SELECT * FROM photograph WHERE id = ?;
+
+-- name: GetPhotographListForAdmin :many
+SELECT
+	p.*,
+	g.name AS group_name
+FROM photograph p
+JOIN groups g ON p.group_id = g.id
+ORDER BY p.id DESC;
+
+-- name: UpdatePhotograph :exec
+UPDATE photograph
+SET name = ?, group_id = ?, photo_type = ?, abbreviation = ?, name_for_order = ?
+WHERE id = ?;
+
+-- name: DeletePhotograph :exec
+DELETE FROM photograph WHERE id = ?;

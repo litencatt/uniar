@@ -7,7 +7,18 @@ package repository
 
 import (
 	"context"
+	"database/sql"
+	"time"
 )
+
+const deletePhotograph = `-- name: DeletePhotograph :exec
+DELETE FROM photograph WHERE id = ?
+`
+
+func (q *Queries) DeletePhotograph(ctx context.Context, db DBTX, id int64) error {
+	_, err := db.ExecContext(ctx, deletePhotograph, id)
+	return err
+}
 
 const getPhotographByGroupId = `-- name: GetPhotographByGroupId :many
 ;
@@ -49,6 +60,29 @@ func (q *Queries) GetPhotographByGroupId(ctx context.Context, db DBTX, groupID i
 		return nil, err
 	}
 	return items, nil
+}
+
+const getPhotographById = `-- name: GetPhotographById :one
+;
+
+SELECT id, name, group_id, abbreviation, photo_type, released_at, created_at, photo_type_id, name_for_order FROM photograph WHERE id = ?
+`
+
+func (q *Queries) GetPhotographById(ctx context.Context, db DBTX, id int64) (Photograph, error) {
+	row := db.QueryRowContext(ctx, getPhotographById, id)
+	var i Photograph
+	err := row.Scan(
+		&i.ID,
+		&i.Name,
+		&i.GroupID,
+		&i.Abbreviation,
+		&i.PhotoType,
+		&i.ReleasedAt,
+		&i.CreatedAt,
+		&i.PhotoTypeID,
+		&i.NameForOrder,
+	)
+	return i, err
 }
 
 const getPhotographList = `-- name: GetPhotographList :many
@@ -180,6 +214,62 @@ func (q *Queries) GetPhotographListByPhotoType(ctx context.Context, db DBTX, pho
 	return items, nil
 }
 
+const getPhotographListForAdmin = `-- name: GetPhotographListForAdmin :many
+SELECT
+	p.id, p.name, p.group_id, p.abbreviation, p.photo_type, p.released_at, p.created_at, p.photo_type_id, p.name_for_order,
+	g.name AS group_name
+FROM photograph p
+JOIN groups g ON p.group_id = g.id
+ORDER BY p.id DESC
+`
+
+type GetPhotographListForAdminRow struct {
+	ID           int64
+	Name         string
+	GroupID      int64
+	Abbreviation string
+	PhotoType    string
+	ReleasedAt   interface{}
+	CreatedAt    time.Time
+	PhotoTypeID  sql.NullInt64
+	NameForOrder string
+	GroupName    string
+}
+
+func (q *Queries) GetPhotographListForAdmin(ctx context.Context, db DBTX) ([]GetPhotographListForAdminRow, error) {
+	rows, err := db.QueryContext(ctx, getPhotographListForAdmin)
+	if err != nil {
+		return nil, err
+	}
+	defer rows.Close()
+	var items []GetPhotographListForAdminRow
+	for rows.Next() {
+		var i GetPhotographListForAdminRow
+		if err := rows.Scan(
+			&i.ID,
+			&i.Name,
+			&i.GroupID,
+			&i.Abbreviation,
+			&i.PhotoType,
+			&i.ReleasedAt,
+			&i.CreatedAt,
+			&i.PhotoTypeID,
+			&i.NameForOrder,
+			&i.GroupName,
+		); err != nil {
+			return nil, err
+		}
+		items = append(items, i)
+	}
+	if err := rows.Close(); err != nil {
+		return nil, err
+	}
+	if err := rows.Err(); err != nil {
+		return nil, err
+	}
+	return items, nil
+}
+
 const getSsrPlusReleasedPhotographList = `-- name: GetSsrPlusReleasedPhotographList :many
 ;
 
@@ -228,5 +318,32 @@ type RegistPhotographParams struct {
 
 func (q *Queries) RegistPhotograph(ctx context.Context, db DBTX, arg RegistPhotographParams) error {
 	_, err := db.ExecContext(ctx, registPhotograph, arg.Name, arg.GroupID, arg.PhotoType)
+	return err
+}
+
+const updatePhotograph = `-- name: UpdatePhotograph :exec
+UPDATE photograph
+SET name = ?, group_id = ?, photo_type = ?, abbreviation = ?, name_for_order = ?
+WHERE id = ?
+`
+
+type UpdatePhotographParams struct {
+	Name         string
+	GroupID      int64
+	PhotoType    string
+	Abbreviation string
+	NameForOrder string
+	ID           int64
+}
+
+func (q *Queries) UpdatePhotograph(ctx context.Context, db DBTX, arg UpdatePhotographParams) error {
+	_, err := db.ExecContext(ctx, updatePhotograph,
+		arg.Name,
+		arg.GroupID,
+		arg.PhotoType,
+		arg.Abbreviation,
+		arg.NameForOrder,
+		arg.ID,
+	)
 	return err
 }

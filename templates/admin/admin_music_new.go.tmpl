@@ -1,0 +1,49 @@
+{{ define "admin/music_new.go.tmpl" }}
+{{ template "admin_header" . }}
+
+<h2>新規楽曲追加</h2>
+
+<form method="post" action="/admin/music">
+    <div class="form-group">
+        <label for="name">楽曲名</label>
+        <input type="text" class="form-control" id="name" name="name" required>
+    </div>
+
+    <div class="form-group">
+        <label for="normal">Normal</label>
+        <input type="number" class="form-control" id="normal" name="normal" required>
+    </div>
+
+    <div class="form-group">
+        <label for="pro">Pro</label>
+        <input type="number" class="form-control" id="pro" name="pro" required>
+    </div>
+
+    <div class="form-group">
+        <label for="master">Master</label>
+        <input type="number" class="form-control" id="master" name="master" required>
+    </div>
+
+    <div class="form-group">
+        <label for="length">長さ</label>
+        <input type="number" class="form-control" id="length" name="length" required>
+    </div>
+
+    <div class="form-group">
+        <label for="color_type_id">カラータイプID</label>
+        <input type="number" class="form-control" id="color_type_id" name="color_type_id" required>
+    </div>
+
+    <div class="form-group">
+        <label for="live_id">ライブID</label>
+        <input type="number" class="form-control" id="live_id" name="live_id" required>
+    </div>
+
+    <div style="margin-top: 2rem;">
+        <button type="submit" class="btn btn-primary">作成</button>
+        <a href="/admin/music" class="btn btn-secondary">キャンセル</a>
+    </div>
+</form>
+
+{{ template "admin_footer" . }}
+{{ end }}
