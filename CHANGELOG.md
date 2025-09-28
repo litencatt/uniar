@@ -1,5 +1,8 @@
 # Changelog
 
+## [v0.19.1](https://github.com/litencatt/uniar/compare/v0.19.0...v0.19.1) - 2025-09-28
+- GoReleaserによるHomebrew Formula自動更新の修正 by @litencatt in https://github.com/litencatt/uniar/pull/94
+
 ## [v0.19.0](https://github.com/litencatt/uniar/compare/v0.18.4...v0.19.0) - 2025-09-28
 - Launchable docker dev env by @litencatt in https://github.com/litencatt/uniar/pull/90
 - CI/CDパイプラインとテストの追加およびコード品質の改善 by @litencatt in https://github.com/litencatt/uniar/pull/92
