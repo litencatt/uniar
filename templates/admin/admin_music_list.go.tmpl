@@ -3,6 +3,10 @@
 
 <h2>楽曲管理</h2>
 
+<div class="mb-3">
+    <a href="/admin/music/new" class="btn btn-primary">新規楽曲追加</a>
+</div>
+
 <table class="table">
     <thead>
         <tr>
@@ -31,7 +35,6 @@
             <td>{{ .Length }}</td>
             <td>{{ .MusicBonus }}</td>
             <td>
-                <a href="/admin/music/{{ .ID }}" class="btn btn-secondary">詳細</a>
                 <a href="/admin/music/{{ .ID }}/edit" class="btn">編集</a>
                 <form method="post" action="/admin/music/{{ .ID }}/delete" style="display: inline;"
                       onsubmit="return confirm('この楽曲を削除しますか？')">

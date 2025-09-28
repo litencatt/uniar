@@ -1,0 +1,62 @@
+{{ define "admin/scene_new.go.tmpl" }}
+{{ template "admin_header" . }}
+
+<h2>新規シーンカード追加</h2>
+
+<form method="post" action="/admin/scene">
+    <div class="form-group">
+        <label for="photograph_id">撮影ID</label>
+        <input type="number" class="form-control" id="photograph_id" name="photograph_id" required>
+    </div>
+
+    <div class="form-group">
+        <label for="member_id">メンバーID</label>
+        <input type="number" class="form-control" id="member_id" name="member_id" required>
+    </div>
+
+    <div class="form-group">
+        <label for="color_type_id">カラータイプID</label>
+        <input type="number" class="form-control" id="color_type_id" name="color_type_id" required>
+    </div>
+
+    <div class="form-group">
+        <label for="vocal_max">Vocal最大値</label>
+        <input type="number" class="form-control" id="vocal_max" name="vocal_max" required>
+    </div>
+
+    <div class="form-group">
+        <label for="dance_max">Dance最大値</label>
+        <input type="number" class="form-control" id="dance_max" name="dance_max" required>
+    </div>
+
+    <div class="form-group">
+        <label for="performance_max">Performance最大値</label>
+        <input type="number" class="form-control" id="performance_max" name="performance_max" required>
+    </div>
+
+    <div class="form-group">
+        <label for="center_skill">センタースキル</label>
+        <input type="text" class="form-control" id="center_skill" name="center_skill">
+    </div>
+
+    <div class="form-group">
+        <label for="expected_value">期待値</label>
+        <input type="text" class="form-control" id="expected_value" name="expected_value">
+    </div>
+
+    <div class="form-group">
+        <label for="ssr_plus">SSR+</label>
+        <select class="form-control" id="ssr_plus" name="ssr_plus">
+            <option value="0">No</option>
+            <option value="1">Yes</option>
+        </select>
+    </div>
+
+    <div style="margin-top: 2rem;">
+        <button type="submit" class="btn btn-primary">作成</button>
+        <a href="/admin/scene" class="btn btn-secondary">キャンセル</a>
+    </div>
+</form>
+
+{{ template "admin_footer" . }}
+{{ end }}

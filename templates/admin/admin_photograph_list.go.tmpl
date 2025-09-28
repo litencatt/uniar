@@ -3,6 +3,10 @@
 
 <h2>撮影管理</h2>
 
+<div class="mb-3">
+    <a href="/admin/photograph/new" class="btn btn-primary">新規撮影追加</a>
+</div>
+
 <table class="table">
     <thead>
         <tr>
@@ -25,7 +29,6 @@
             <td>{{ .Abbreviation }}</td>
             <td>{{ .NameForOrder }}</td>
             <td>
-                <a href="/admin/photograph/{{ .ID }}" class="btn btn-secondary">詳細</a>
                 <a href="/admin/photograph/{{ .ID }}/edit" class="btn">編集</a>
                 <form method="post" action="/admin/photograph/{{ .ID }}/delete" style="display: inline;"
                       onsubmit="return confirm('この撮影を削除しますか？')">

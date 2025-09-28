@@ -3,6 +3,10 @@
 
 <h2>シーンカード管理</h2>
 
+<div class="mb-3">
+    <a href="/admin/scene/new" class="btn btn-primary">新規シーンカード追加</a>
+</div>
+
 <table class="table">
     <thead>
         <tr>
@@ -31,7 +35,6 @@
             <td>{{ .ExpectedValue }}</td>
             <td>{{ if eq .SsrPlus 1 }}Yes{{ else }}No{{ end }}</td>
             <td>
-                <a href="/admin/scene/{{ .ID }}" class="btn btn-secondary">詳細</a>
                 <a href="/admin/scene/{{ .ID }}/edit" class="btn">編集</a>
                 <form method="post" action="/admin/scene/{{ .ID }}/delete" style="display: inline;"
                       onsubmit="return confirm('このシーンカードを削除しますか？')">
