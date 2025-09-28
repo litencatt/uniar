@@ -23,7 +23,7 @@ func (h *AdminMusicHandler) ListMusic(c *gin.Context) {
 		return
 	}
 
-	c.HTML(http.StatusOK, "admin/music/list.html", gin.H{
+	c.HTML(http.StatusOK, "admin/music/list.go.tmpl", gin.H{
 		"musics": musics,
 	})
 }
@@ -48,7 +48,7 @@ func (h *AdminMusicHandler) ShowMusic(c *gin.Context) {
 		return
 	}
 
-	c.HTML(http.StatusOK, "admin/music/show.html", gin.H{
+	c.HTML(http.StatusOK, "admin/music/show.go.tmpl", gin.H{
 		"music": music,
 	})
 }
@@ -73,7 +73,7 @@ func (h *AdminMusicHandler) EditMusic(c *gin.Context) {
 		return
 	}
 
-	c.HTML(http.StatusOK, "admin/music/edit.html", gin.H{
+	c.HTML(http.StatusOK, "admin/music/edit.go.tmpl", gin.H{
 		"music": music,
 	})
 }

@@ -23,7 +23,7 @@ func (h *AdminPhotographHandler) ListPhotograph(c *gin.Context) {
 		return
 	}
 
-	c.HTML(http.StatusOK, "admin/photograph/list.html", gin.H{
+	c.HTML(http.StatusOK, "admin/photograph/list.go.tmpl", gin.H{
 		"photographs": photographs,
 	})
 }
@@ -48,7 +48,7 @@ func (h *AdminPhotographHandler) ShowPhotograph(c *gin.Context) {
 		return
 	}
 
-	c.HTML(http.StatusOK, "admin/photograph/show.html", gin.H{
+	c.HTML(http.StatusOK, "admin/photograph/show.go.tmpl", gin.H{
 		"photograph": photograph,
 	})
 }
@@ -73,7 +73,7 @@ func (h *AdminPhotographHandler) EditPhotograph(c *gin.Context) {
 		return
 	}
 
-	c.HTML(http.StatusOK, "admin/photograph/edit.html", gin.H{
+	c.HTML(http.StatusOK, "admin/photograph/edit.go.tmpl", gin.H{
 		"photograph": photograph,
 	})
 }

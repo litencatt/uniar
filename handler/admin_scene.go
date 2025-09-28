@@ -40,7 +40,7 @@ func (h *AdminSceneHandler) ListScene(c *gin.Context) {
 	hasNext := page < totalPages
 	hasPrev := page > 1
 
-	c.HTML(http.StatusOK, "admin/scene/list.html", gin.H{
+	c.HTML(http.StatusOK, "admin/scene/list.go.tmpl", gin.H{
 		"scenes":      scenes,
 		"currentPage": page,
 		"totalPages":  totalPages,
@@ -71,7 +71,7 @@ func (h *AdminSceneHandler) ShowScene(c *gin.Context) {
 		return
 	}
 
-	c.HTML(http.StatusOK, "admin/scene/show.html", gin.H{
+	c.HTML(http.StatusOK, "admin/scene/show.go.tmpl", gin.H{
 		"scene": scene,
 	})
 }
@@ -96,7 +96,7 @@ func (h *AdminSceneHandler) EditScene(c *gin.Context) {
 		return
 	}
 
-	c.HTML(http.StatusOK, "admin/scene/edit.html", gin.H{
+	c.HTML(http.StatusOK, "admin/scene/edit.go.tmpl", gin.H{
 		"scene": scene,
 	})
 }

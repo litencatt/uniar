@@ -50,7 +50,7 @@ func (h *AdminDashboardHandler) Dashboard(c *gin.Context) {
 		return
 	}
 
-	c.HTML(http.StatusOK, "admin/dashboard.html", gin.H{
+	c.HTML(http.StatusOK, "admin/dashboard.go.tmpl", gin.H{
 		"musicCount":      len(musics),
 		"photographCount": len(photographs),
 		"sceneCount":      sceneCount,
