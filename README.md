@@ -3,7 +3,7 @@
 
 `uniar` is database and management your scene collections CLI tool for [UNI'S ON AIR](https://keyahina-unisonair.com/).
 
-## Usage		
+## Usage
 
 ```
 uniar is UNI'S ON AIR music and scene cards database and manage your scene cards collection tool.
@@ -126,8 +126,22 @@ Use "uniar [command] --help" for more information about a command.
 
 ```
 
-### Usage
+### Scene Listing Examples
 
+The following examples demonstrate various ways to filter and display scene card data:
+
+**Key Options:**
+- `-f, --full-name`: Show full photograph names instead of abbreviated versions
+- `-c, --color`: Filter by card color (Red, Blue, Green, Yellow, Purple)
+- `-m, --member`: Filter by member name
+- `-p, --photograph`: Filter by photograph name
+- `-d, --detail`: Show detailed stats including individual VO/DA/PE values
+- `--ignore-columns`: Hide specific columns from the display
+- `--have`: Show only cards you own
+- `--not-have`: Show only cards you don't own
+- `-s, --sort`: Sort by specific ranking criteria
+
+#### Basic scene listing with full photograph names
 ```
 $ uniar list scene -h
 Show scene card list
@@ -155,6 +169,7 @@ Global Flags:
 
 ```
 
+#### Display all scenes with full photograph names (top 10 results)
 ```
 $ uniar list scene -f | head
 +--------+------------------------------------+---------+------------+--------+-------+-------+--------+--------+--------+------+------+------+-------+
@@ -170,6 +185,7 @@ $ uniar list scene -f | head
 
 ```
 
+#### Filter scenes by color (Blue cards only)
 ```
 $ uniar list scene -f -c Blue
 +-------+------------------------------------+---------+------------+--------+-------+-------+--------+--------+--------+------+------+------+-------+
@@ -185,6 +201,7 @@ $ uniar list scene -f -c Blue
 
 ```
 
+#### Filter scenes by member (加藤史帆's cards only)
 ```
 $ uniar list scene -f -m 加藤史帆
 +--------+------------------------------------+---------+----------+--------+-------+-------+--------+--------+--------+------+------+------+-------+
@@ -200,6 +217,7 @@ $ uniar list scene -f -m 加藤史帆
 
 ```
 
+#### Filter scenes by photograph name (キュン cards only)
 ```
 $ uniar list scene -f -p キュン
 +--------+------------+---------+------------+--------+-------+-------+--------+--------+--------+------+------+------+-------+
@@ -215,6 +233,7 @@ $ uniar list scene -f -p キュン
 
 ```
 
+#### Combined filters (Blue + 加藤史帆 + キュン)
 ```
 $ uniar list scene -f -c Blue -m 加藤史帆 -p キュン
 +-------+------------+---------+----------+--------+-------+-------+--------+--------+--------+------+------+------+-------+
@@ -223,6 +242,38 @@ $ uniar list scene -f -c Blue -m 加藤史帆 -p キュン
 | Blue  | キュン     | true    | 加藤史帆 |   2.46 | 12560 |     1 |      1 |      1 |      1 |    1 |    1 |    1 | false |
 | Blue  | キュン     | false   | 加藤史帆 |   2.46 | 10310 |     2 |      2 |      2 |      2 |    2 |    2 |    2 | false |
 +-------+------------+---------+----------+--------+-------+-------+--------+--------+--------+------+------+------+-------+
+
+```
+
+#### Hide specific columns from display
+```
+$ uniar list scene --ignore-columns All35,VoDa50,DaPe50,VoPe50 | head
++--------+--------------------------------+---------+------------+--------+-------+------+------+------+-------+
+| COLOR  |           PHOTOGRAPH           | SSRPLUS |   MEMBER   | EXPECT | TOTAL | VO85 | DA85 | PE85 | HAVE  |
++--------+--------------------------------+---------+------------+--------+-------+------+------+------+-------+
+| Green  | こん好き                       | true    | 加藤史帆   |   3.68 | 13067 |    1 |    2 |    2 | false |
+| Purple | Buddies                        | true    | 山﨑天     |   3.72 | 13323 |    4 |    1 |    6 | false |
+| Yellow | 誰鐘                           | true    | 山﨑天     |   3.68 | 13076 |    2 |    6 |    5 | false |
+| Red    | ハピオラ                       | true    | 松田好花   |   3.68 | 12974 |    3 |   13 |    4 | false |
+| Yellow | ハピオラ                       | true    | 高瀬愛奈   |   3.68 | 12972 |    8 |   10 |    3 | false |
+| Red    | セゾン                         | true    | 小池美波   |   3.68 | 12859 |    7 |    7 |   11 | false |
+| Red    | アザカワ                       | true    | 佐々木美玲 |   3.72 | 13324 |   19 |   20 |    1 | false |
+
+```
+
+#### Show detailed stats with hidden columns
+```
+$ uniar list scene -d --ignore-columns All35,VoDa50,DaPe50,VoPe50 | head
++--------+--------------------------------+---------+------------+--------+-------+------+------+------+------+------+------+-------+
+| COLOR  |           PHOTOGRAPH           | SSRPLUS |   MEMBER   | EXPECT | TOTAL | VO85 | DA85 | PE85 |  VO  |  DA  |  PE  | HAVE  |
++--------+--------------------------------+---------+------------+--------+-------+------+------+------+------+------+------+-------+
+| Green  | こん好き                       | true    | 加藤史帆   |   3.68 | 13067 |    1 |    2 |    2 | 5102 | 3780 | 3755 | false |
+| Purple | Buddies                        | true    | 山﨑天     |   3.72 | 13323 |    4 |    1 |    6 | 3033 | 6795 | 3065 | false |
+| Yellow | 誰鐘                           | true    | 山﨑天     |   3.68 | 13076 |    2 |    6 |    5 | 5092 | 3756 | 3798 | false |
+| Red    | ハピオラ                       | true    | 松田好花   |   3.68 | 12974 |    3 |   13 |    4 | 5059 | 2920 | 4565 | false |
+| Yellow | ハピオラ                       | true    | 高瀬愛奈   |   3.68 | 12972 |    8 |   10 |    3 | 3761 | 3820 | 4961 | false |
+| Red    | セゾン                         | true    | 小池美波   |   3.68 | 12859 |    7 |    7 |   11 | 4006 | 4578 | 3845 | false |
+| Red    | アザカワ                       | true    | 佐々木美玲 |   3.72 | 13324 |   19 |   20 |    1 | 3023 | 3036 | 6835 | false |
 
 ```
 
@@ -257,33 +308,3 @@ Initialize and configure the database:
 
 - `uniar doc` - Generate documentation
 - `uniar completion` - Generate shell completion scripts
-
-```
-$ uniar list scene --ignore-columns All35,VoDa50,DaPe50,VoPe50 | head
-+--------+--------------------------------+---------+------------+--------+-------+------+------+------+-------+
-| COLOR  |           PHOTOGRAPH           | SSRPLUS |   MEMBER   | EXPECT | TOTAL | VO85 | DA85 | PE85 | HAVE  |
-+--------+--------------------------------+---------+------------+--------+-------+------+------+------+-------+
-| Green  | こん好き                       | true    | 加藤史帆   |   3.68 | 13067 |    1 |    2 |    2 | false |
-| Purple | Buddies                        | true    | 山﨑天     |   3.72 | 13323 |    4 |    1 |    6 | false |
-| Yellow | 誰鐘                           | true    | 山﨑天     |   3.68 | 13076 |    2 |    6 |    5 | false |
-| Red    | ハピオラ                       | true    | 松田好花   |   3.68 | 12974 |    3 |   13 |    4 | false |
-| Yellow | ハピオラ                       | true    | 高瀬愛奈   |   3.68 | 12972 |    8 |   10 |    3 | false |
-| Red    | セゾン                         | true    | 小池美波   |   3.68 | 12859 |    7 |    7 |   11 | false |
-| Red    | アザカワ                       | true    | 佐々木美玲 |   3.72 | 13324 |   19 |   20 |    1 | false |
-
-```
-
-```
-$ uniar list scene -d --ignore-columns All35,VoDa50,DaPe50,VoPe50 | head
-+--------+--------------------------------+---------+------------+--------+-------+------+------+------+------+------+------+-------+
-| COLOR  |           PHOTOGRAPH           | SSRPLUS |   MEMBER   | EXPECT | TOTAL | VO85 | DA85 | PE85 |  VO  |  DA  |  PE  | HAVE  |
-+--------+--------------------------------+---------+------------+--------+-------+------+------+------+------+------+------+-------+
-| Green  | こん好き                       | true    | 加藤史帆   |   3.68 | 13067 |    1 |    2 |    2 | 5102 | 3780 | 3755 | false |
-| Purple | Buddies                        | true    | 山﨑天     |   3.72 | 13323 |    4 |    1 |    6 | 3033 | 6795 | 3065 | false |
-| Yellow | 誰鐘                           | true    | 山﨑天     |   3.68 | 13076 |    2 |    6 |    5 | 5092 | 3756 | 3798 | false |
-| Red    | ハピオラ                       | true    | 松田好花   |   3.68 | 12974 |    3 |   13 |    4 | 5059 | 2920 | 4565 | false |
-| Yellow | ハピオラ                       | true    | 高瀬愛奈   |   3.68 | 12972 |    8 |   10 |    3 | 3761 | 3820 | 4961 | false |
-| Red    | セゾン                         | true    | 小池美波   |   3.68 | 12859 |    7 |    7 |   11 | 4006 | 4578 | 3845 | false |
-| Red    | アザカワ                       | true    | 佐々木美玲 |   3.72 | 13324 |   19 |   20 |    1 | 3023 | 3036 | 6835 | false |
-
-```
