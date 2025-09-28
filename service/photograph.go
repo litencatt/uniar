@@ -22,6 +22,12 @@ type UpdatePhotographParams struct {
 	NameForOrder string
 }
 
+type AddPhotographParams struct {
+	Name      string
+	GroupID   int64
+	PhotoType string
+}
+
 func (x *Photgraph) ListPhotograph(ctx context.Context) ([]entity.Photograph, error) {
 	ps, err := x.Querier.GetPhotographListAll(ctx, x.DB)
 	if err != nil {
@@ -141,6 +147,18 @@ func (x *Photgraph) Update(ctx context.Context, id int64, params UpdatePhotograp
 
 func (x *Photgraph) Delete(ctx context.Context, id int64) error {
 	err := x.Querier.DeletePhotograph(ctx, x.DB, id)
+	if err != nil {
+		return err
+	}
+	return nil
+}
+
+func (x *Photgraph) Add(ctx context.Context, params AddPhotographParams) error {
+	err := x.Querier.RegistPhotograph(ctx, x.DB, repository.RegistPhotographParams{
+		Name:      params.Name,
+		GroupID:   params.GroupID,
+		PhotoType: params.PhotoType,
+	})
 	if err != nil {
 		return err
 	}

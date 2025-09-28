@@ -113,3 +113,31 @@ func (h *AdminPhotographHandler) DeletePhotograph(c *gin.Context) {
 
 	c.Redirect(http.StatusFound, "/admin/photograph")
 }
+
+func (h *AdminPhotographHandler) NewPhotograph(c *gin.Context) {
+	c.HTML(http.StatusOK, "admin/photograph_new.go.tmpl", gin.H{})
+}
+
+func (h *AdminPhotographHandler) AddPhotograph(c *gin.Context) {
+	ctx := c.Request.Context()
+
+	name := c.PostForm("name")
+	groupID, _ := strconv.ParseInt(c.PostForm("group_id"), 10, 64)
+	photoType := c.PostForm("photo_type")
+
+	params := service.AddPhotographParams{
+		Name:      name,
+		GroupID:   groupID,
+		PhotoType: photoType,
+	}
+
+	err := h.PhotographService.Add(ctx, params)
+	if err != nil {
+		c.HTML(http.StatusInternalServerError, "500.go.tmpl", gin.H{
+			"error": err.Error(),
+		})
+		return
+	}
+
+	c.Redirect(http.StatusFound, "/admin/photograph")
+}

@@ -209,6 +209,18 @@ type UpdateSceneParams struct {
 	SsrPlus        int64
 }
 
+type AddSceneParams struct {
+	PhotographID   int64
+	MemberID       int64
+	ColorTypeID    int64
+	VocalMax       int64
+	DanceMax       int64
+	PerformanceMax int64
+	CenterSkill    string
+	ExpectedValue  string
+	SsrPlus        int64
+}
+
 func (x *Scene) GetByID(ctx context.Context, id int64) (*entity.SceneWithDetails, error) {
 	s, err := x.Querier.GetSceneById(ctx, x.DB, id)
 	if err != nil {
@@ -322,6 +334,34 @@ func (x *Scene) Update(ctx context.Context, id int64, params UpdateSceneParams) 
 
 func (x *Scene) Delete(ctx context.Context, id int64) error {
 	err := x.Querier.DeleteScene(ctx, x.DB, id)
+	if err != nil {
+		return err
+	}
+	return nil
+}
+
+func (x *Scene) Add(ctx context.Context, params AddSceneParams) error {
+	centerSkill := sql.NullString{
+		String: params.CenterSkill,
+		Valid:  params.CenterSkill != "",
+	}
+
+	expectedValue := sql.NullString{
+		String: params.ExpectedValue,
+		Valid:  params.ExpectedValue != "",
+	}
+
+	err := x.Querier.RegistScene(ctx, x.DB, repository.RegistSceneParams{
+		PhotographID:   params.PhotographID,
+		MemberID:       params.MemberID,
+		ColorTypeID:    params.ColorTypeID,
+		VocalMax:       params.VocalMax,
+		DanceMax:       params.DanceMax,
+		PerformanceMax: params.PerformanceMax,
+		CenterSkill:    centerSkill,
+		ExpectedValue:  expectedValue,
+		SsrPlus:        params.SsrPlus,
+	})
 	if err != nil {
 		return err
 	}

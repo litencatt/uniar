@@ -24,6 +24,16 @@ type UpdateMusicParams struct {
 	MusicBonus  int64
 }
 
+type AddMusicParams struct {
+	Name        string
+	Normal      int64
+	Pro         int64
+	Master      int64
+	Length      int64
+	ColorTypeID int64
+	LiveID      int64
+}
+
 func (s *Music) GetByID(ctx context.Context, id int64) (*entity.Music, error) {
 	m, err := s.Querier.GetMusicById(ctx, s.DB, id)
 	if err != nil {
@@ -104,6 +114,22 @@ func (s *Music) Update(ctx context.Context, id int64, params UpdateMusicParams) 
 
 func (s *Music) Delete(ctx context.Context, id int64) error {
 	err := s.Querier.DeleteMusic(ctx, s.DB, id)
+	if err != nil {
+		return err
+	}
+	return nil
+}
+
+func (s *Music) Add(ctx context.Context, params AddMusicParams) error {
+	err := s.Querier.RegistMusic(ctx, s.DB, repository.RegistMusicParams{
+		Name:        params.Name,
+		Normal:      params.Normal,
+		Pro:         params.Pro,
+		Master:      params.Master,
+		Length:      params.Length,
+		ColorTypeID: params.ColorTypeID,
+		LiveID:      params.LiveID,
+	})
 	if err != nil {
 		return err
 	}

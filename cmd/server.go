@@ -152,18 +152,24 @@ func run(ctx context.Context) error {
 
 		// 楽曲管理
 		admin.GET("/music", adminMusic.ListMusic)
+		admin.GET("/music/new", adminMusic.NewMusic)
+		admin.POST("/music", adminMusic.AddMusic)
 		admin.GET("/music/:id/edit", adminMusic.EditMusic)
 		admin.POST("/music/:id", adminMusic.UpdateMusic)
 		admin.POST("/music/:id/delete", adminMusic.DeleteMusic)
 
 		// 撮影管理
 		admin.GET("/photograph", adminPhotograph.ListPhotograph)
+		admin.GET("/photograph/new", adminPhotograph.NewPhotograph)
+		admin.POST("/photograph", adminPhotograph.AddPhotograph)
 		admin.GET("/photograph/:id/edit", adminPhotograph.EditPhotograph)
 		admin.POST("/photograph/:id", adminPhotograph.UpdatePhotograph)
 		admin.POST("/photograph/:id/delete", adminPhotograph.DeletePhotograph)
 
 		// シーンカード管理
 		admin.GET("/scene", adminScene.ListScene)
+		admin.GET("/scene/new", adminScene.NewScene)
+		admin.POST("/scene", adminScene.AddScene)
 		admin.GET("/scene/:id/edit", adminScene.EditScene)
 		admin.POST("/scene/:id", adminScene.UpdateScene)
 		admin.POST("/scene/:id/delete", adminScene.DeleteScene)

@@ -144,3 +144,43 @@ func (h *AdminSceneHandler) DeleteScene(c *gin.Context) {
 
 	c.Redirect(http.StatusFound, "/admin/scene")
 }
+
+func (h *AdminSceneHandler) NewScene(c *gin.Context) {
+	c.HTML(http.StatusOK, "admin/scene_new.go.tmpl", gin.H{})
+}
+
+func (h *AdminSceneHandler) AddScene(c *gin.Context) {
+	ctx := c.Request.Context()
+
+	photographID, _ := strconv.ParseInt(c.PostForm("photograph_id"), 10, 64)
+	memberID, _ := strconv.ParseInt(c.PostForm("member_id"), 10, 64)
+	colorTypeID, _ := strconv.ParseInt(c.PostForm("color_type_id"), 10, 64)
+	vocalMax, _ := strconv.ParseInt(c.PostForm("vocal_max"), 10, 64)
+	danceMax, _ := strconv.ParseInt(c.PostForm("dance_max"), 10, 64)
+	performanceMax, _ := strconv.ParseInt(c.PostForm("performance_max"), 10, 64)
+	centerSkill := c.PostForm("center_skill")
+	expectedValue := c.PostForm("expected_value")
+	ssrPlus, _ := strconv.ParseInt(c.PostForm("ssr_plus"), 10, 64)
+
+	params := service.AddSceneParams{
+		PhotographID:   photographID,
+		MemberID:       memberID,
+		ColorTypeID:    colorTypeID,
+		VocalMax:       vocalMax,
+		DanceMax:       danceMax,
+		PerformanceMax: performanceMax,
+		CenterSkill:    centerSkill,
+		ExpectedValue:  expectedValue,
+		SsrPlus:        ssrPlus,
+	}
+
+	err := h.SceneService.Add(ctx, params)
+	if err != nil {
+		c.HTML(http.StatusInternalServerError, "500.go.tmpl", gin.H{
+			"error": err.Error(),
+		})
+		return
+	}
+
+	c.Redirect(http.StatusFound, "/admin/scene")
+}

@@ -119,3 +119,39 @@ func (h *AdminMusicHandler) DeleteMusic(c *gin.Context) {
 
 	c.Redirect(http.StatusFound, "/admin/music")
 }
+
+func (h *AdminMusicHandler) NewMusic(c *gin.Context) {
+	c.HTML(http.StatusOK, "admin/music_new.go.tmpl", gin.H{})
+}
+
+func (h *AdminMusicHandler) AddMusic(c *gin.Context) {
+	ctx := c.Request.Context()
+
+	name := c.PostForm("name")
+	normal, _ := strconv.ParseInt(c.PostForm("normal"), 10, 64)
+	pro, _ := strconv.ParseInt(c.PostForm("pro"), 10, 64)
+	master, _ := strconv.ParseInt(c.PostForm("master"), 10, 64)
+	length, _ := strconv.ParseInt(c.PostForm("length"), 10, 64)
+	colorTypeID, _ := strconv.ParseInt(c.PostForm("color_type_id"), 10, 64)
+	liveID, _ := strconv.ParseInt(c.PostForm("live_id"), 10, 64)
+
+	params := service.AddMusicParams{
+		Name:        name,
+		Normal:      normal,
+		Pro:         pro,
+		Master:      master,
+		Length:      length,
+		ColorTypeID: colorTypeID,
+		LiveID:      liveID,
+	}
+
+	err := h.MusicService.Add(ctx, params)
+	if err != nil {
+		c.HTML(http.StatusInternalServerError, "500.go.tmpl", gin.H{
+			"error": err.Error(),
+		})
+		return
+	}
+
+	c.Redirect(http.StatusFound, "/admin/music")
+}
