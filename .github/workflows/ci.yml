@@ -77,11 +77,6 @@ jobs:
     - name: Download dependencies
       run: go mod download
 
-    - name: Install golangci-lint
-      uses: golangci/golangci-lint-action@v4
-      with:
-        version: latest
-
     - name: Install sqlc
       run: go install github.com/sqlc-dev/sqlc/cmd/sqlc@latest
 
@@ -95,7 +90,10 @@ jobs:
       run: go generate ./...
 
     - name: Run golangci-lint
-      run: golangci-lint run
+      uses: golangci/golangci-lint-action@v4
+      with:
+        version: latest
+        args: --timeout=10m
 
   build:
     runs-on: ubuntu-latest
