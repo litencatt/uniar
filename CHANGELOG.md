@@ -1,5 +1,8 @@
 # Changelog
 
+## [v0.19.4](https://github.com/litencatt/uniar/compare/v0.19.3...v0.19.4) - 2025-09-28
+- Fix GoReleaser settings for Homebrew tap by @litencatt in https://github.com/litencatt/uniar/pull/100
+
 ## [v0.19.3](https://github.com/litencatt/uniar/compare/v0.19.2...v0.19.3) - 2025-09-28
 - GoReleaser changelog設定の非推奨警告解消 by @litencatt in https://github.com/litencatt/uniar/pull/98
 
