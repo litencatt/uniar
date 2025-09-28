@@ -1,0 +1,37 @@
+{{ template "admin_header" . }}
+
+<h2>撮影編集</h2>
+
+<form method="post" action="/admin/photograph/{{ .photograph.ID }}">
+    <div class="form-group">
+        <label for="name">撮影名</label>
+        <input type="text" class="form-control" id="name" name="name" value="{{ .photograph.Name }}" required>
+    </div>
+
+    <div class="form-group">
+        <label for="group_id">グループID</label>
+        <input type="number" class="form-control" id="group_id" name="group_id" value="{{ .photograph.GroupID }}" required>
+    </div>
+
+    <div class="form-group">
+        <label for="photo_type">撮影タイプ</label>
+        <input type="text" class="form-control" id="photo_type" name="photo_type" value="{{ .photograph.PhotoType }}" required>
+    </div>
+
+    <div class="form-group">
+        <label for="abbreviation">略称</label>
+        <input type="text" class="form-control" id="abbreviation" name="abbreviation" value="{{ .photograph.Abbreviation }}">
+    </div>
+
+    <div class="form-group">
+        <label for="name_for_order">並び順名</label>
+        <input type="text" class="form-control" id="name_for_order" name="name_for_order" value="{{ .photograph.NameForOrder }}">
+    </div>
+
+    <div style="margin-top: 2rem;">
+        <button type="submit" class="btn">更新</button>
+        <a href="/admin/photograph" class="btn btn-secondary">キャンセル</a>
+    </div>
+</form>
+
+{{ template "admin_footer" . }}

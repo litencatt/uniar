@@ -1,0 +1,58 @@
+{{ template "admin_header" . }}
+
+<h2>シーンカード管理</h2>
+
+<table class="table">
+    <thead>
+        <tr>
+            <th>ID</th>
+            <th>撮影</th>
+            <th>メンバー</th>
+            <th>カラー</th>
+            <th>Vocal</th>
+            <th>Dance</th>
+            <th>Performance</th>
+            <th>期待値</th>
+            <th>SSR+</th>
+            <th>操作</th>
+        </tr>
+    </thead>
+    <tbody>
+        {{ range .scenes }}
+        <tr>
+            <td>{{ .ID }}</td>
+            <td>{{ .PhotographName }}</td>
+            <td>{{ .MemberName }}</td>
+            <td>{{ .ColorName }}</td>
+            <td>{{ .VocalMax }}</td>
+            <td>{{ .DanceMax }}</td>
+            <td>{{ .PerformanceMax }}</td>
+            <td>{{ .ExpectedValue }}</td>
+            <td>{{ if eq .SsrPlus 1 }}Yes{{ else }}No{{ end }}</td>
+            <td>
+                <a href="/admin/scene/{{ .ID }}" class="btn btn-secondary">詳細</a>
+                <a href="/admin/scene/{{ .ID }}/edit" class="btn">編集</a>
+                <form method="post" action="/admin/scene/{{ .ID }}/delete" style="display: inline;"
+                      onsubmit="return confirm('このシーンカードを削除しますか？')">
+                    <button type="submit" class="btn btn-danger">削除</button>
+                </form>
+            </td>
+        </tr>
+        {{ end }}
+    </tbody>
+</table>
+
+<!-- ページネーション -->
+<div class="pagination">
+    {{ if .hasPrev }}
+        <a href="?page={{ .prevPage }}">&laquo; 前へ</a>
+    {{ end }}
+
+    <span>ページ {{ .currentPage }} / {{ .totalPages }}</span>
+
+    {{ if .hasNext }}
+        <a href="?page={{ .nextPage }}">次へ &raquo;</a>
+    {{ end }}
+</div>
+
+{{ template "admin_footer" . }}

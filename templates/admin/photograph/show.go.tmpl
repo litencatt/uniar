@@ -1,0 +1,39 @@
+{{ template "admin_header" . }}
+
+<h2>撮影詳細</h2>
+
+<div style="background: #f8f9fa; padding: 1.5rem; border-radius: 8px; margin: 1rem 0;">
+    <h3>{{ .photograph.Name }}</h3>
+
+    <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 1rem; margin: 1rem 0;">
+        <div>
+            <strong>ID:</strong> {{ .photograph.ID }}
+        </div>
+        <div>
+            <strong>グループID:</strong> {{ .photograph.GroupID }}
+        </div>
+        <div>
+            <strong>撮影タイプ:</strong> {{ .photograph.PhotoType }}
+        </div>
+        <div>
+            <strong>略称:</strong> {{ .photograph.Abbreviation }}
+        </div>
+        <div>
+            <strong>並び順名:</strong> {{ .photograph.NameForOrder }}
+        </div>
+        <div>
+            <strong>リリース日:</strong> {{ .photograph.ReleasedAt.Format "2006-01-02" }}
+        </div>
+    </div>
+</div>
+
+<div style="margin-top: 2rem;">
+    <a href="/admin/photograph/{{ .photograph.ID }}/edit" class="btn">編集</a>
+    <a href="/admin/photograph" class="btn btn-secondary">一覧に戻る</a>
+    <form method="post" action="/admin/photograph/{{ .photograph.ID }}/delete" style="display: inline;"
+          onsubmit="return confirm('この撮影を削除しますか？')">
+        <button type="submit" class="btn btn-danger">削除</button>
+    </form>
+</div>
+
+{{ template "admin_footer" . }}

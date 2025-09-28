@@ -1,0 +1,63 @@
+{{ template "admin_header" . }}
+
+<h2>シーンカード編集</h2>
+
+<form method="post" action="/admin/scene/{{ .scene.ID }}">
+    <div class="form-group">
+        <label for="photograph_id">撮影ID</label>
+        <input type="number" class="form-control" id="photograph_id" name="photograph_id" value="{{ .scene.PhotographID }}" required>
+        <small>現在: {{ .scene.PhotographName }}</small>
+    </div>
+
+    <div class="form-group">
+        <label for="member_id">メンバーID</label>
+        <input type="number" class="form-control" id="member_id" name="member_id" value="{{ .scene.MemberID }}" required>
+        <small>現在: {{ .scene.MemberName }}</small>
+    </div>
+
+    <div class="form-group">
+        <label for="color_type_id">カラータイプID</label>
+        <input type="number" class="form-control" id="color_type_id" name="color_type_id" value="{{ .scene.ColorTypeID }}" required>
+        <small>現在: {{ .scene.ColorName }}</small>
+    </div>
+
+    <div class="form-group">
+        <label for="vocal_max">Vocal最大値</label>
+        <input type="number" class="form-control" id="vocal_max" name="vocal_max" value="{{ .scene.VocalMax }}" required>
+    </div>
+
+    <div class="form-group">
+        <label for="dance_max">Dance最大値</label>
+        <input type="number" class="form-control" id="dance_max" name="dance_max" value="{{ .scene.DanceMax }}" required>
+    </div>
+
+    <div class="form-group">
+        <label for="performance_max">Performance最大値</label>
+        <input type="number" class="form-control" id="performance_max" name="performance_max" value="{{ .scene.PerformanceMax }}" required>
+    </div>
+
+    <div class="form-group">
+        <label for="center_skill">センタースキル</label>
+        <input type="text" class="form-control" id="center_skill" name="center_skill" value="{{ .scene.CenterSkill }}">
+    </div>
+
+    <div class="form-group">
+        <label for="expected_value">期待値</label>
+        <input type="text" class="form-control" id="expected_value" name="expected_value" value="{{ .scene.ExpectedValue }}">
+    </div>
+
+    <div class="form-group">
+        <label for="ssr_plus">SSR+</label>
+        <select class="form-control" id="ssr_plus" name="ssr_plus">
+            <option value="0" {{ if eq .scene.SsrPlus 0 }}selected{{ end }}>No</option>
+            <option value="1" {{ if eq .scene.SsrPlus 1 }}selected{{ end }}>Yes</option>
+        </select>
+    </div>
+
+    <div style="margin-top: 2rem;">
+        <button type="submit" class="btn">更新</button>
+        <a href="/admin/scene" class="btn btn-secondary">キャンセル</a>
+    </div>
+</form>
+
+{{ template "admin_footer" . }}

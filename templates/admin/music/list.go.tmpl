@@ -1,0 +1,45 @@
+{{ template "admin_header" . }}
+
+<h2>楽曲管理</h2>
+
+<table class="table">
+    <thead>
+        <tr>
+            <th>ID</th>
+            <th>楽曲名</th>
+            <th>ライブ</th>
+            <th>カラー</th>
+            <th>Normal</th>
+            <th>Pro</th>
+            <th>Master</th>
+            <th>長さ</th>
+            <th>楽曲ボーナス</th>
+            <th>操作</th>
+        </tr>
+    </thead>
+    <tbody>
+        {{ range .musics }}
+        <tr>
+            <td>{{ .ID }}</td>
+            <td>{{ .Name }}</td>
+            <td>{{ .LiveName }}</td>
+            <td>{{ .ColorName }}</td>
+            <td>{{ .Normal }}</td>
+            <td>{{ .Pro }}</td>
+            <td>{{ .Master }}</td>
+            <td>{{ .Length }}</td>
+            <td>{{ .MusicBonus }}</td>
+            <td>
+                <a href="/admin/music/{{ .ID }}" class="btn btn-secondary">詳細</a>
+                <a href="/admin/music/{{ .ID }}/edit" class="btn">編集</a>
+                <form method="post" action="/admin/music/{{ .ID }}/delete" style="display: inline;"
+                      onsubmit="return confirm('この楽曲を削除しますか？')">
+                    <button type="submit" class="btn btn-danger">削除</button>
+                </form>
+            </td>
+        </tr>
+        {{ end }}
+    </tbody>
+</table>
+
+{{ template "admin_footer" . }}
