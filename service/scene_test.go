@@ -24,6 +24,7 @@ func TestListScene(t *testing.T) {
 				Color:      "%",
 				Member:     "%",
 				Photograph: "%",
+				ProducerID: 1,
 			},
 			exp: []entity.Scene{
 				{
@@ -62,8 +63,11 @@ func TestListScene(t *testing.T) {
 					PerformanceMax: 0,
 					ExpectedValue:  sql.NullString{String: "0", Valid: true},
 					SsrPlus:        1,
+					Bonds:          sql.NullInt64{Int64: 0, Valid: false},
+					Discography:    sql.NullInt64{Int64: 0, Valid: false},
 				},
 			}, nil)
+			q.EXPECT().GetProducerScenesWithProducerId(ctx, gomock.Any(), int64(1)).Return([]repository.GetProducerScenesWithProducerIdRow{}, nil)
 			svc := &Scene{
 				DB:      db,
 				Querier: q,
