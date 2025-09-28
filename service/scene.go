@@ -132,7 +132,15 @@ func (x *Scene) ListScene(ctx context.Context, arg *ListSceneRequest) ([]entity.
 			Expect:     float32(e),
 			SsrPlus:    s.SsrPlus == 1,
 		}
-		scene.CalcTotal(s.Bonds, s.Discography)
+		bonds := int64(0)
+		if s.Bonds.Valid {
+			bonds = s.Bonds.Int64
+		}
+		discography := int64(0)
+		if s.Discography.Valid {
+			discography = s.Discography.Int64
+		}
+		scene.CalcTotal(bonds, discography)
 		scenes = append(scenes, scene)
 	}
 

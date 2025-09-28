@@ -31,8 +31,19 @@ docker-build:
 db-init:
 	rm ~/.uniar/uniar.db
 
+db-init-docker:
+	docker compose exec app rm -f /root/.uniar/uniar.db
+	docker compose exec app touch /root/.uniar/uniar.db
+
 db-migrate:
 	sqlite3def ~/.uniar/uniar.db -f sql/schema.sql
+
+db-migrate-docker:
+	docker compose exec app sqlite3def /root/.uniar/uniar.db -f sql/schema.sql
+
+db-setup-docker:
+	@$(MAKE) db-init-docker
+	@$(MAKE) db-migrate-docker
 
 db-dump:
 	sqlite3 ~/.uniar/uniar.db '.dump "center_skills"' | grep ^INSERT  > sql/seed.sql
