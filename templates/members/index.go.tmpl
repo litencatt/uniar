@@ -1,12 +1,12 @@
 {{ define "members/index.go.tmpl" }}
 {{ template "header" . }}
 <form action="/auth/members" method="POST">
-  <input type="submit" />    
+  <input type="submit" />
   <div>
     <table border="1">
       <thead>
         <tr>
-          <th>member</th>
+          <th>メンバー名</th>
           <th>絆Lv</th>
           <th>ディスコグラフィー</th>
         </tr>
@@ -15,8 +15,8 @@
         {{range .members}}
         <tr>
           <td>{{ .Name }}</td>
-          <td><input type="text" name="bonds_{{ .MemberID }}" value="{{ .BondLevel }}"></td>    
-          <td><input type="text" name="disco_{{ .MemberID }}" value="{{ .Discography }}"></td>    
+          <td><input type="text" name="bonds_{{ .MemberID }}" value="{{ .BondLevel }}"></td>
+          <td><input type="text" name="disco_{{ .MemberID }}" value="{{ .Discography }}"></td>
         </tr>
         {{end}}
       </tbody>
