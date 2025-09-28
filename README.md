@@ -36,6 +36,67 @@ $ brew tap litencatt/tap
 $ brew install litencatt/tap/uniar
 ```
 
+## Configuration
+
+### Database
+
+`uniar` uses SQLite for data storage. The database file is stored at:
+- **Default location**: `~/.uniar/uniar.db`
+- **Config file**: `~/.uniar.yaml` (optional)
+
+### First-time Setup
+
+Before using `uniar`, run the setup command to initialize the database:
+
+```bash
+$ uniar setup
+```
+
+This will create the necessary database schema and initial data.
+
+## Server Mode
+
+`uniar` can run as a web server with a web UI for managing your scene collections.
+
+### Starting the Server
+
+```bash
+$ uniar server
+```
+
+This starts a web server on port 8090 with the following features:
+
+- **Web UI**: Browser-based interface for viewing and managing scene collections
+- **Google OAuth Authentication**: Secure login using Google accounts
+- **Scene Management**: View, filter, and register scene cards through the web interface
+- **Member Management**: Manage member information and preferences
+- **Producer Registration**: Automatic user registration and session management
+
+### Server Configuration
+
+The server requires a `cred.json` file for Google OAuth authentication. This file should contain your Google OAuth2 credentials and is automatically excluded from version control.
+
+**cred.json format:**
+```json
+{
+    "clientid": "xxx...",
+    "secret": "xxx..."
+}
+```
+
+Place this file in the same directory as the `uniar` binary when running the server.
+
+**Server endpoints:**
+- `/` - Root redirect to login
+- `/login` - Google OAuth login
+- `/auth` - Authenticated routes (requires login)
+  - `/auth/scenes` - Scene card listing and management
+  - `/auth/regist/:group_id` - Scene registration
+  - `/auth/members` - Member management
+  - `/auth/logout` - Logout
+
+**Port:** 8090 (default)
+
 ## Commands
 
 ### List
@@ -164,6 +225,38 @@ $ uniar list scene -f -c Blue -m 加藤史帆 -p キュン
 +-------+------------+---------+----------+--------+-------+-------+--------+--------+--------+------+------+------+-------+
 
 ```
+
+### Other List Commands
+
+- `uniar list member` - List all members
+- `uniar list music` - List music tracks
+- `uniar list photograph` - List photographs
+- `uniar list live` - List live performances
+- `uniar list group` - List groups
+
+### Registration Commands
+
+Register new data into the database:
+
+- `uniar regist scene` - Register scene cards
+- `uniar regist music` - Register music tracks
+- `uniar regist photograph` - Register photographs
+- `uniar regist live` - Register live performances
+
+### Setup Commands
+
+Initialize and configure the database:
+
+- `uniar setup` - Initial setup wizard
+- `uniar setup scene` - Setup scene data
+- `uniar setup member` - Setup member data
+- `uniar setup office` - Setup office/group data
+- `uniar setup migrate` - Run database migrations
+
+### Other Commands
+
+- `uniar doc` - Generate documentation
+- `uniar completion` - Generate shell completion scripts
 
 ```
 $ uniar list scene --ignore-columns All35,VoDa50,DaPe50,VoPe50 | head
