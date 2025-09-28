@@ -20,6 +20,13 @@ make docker-build            # Build Docker image
 make db-init                 # Remove the database file (reset)
 make db-migrate             # Apply schema migrations using sqlite3def
 make db-dump                # Export database to sql/seed.sql
+make db-setup               # Initialize and migrate database (combines db-init + db-migrate)
+
+# Docker database commands
+make db-init-docker         # Initialize database in Docker container
+make db-migrate-docker      # Apply schema migrations in Docker container
+make db-setup-docker        # Initialize and migrate database in Docker container
+
 sqlite3def ~/.uniar/uniar.db -f sql/schema.sql  # Apply schema manually
 ```
 
@@ -39,6 +46,11 @@ air                        # Run with hot reload (uses .air.toml config)
 ```bash
 go test ./...             # Run all tests
 go test ./service/...     # Run service layer tests
+go test -v ./...          # Run tests with verbose output
+go test -race -coverprofile=coverage.out ./...  # Run tests with race detection and coverage
+
+# Docker testing
+docker compose exec app go test -v ./...  # Run tests in Docker container
 ```
 
 ### Documentation & Release
@@ -46,6 +58,13 @@ go test ./service/...     # Run service layer tests
 make doc                  # Generate README from command documentation
 make prerelease          # Prepare for release (dump DB, update docs, generate changelog)
 make release             # Create and push release
+```
+
+### CI/CD
+```bash
+# GitHub Actions workflows are configured in .github/workflows/
+# - ci.yml: Runs tests, linting, and build checks on push/PR
+# - Includes test coverage reporting with codecov
 ```
 
 ## Architecture
@@ -71,6 +90,7 @@ make release             # Create and push release
 
 - **entity/** - Domain models
   - Scene, Member, Photograph, Producer entities
+  - Includes CalcTotal method for score calculations
 
 - **sql/** - Database schemas and queries
   - schema.sql defines table structure
@@ -89,7 +109,21 @@ The application manages UNI'S ON AIR game data including:
 
 - Cobra for CLI commands
 - Gin for HTTP server
-- sqlc for SQL code generation
+- sqlc for SQL code generation (with field rename configuration)
 - sqlite3 as database
 - Air for hot reload during development
 - mockgen for test mocks
+- sqlmock for database testing
+- golangci-lint for code quality checks
+
+### sqlc Configuration
+
+Field naming is configured in `sqlc.yaml` with rename rules:
+```yaml
+rename:
+  memberid: "MemberID"
+  photographid: "PhotographID"
+  producerid: "ProducerID"
+```
+
+This ensures proper Go naming conventions (PascalCase) for generated struct fields.
