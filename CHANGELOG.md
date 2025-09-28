@@ -1,25 +1,39 @@
 # Changelog
 
-## [v0.19.2](https://github.com/litencatt/uniar/compare/v0.19.1...v0.19.2) - 2025-09-28
-- SQLiteドライバーの純Go実装への移行とクロスコンパイル対応 by @litencatt in https://github.com/litencatt/uniar/pull/96
+## [0.19.2](https://github.com/litencatt/uniar/compare/v0.19.2...0.19.2) (2025-09-28)
 
-## [v0.19.1](https://github.com/litencatt/uniar/compare/v0.19.0...v0.19.1) - 2025-09-28
-- GoReleaserによるHomebrew Formula自動更新の修正 by @litencatt in https://github.com/litencatt/uniar/pull/94
 
-## [v0.19.0](https://github.com/litencatt/uniar/compare/v0.18.4...v0.19.0) - 2025-09-28
-- Launchable docker dev env by @litencatt in https://github.com/litencatt/uniar/pull/90
-- CI/CDパイプラインとテストの追加およびコード品質の改善 by @litencatt in https://github.com/litencatt/uniar/pull/92
-- CI設定の最適化と.gitignoreの改善 by @litencatt in https://github.com/litencatt/uniar/pull/93
+## [v0.19.2](https://github.com/litencatt/uniar/compare/v0.19.1...v0.19.2) (2025-09-28)
 
-## [v0.18.4](https://github.com/litencatt/uniar/compare/v0.18.3...v0.18.4) - 2024-02-12
-- 2024.02.12 update by @litencatt in https://github.com/litencatt/uniar/pull/88
+* Release for v0.19.2 [#97](https://github.com/litencatt/uniar/pull/97) ([github-actions[bot]](https://github.com/apps/github-actions))
+* SQLiteドライバーの純Go実装への移行とクロスコンパイル対応 [#96](https://github.com/litencatt/uniar/pull/96) ([litencatt](https://github.com/litencatt))
 
-## [v0.18.3](https://github.com/litencatt/uniar/compare/v0.18.2...v0.18.3) - 2023-09-10
-- tagpr by @litencatt in https://github.com/litencatt/uniar/pull/85
-- Auth and login by @litencatt in https://github.com/litencatt/uniar/pull/73
+## [v0.19.1](https://github.com/litencatt/uniar/compare/v0.19.0...v0.19.1) (2025-09-28)
+
+* Release for v0.19.1 [#95](https://github.com/litencatt/uniar/pull/95) ([github-actions[bot]](https://github.com/apps/github-actions))
+* GoReleaserによるHomebrew Formula自動更新の修正 [#94](https://github.com/litencatt/uniar/pull/94) ([litencatt](https://github.com/litencatt))
+
+## [v0.19.0](https://github.com/litencatt/uniar/compare/v0.18.4...v0.19.0) (2025-09-28)
+
+* Release for v0.19.0 [#91](https://github.com/litencatt/uniar/pull/91) ([github-actions[bot]](https://github.com/apps/github-actions))
+* CI設定の最適化と.gitignoreの改善 [#93](https://github.com/litencatt/uniar/pull/93) ([litencatt](https://github.com/litencatt))
+* CI/CDパイプラインとテストの追加およびコード品質の改善 [#92](https://github.com/litencatt/uniar/pull/92) ([litencatt](https://github.com/litencatt))
+* Launchable docker dev env [#90](https://github.com/litencatt/uniar/pull/90) ([litencatt](https://github.com/litencatt))
+
+## [v0.18.4](https://github.com/litencatt/uniar/compare/v0.18.3...v0.18.4) (2025-09-28)
+
+* Release for v0.18.4 [#89](https://github.com/litencatt/uniar/pull/89) ([github-actions[bot]](https://github.com/apps/github-actions))
+* 2024.02.12 update [#88](https://github.com/litencatt/uniar/pull/88) ([litencatt](https://github.com/litencatt))
+
+## [v0.18.3](https://github.com/litencatt/uniar/compare/v0.18.2...v0.18.3) (2024-02-12)
+
+* Release for v0.18.3 [#86](https://github.com/litencatt/uniar/pull/86) ([github-actions[bot]](https://github.com/apps/github-actions))
+* Auth and login [#73](https://github.com/litencatt/uniar/pull/73) ([litencatt](https://github.com/litencatt))
+* tagpr [#85](https://github.com/litencatt/uniar/pull/85) ([litencatt](https://github.com/litencatt))
 
 ## [v0.18.2](https://github.com/litencatt/uniar/compare/v0.18.0...v0.18.2) (2023-05-01)
 
+* bump to v0.18.2 [#84](https://github.com/litencatt/uniar/pull/84) ([litencatt](https://github.com/litencatt))
 * Fix photo order match to original game app [#83](https://github.com/litencatt/uniar/pull/83) ([litencatt](https://github.com/litencatt))
 * bump to v0.18.1 [#82](https://github.com/litencatt/uniar/pull/82) ([litencatt](https://github.com/litencatt))
 * Add generate mock command [#81](https://github.com/litencatt/uniar/pull/81) ([litencatt](https://github.com/litencatt))
