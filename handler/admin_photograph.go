@@ -9,7 +9,7 @@ import (
 )
 
 type AdminPhotographHandler struct {
-	PhotographService service.Photgraph
+	PhotographService *service.Photgraph
 }
 
 func (h *AdminPhotographHandler) ListPhotograph(c *gin.Context) {

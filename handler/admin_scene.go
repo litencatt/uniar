@@ -9,7 +9,7 @@ import (
 )
 
 type AdminSceneHandler struct {
-	SceneService service.Scene
+	SceneService *service.Scene
 }
 
 func (h *AdminSceneHandler) ListScene(c *gin.Context) {

@@ -9,7 +9,7 @@ import (
 )
 
 type AdminMusicHandler struct {
-	MusicService service.Music
+	MusicService *service.Music
 }
 
 func (h *AdminMusicHandler) ListMusic(c *gin.Context) {

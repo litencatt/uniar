@@ -131,7 +131,7 @@ func (x *LoginProducer) AuthHandler(c *gin.Context) {
 			EMail:      goauthUser.Email,
 			LoggedIn:   true,
 			ProducerId: p.ID,
-			IsAdmin:    p.IsAdmin == 1,
+			IsAdmin:    p.IsAdmin,
 		}
 		fmt.Printf("AuthHandler() save uniar_session value:%+v\n", userSession)
 		session.Set("uniar_session", &userSession)

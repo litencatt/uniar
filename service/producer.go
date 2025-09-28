@@ -27,6 +27,7 @@ func (x *Producer) FindProducer(ctx context.Context, identityId string) (entity.
 		ID:          p.ID,
 		ProviderID:  p.ProviderID,
 		IdentityId:  p.IdentityID,
+		IsAdmin:     p.IsAdmin == 1,
 	}, nil
 }
 

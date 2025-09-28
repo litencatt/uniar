@@ -8,9 +8,9 @@ import (
 )
 
 type AdminDashboardHandler struct {
-	MusicService      service.Music
-	PhotographService service.Photgraph
-	SceneService      service.Scene
+	MusicService      *service.Music
+	PhotographService *service.Photgraph
+	SceneService      *service.Scene
 }
 
 func (h *AdminDashboardHandler) Dashboard(c *gin.Context) {
