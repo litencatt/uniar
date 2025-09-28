@@ -52,17 +52,13 @@ var listSceneCmd = &cobra.Command{
 			color = "%"
 		}
 
-		member := m
-		if m == "" {
-			member = "%"
-		} else {
+		member := "%"
+		if m != "" {
 			member = "%" + m + "%"
 		}
 
-		photo := p
-		if p == "" {
-			photo = "%"
-		} else {
+		photo := "%"
+		if p != "" {
 			photo = "%" + p + "%"
 		}
 

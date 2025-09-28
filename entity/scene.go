@@ -50,21 +50,22 @@ type OfficeBonus struct {
 	Performance int64
 }
 
-var (
-	all35  = 0.35
-	voda50 = 0.50
-	dape50 = 0.50
-	vope50 = 0.50
-	vo85   = 0.85
-	da85   = 0.85
-	pe85   = 0.85
-
-	// フロントスキン
-	frontSkinAll5  = 0.05
-	frontSkinVoda8 = 0.08
-	frontSkinDape8 = 0.08
-	frontSkinVope8 = 0.08
-)
+// Score calculation constants (commented out as unused)
+// const (
+// 	all35  = 0.35
+// 	voda50 = 0.50
+// 	dape50 = 0.50
+// 	vope50 = 0.50
+// 	vo85   = 0.85
+// 	da85   = 0.85
+// 	pe85   = 0.85
+//
+// 	// フロントスキン
+// 	frontSkinAll5  = 0.05
+// 	frontSkinVoda8 = 0.08
+// 	frontSkinDape8 = 0.08
+// 	frontSkinVope8 = 0.08
+// )
 
 var (
 	bonds = []int64{

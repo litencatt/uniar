@@ -41,17 +41,13 @@ var setupSceneCmd = &cobra.Command{
 		m, _ := cmd.Flags().GetString("member")
 		p, _ := cmd.Flags().GetString("photograph")
 
-		member := m
-		if m == "" {
-			member = "%"
-		} else {
+		member := "%"
+		if m != "" {
 			member = "%" + m + "%"
 		}
 
-		photo := p
-		if p == "" {
-			photo = "%"
-		} else {
+		photo := "%"
+		if p != "" {
 			photo = "%" + p + "%"
 		}
 
@@ -70,25 +66,26 @@ var setupSceneCmd = &cobra.Command{
 	},
 }
 
-func initProducerScene(ctx context.Context, db *sql.DB, q *repository.Queries) error {
-	// producer_scenesレコード作成
-	ss, err := q.GetAllScenes(ctx, db)
-	if err != nil {
-		return err
-	}
-	for _, s := range ss {
-		if err := q.RegistProducerScene(ctx, db, repository.RegistProducerSceneParams{
-			ProducerID:   1,
-			PhotographID: s.PhotographID,
-			MemberID:     s.MemberID,
-			SsrPlus:      s.SsrPlus,
-		}); err != nil {
-			return err
-		}
-	}
-
-	return nil
-}
+// initProducerScene function is commented out as unused
+// func initProducerScene(ctx context.Context, db *sql.DB, q *repository.Queries) error {
+// 	// producer_scenesレコード作成
+// 	ss, err := q.GetAllScenes(ctx, db)
+// 	if err != nil {
+// 		return err
+// 	}
+// 	for _, s := range ss {
+// 		if err := q.RegistProducerScene(ctx, db, repository.RegistProducerSceneParams{
+// 			ProducerID:   1,
+// 			PhotographID: s.PhotographID,
+// 			MemberID:     s.MemberID,
+// 			SsrPlus:      s.SsrPlus,
+// 		}); err != nil {
+// 			return err
+// 		}
+// 	}
+//
+// 	return nil
+// }
 
 func setupScene(ctx context.Context, db *sql.DB, q *repository.Queries, photo, member string) error {
 	fmt.Printf("== 所持シーンカードセットアップ ==\n0:未所持\n1:所持\nデフォルト値:0(未所持)\n\n")

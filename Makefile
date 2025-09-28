@@ -65,6 +65,12 @@ doc: build
 gen-mock:
 	mockgen -source repository/querier.go -destination repository/querier_mock.go -package repository
 
+lint:
+	golangci-lint run
+
+lint-docker:
+	docker compose exec app golangci-lint run
+
 prerelease:
 	@$(MAKE) db-dump
 	go mod tidy

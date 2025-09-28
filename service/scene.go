@@ -146,31 +146,31 @@ func (x *Scene) ListScene(ctx context.Context, arg *ListSceneRequest) ([]entity.
 
 	// 各センタースキル毎の順位
 	sort.Slice(scenes, func(i, j int) bool { return scenes[i].All35Score > scenes[j].All35Score })
-	for i, _ := range scenes {
+	for i := range scenes {
 		scenes[i].All35 = int64(i + 1)
 	}
 	sort.Slice(scenes, func(i, j int) bool { return scenes[i].VoDa50Score > scenes[j].VoDa50Score })
-	for i, _ := range scenes {
+	for i := range scenes {
 		scenes[i].VoDa50 = int64(i + 1)
 	}
 	sort.Slice(scenes, func(i, j int) bool { return scenes[i].DaPe50Score > scenes[j].DaPe50Score })
-	for i, _ := range scenes {
+	for i := range scenes {
 		scenes[i].DaPe50 = int64(i + 1)
 	}
 	sort.Slice(scenes, func(i, j int) bool { return scenes[i].VoPe50Score > scenes[j].VoPe50Score })
-	for i, _ := range scenes {
+	for i := range scenes {
 		scenes[i].VoPe50 = int64(i + 1)
 	}
 	sort.Slice(scenes, func(i, j int) bool { return scenes[i].Vo85Score > scenes[j].Vo85Score })
-	for i, _ := range scenes {
+	for i := range scenes {
 		scenes[i].Vo85 = int64(i + 1)
 	}
 	sort.Slice(scenes, func(i, j int) bool { return scenes[i].Da85Score > scenes[j].Da85Score })
-	for i, _ := range scenes {
+	for i := range scenes {
 		scenes[i].Da85 = int64(i + 1)
 	}
 	sort.Slice(scenes, func(i, j int) bool { return scenes[i].Pe85Score > scenes[j].Pe85Score })
-	for i, _ := range scenes {
+	for i := range scenes {
 		scenes[i].Pe85 = int64(i + 1)
 	}
 

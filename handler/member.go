@@ -46,7 +46,10 @@ func (ls *ListMember) UpdateMember(c *gin.Context) {
 		return
 	}
 
-	c.Request.ParseForm()
+	if err := c.Request.ParseForm(); err != nil {
+		c.String(http.StatusBadRequest, err.Error())
+		return
+	}
 	for _, pm := range pms {
 		bond := c.Request.Form[fmt.Sprintf("bonds_%d", pm.MemberID)]
 		bondInt, _ := strconv.ParseInt(bond[0], 10, 64)
@@ -54,12 +57,15 @@ func (ls *ListMember) UpdateMember(c *gin.Context) {
 		disco := c.Request.Form[fmt.Sprintf("disco_%d", pm.MemberID)]
 		discoInt, _ := strconv.ParseInt(disco[0], 10, 64)
 
-		ls.MemberService.UpdateProducerMember(ctx, entity.ProducerMember{
+		if err := ls.MemberService.UpdateProducerMember(ctx, entity.ProducerMember{
 			ProducerID:  us.ProducerId,
 			MemberID:    pm.MemberID,
 			BondLevel:   bondInt,
 			Discography: discoInt,
-		})
+		}); err != nil {
+			c.String(http.StatusInternalServerError, err.Error())
+			return
+		}
 	}
 
 	c.Redirect(http.StatusFound, "/auth/members")
