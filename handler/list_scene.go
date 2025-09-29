@@ -59,6 +59,7 @@ func (ls *ListScene) ListScene(c *gin.Context) {
 		"title":              "Scenes Index",
 		"LoggedIn":           us.LoggedIn,
 		"EMail":              us.EMail,
+		"IsAdmin":            us.IsAdmin,
 		"photograph":         ps,
 		"selectedPhotograph": req.Photograph,
 		"color":              []string{"Red", "Blue", "Green", "Yellow", "Purple"},

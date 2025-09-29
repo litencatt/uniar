@@ -12,6 +12,24 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 `uniar` is a CLI tool and web server for managing UNI'S ON AIR scene card collections and database. It uses SQLite for data storage and is written in Go with Cobra for CLI commands and Gin for the web server.
 
+## Development Quality Assurance (CRITICAL)
+
+### Required Checks After Code Changes
+- **MANDATORY**: Execute the following after every Go code change:
+  1. `go fmt ./...` - Format code according to Go standards
+  2. `golangci-lint run` - Run linter (if installed)
+  3. `go test ./...` - Run all tests
+  4. `go test -race ./...` - Check for race conditions
+  5. Fix all errors and warnings before considering task complete
+
+### Pre-Commit Verification Checklist
+- `go mod tidy` - Clean up module dependencies
+- All tests must pass
+- Test coverage must not decrease (`go test -cover ./...`)
+- Build must succeed (`go build ./...`)
+
+**IMPORTANT**: These checks are mandatory for maintaining code quality and preventing regressions. Never skip these steps.
+
 ## Development Commands
 
 ### Build

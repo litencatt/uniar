@@ -225,5 +225,13 @@ func getUserSession(c *gin.Context) (*UserSession, error) {
 	if us == nil {
 		return nil, fmt.Errorf("getUserSession() user session not found")
 	}
-	return us.(*UserSession), nil
+
+	userSession := us.(*UserSession)
+
+	// ADMIN_DEBUG=trueの場合、IsAdminをtrueに設定
+	if os.Getenv("ADMIN_DEBUG") == "true" {
+		userSession.IsAdmin = true
+	}
+
+	return userSession, nil
 }
