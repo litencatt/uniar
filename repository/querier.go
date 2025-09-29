@@ -16,6 +16,7 @@ type Querier interface {
 	GetAllMembers(ctx context.Context, db DBTX) ([]Member, error)
 	GetAllScenes(ctx context.Context, db DBTX) ([]GetAllScenesRow, error)
 	GetAllScenesWithGroupId(ctx context.Context, db DBTX, groupID int64) ([]GetAllScenesWithGroupIdRow, error)
+	GetColorTypeList(ctx context.Context, db DBTX) ([]GetColorTypeListRow, error)
 	GetGroup(ctx context.Context, db DBTX) ([]GetGroupRow, error)
 	GetGroupNameById(ctx context.Context, db DBTX, id int64) (string, error)
 	GetLiveList(ctx context.Context, db DBTX) ([]GetLiveListRow, error)
@@ -25,6 +26,7 @@ type Querier interface {
 	GetMusicList(ctx context.Context, db DBTX) ([]GetMusicListRow, error)
 	GetMusicListAll(ctx context.Context, db DBTX) ([]GetMusicListAllRow, error)
 	GetMusicListWithColor(ctx context.Context, db DBTX, name string) ([]GetMusicListWithColorRow, error)
+	GetPhotoTypeList(ctx context.Context, db DBTX) ([]string, error)
 	GetPhotographByGroupId(ctx context.Context, db DBTX, groupID int64) ([]GetPhotographByGroupIdRow, error)
 	GetPhotographById(ctx context.Context, db DBTX, id int64) (Photograph, error)
 	GetPhotographList(ctx context.Context, db DBTX, arg GetPhotographListParams) ([]GetPhotographListRow, error)
@@ -51,6 +53,9 @@ type Querier interface {
 	RegistProducerOffice(ctx context.Context, db DBTX, producerID int64) error
 	RegistProducerScene(ctx context.Context, db DBTX, arg RegistProducerSceneParams) error
 	RegistScene(ctx context.Context, db DBTX, arg RegistSceneParams) error
+	SearchMusicList(ctx context.Context, db DBTX, arg SearchMusicListParams) ([]SearchMusicListRow, error)
+	SearchPhotographList(ctx context.Context, db DBTX, arg SearchPhotographListParams) ([]SearchPhotographListRow, error)
+	SearchSceneList(ctx context.Context, db DBTX, arg SearchSceneListParams) ([]SearchSceneListRow, error)
 	UpdateMusic(ctx context.Context, db DBTX, arg UpdateMusicParams) error
 	UpdatePhotograph(ctx context.Context, db DBTX, arg UpdatePhotographParams) error
 	UpdateProducerMember(ctx context.Context, db DBTX, arg UpdateProducerMemberParams) error

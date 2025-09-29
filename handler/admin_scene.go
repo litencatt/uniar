@@ -5,17 +5,65 @@ import (
 	"strconv"
 
 	"github.com/gin-gonic/gin"
+	"github.com/litencatt/uniar/repository"
 	"github.com/litencatt/uniar/service"
 )
 
 type AdminSceneHandler struct {
-	SceneService *service.Scene
+	SceneService  *service.Scene
+	SearchService *service.SearchService
 }
 
 func (h *AdminSceneHandler) ListScene(c *gin.Context) {
 	ctx := c.Request.Context()
 
-	// ページネーション
+	// ドロップダウン選択肢用のデータを取得
+	members, err := h.SearchService.Querier.GetAllMembers(ctx, h.SearchService.DB)
+	if err != nil {
+		members = []repository.Member{} // エラー時は空配列
+	}
+
+	photographs, err := h.SearchService.Querier.GetPhotographListForAdmin(ctx, h.SearchService.DB)
+	if err != nil {
+		photographs = []repository.GetPhotographListForAdminRow{} // エラー時は空配列
+	}
+
+	colors, err := h.SearchService.Querier.GetColorTypeList(ctx, h.SearchService.DB)
+	if err != nil {
+		colors = []repository.GetColorTypeListRow{} // エラー時は空配列
+	}
+
+	// 検索パラメータを取得
+	var searchParams service.SceneSearchParams
+	if err := c.ShouldBindQuery(&searchParams); err == nil {
+		// 検索パラメータがある場合は検索実行
+		if searchParams.MemberID != 0 || searchParams.PhotographID != 0 || searchParams.ColorTypeID != 0 || searchParams.SSRPlus != -1 {
+			scenes, err := h.SearchService.SearchScene(ctx, searchParams)
+			if err != nil {
+				c.HTML(http.StatusInternalServerError, "500.go.tmpl", gin.H{
+					"error": err.Error(),
+				})
+				return
+			}
+
+			c.HTML(http.StatusOK, "admin_scene_list.go.tmpl", gin.H{
+				"title":        "シーンカード管理",
+				"scenes":       scenes,
+				"searchParams": searchParams,
+				"members":      members,
+				"photographs":  photographs,
+				"colors":       colors,
+				// ページネーション情報は検索時は無効化
+				"currentPage": 1,
+				"totalPages":  1,
+				"hasNext":     false,
+				"hasPrev":     false,
+			})
+			return
+		}
+	}
+
+	// 検索パラメータがない場合は従来のページネーション付きリスト
 	page, _ := strconv.ParseInt(c.DefaultQuery("page", "1"), 10, 64)
 	perPage := int64(20)
 	offset := (page - 1) * perPage
@@ -40,14 +88,19 @@ func (h *AdminSceneHandler) ListScene(c *gin.Context) {
 	hasNext := page < totalPages
 	hasPrev := page > 1
 
-	c.HTML(http.StatusOK, "admin/scene_list.go.tmpl", gin.H{
-		"scenes":      scenes,
-		"currentPage": page,
-		"totalPages":  totalPages,
-		"hasNext":     hasNext,
-		"hasPrev":     hasPrev,
-		"nextPage":    page + 1,
-		"prevPage":    page - 1,
+	c.HTML(http.StatusOK, "admin_scene_list.go.tmpl", gin.H{
+		"title":        "シーンカード管理",
+		"scenes":       scenes,
+		"searchParams": service.SceneSearchParams{SSRPlus: -1}, // デフォルト値
+		"members":      members,
+		"photographs":  photographs,
+		"colors":       colors,
+		"currentPage":  page,
+		"totalPages":   totalPages,
+		"hasNext":      hasNext,
+		"hasPrev":      hasPrev,
+		"nextPage":     page + 1,
+		"prevPage":     page - 1,
 	})
 }
 

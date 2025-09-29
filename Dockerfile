@@ -2,6 +2,7 @@ FROM golang:1.24.7 AS dev
 
 WORKDIR /app
 
+RUN apt-get update && apt-get install -y sqlite3 && rm -rf /var/lib/apt/lists/*
 RUN go install github.com/air-verse/air@v1.52.3
 RUN go install github.com/sqlc-dev/sqlc/cmd/sqlc@latest
 RUN go install github.com/golang/mock/mockgen@latest

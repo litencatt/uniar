@@ -261,6 +261,82 @@ func (q *Queries) RegistMusic(ctx context.Context, db DBTX, arg RegistMusicParam
 	return err
 }
 
+const searchMusicList = `-- name: SearchMusicList :many
+SELECT
+	m.id, m.name, m.normal, m.pro, m.master, m.length, m.color_type_id, m.live_id, m.pro_plus, m.music_bonus, m.setlist_id, m.created_at,
+	l.name AS live_name,
+	c.name AS color_name
+FROM music m
+JOIN lives l ON m.live_id = l.id
+JOIN color_types c ON m.color_type_id = c.id
+WHERE
+	(CASE WHEN ?1 != '' THEN m.name LIKE '%' || ?1 || '%' ELSE 1 END) AND
+	(CASE WHEN ?2 != 0 THEN m.live_id = ?2 ELSE 1 END) AND
+	(CASE WHEN ?3 != 0 THEN m.color_type_id = ?3 ELSE 1 END)
+ORDER BY m.id DESC
+`
+
+type SearchMusicListParams struct {
+	Column1 interface{}
+	Column2 interface{}
+	Column3 interface{}
+}
+
+type SearchMusicListRow struct {
+	ID          int64
+	Name        string
+	Normal      int64
+	Pro         int64
+	Master      int64
+	Length      int64
+	ColorTypeID int64
+	LiveID      int64
+	ProPlus     sql.NullInt64
+	MusicBonus  sql.NullInt64
+	SetlistID   sql.NullInt64
+	CreatedAt   time.Time
+	LiveName    string
+	ColorName   string
+}
+
+func (q *Queries) SearchMusicList(ctx context.Context, db DBTX, arg SearchMusicListParams) ([]SearchMusicListRow, error) {
+	rows, err := db.QueryContext(ctx, searchMusicList, arg.Column1, arg.Column2, arg.Column3)
+	if err != nil {
+		return nil, err
+	}
+	defer rows.Close()
+	var items []SearchMusicListRow
+	for rows.Next() {
+		var i SearchMusicListRow
+		if err := rows.Scan(
+			&i.ID,
+			&i.Name,
+			&i.Normal,
+			&i.Pro,
+			&i.Master,
+			&i.Length,
+			&i.ColorTypeID,
+			&i.LiveID,
+			&i.ProPlus,
+			&i.MusicBonus,
+			&i.SetlistID,
+			&i.CreatedAt,
+			&i.LiveName,
+			&i.ColorName,
+		); err != nil {
+			return nil, err
+		}
+		items = append(items, i)
+	}
+	if err := rows.Close(); err != nil {
+		return nil, err
+	}
+	if err := rows.Err(); err != nil {
+		return nil, err
+	}
+	return items, nil
+}
+
 const updateMusic = `-- name: UpdateMusic :exec
 UPDATE music
 SET name = ?, normal = ?, pro = ?, master = ?,

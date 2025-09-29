@@ -77,3 +77,18 @@ WHERE id = ?;
 
 -- name: DeletePhotograph :exec
 DELETE FROM photograph WHERE id = ?;
+
+-- name: SearchPhotographList :many
+SELECT
+	p.*,
+	g.name AS group_name
+FROM photograph p
+JOIN groups g ON p.group_id = g.id
+WHERE
+	(CASE WHEN ?1 != '' THEN p.name LIKE '%' || ?1 || '%' ELSE 1 END) AND
+	(CASE WHEN ?2 != 0 THEN p.group_id = ?2 ELSE 1 END) AND
+	(CASE WHEN ?3 != '' THEN p.photo_type = ?3 ELSE 1 END)
+ORDER BY p.id DESC;
+
+-- name: GetPhotoTypeList :many
+SELECT DISTINCT photo_type FROM photograph ORDER BY photo_type;

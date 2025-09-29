@@ -8,6 +8,59 @@
     <a href="/admin/import/photograph" class="btn btn-secondary">CSVインポート</a>
 </div>
 
+<!-- 検索フォーム -->
+<div class="card mb-4">
+    <div class="card-header">
+        <h5 class="mb-0">
+            <button class="btn btn-link" type="button" data-bs-toggle="collapse" data-bs-target="#searchForm" aria-expanded="false" aria-controls="searchForm">
+                🔍 検索・フィルター
+            </button>
+        </h5>
+    </div>
+    <div id="searchForm" class="collapse">
+        <div class="card-body">
+            <form method="GET" action="/admin/photograph">
+                <div class="row">
+                    <div class="col-md-4">
+                        <div class="mb-3">
+                            <label for="name" class="form-label">撮影名</label>
+                            <input type="text" class="form-control" id="name" name="name" value="{{ .searchParams.Name }}" placeholder="撮影名で検索">
+                        </div>
+                    </div>
+                    <div class="col-md-4">
+                        <div class="mb-3">
+                            <label for="group_id" class="form-label">グループ</label>
+                            <select class="form-control" id="group_id" name="group_id">
+                                <option value="0">すべて</option>
+                                {{ range .groups }}
+                                <option value="{{ .ID }}" {{ if eq .ID $.searchParams.GroupID }}selected{{ end }}>{{ .Name }}</option>
+                                {{ end }}
+                            </select>
+                        </div>
+                    </div>
+                    <div class="col-md-4">
+                        <div class="mb-3">
+                            <label for="photo_type" class="form-label">撮影タイプ</label>
+                            <select class="form-control" id="photo_type" name="photo_type">
+                                <option value="">すべて</option>
+                                {{ range .photoTypes }}
+                                <option value="{{ . }}" {{ if eq . $.searchParams.PhotoType }}selected{{ end }}>{{ . }}</option>
+                                {{ end }}
+                            </select>
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-12">
+                        <button type="submit" class="btn btn-primary">検索</button>
+                        <a href="/admin/photograph" class="btn btn-secondary">クリア</a>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
 <table class="table">
     <thead>
         <tr>
