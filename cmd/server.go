@@ -86,14 +86,19 @@ func run(ctx context.Context) error {
 		PhotographService: &service.Photgraph{DB: db, Querier: q},
 		SceneService:      &service.Scene{DB: db, Querier: q},
 	}
+	searchService := &service.SearchService{DB: db, Querier: q}
+
 	adminMusic := &handler.AdminMusicHandler{
-		MusicService: &service.Music{DB: db, Querier: q},
+		MusicService:  &service.Music{DB: db, Querier: q},
+		SearchService: searchService,
 	}
 	adminPhotograph := &handler.AdminPhotographHandler{
 		PhotographService: &service.Photgraph{DB: db, Querier: q},
+		SearchService:     searchService,
 	}
 	adminScene := &handler.AdminSceneHandler{
-		SceneService: &service.Scene{DB: db, Querier: q},
+		SceneService:  &service.Scene{DB: db, Querier: q},
+		SearchService: searchService,
 	}
 	adminImport := &handler.AdminImportHandler{
 		ImportService: &service.ImportService{DB: db, Querier: q},

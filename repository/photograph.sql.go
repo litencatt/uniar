@@ -20,6 +20,33 @@ func (q *Queries) DeletePhotograph(ctx context.Context, db DBTX, id int64) error
 	return err
 }
 
+const getPhotoTypeList = `-- name: GetPhotoTypeList :many
+SELECT DISTINCT photo_type FROM photograph ORDER BY photo_type
+`
+
+func (q *Queries) GetPhotoTypeList(ctx context.Context, db DBTX) ([]string, error) {
+	rows, err := db.QueryContext(ctx, getPhotoTypeList)
+	if err != nil {
+		return nil, err
+	}
+	defer rows.Close()
+	var items []string
+	for rows.Next() {
+		var photo_type string
+		if err := rows.Scan(&photo_type); err != nil {
+			return nil, err
+		}
+		items = append(items, photo_type)
+	}
+	if err := rows.Close(); err != nil {
+		return nil, err
+	}
+	if err := rows.Err(); err != nil {
+		return nil, err
+	}
+	return items, nil
+}
+
 const getPhotographByGroupId = `-- name: GetPhotographByGroupId :many
 ;
 

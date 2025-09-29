@@ -5,16 +5,53 @@ import (
 	"strconv"
 
 	"github.com/gin-gonic/gin"
+	"github.com/litencatt/uniar/repository"
 	"github.com/litencatt/uniar/service"
 )
 
 type AdminPhotographHandler struct {
 	PhotographService *service.Photgraph
+	SearchService     *service.SearchService
 }
 
 func (h *AdminPhotographHandler) ListPhotograph(c *gin.Context) {
 	ctx := c.Request.Context()
 
+	// ドロップダウン選択肢用のデータを取得
+	groups, err := h.SearchService.Querier.GetGroup(ctx, h.SearchService.DB)
+	if err != nil {
+		groups = []repository.GetGroupRow{} // エラー時は空配列
+	}
+
+	photoTypes, err := h.SearchService.Querier.GetPhotoTypeList(ctx, h.SearchService.DB)
+	if err != nil {
+		photoTypes = []string{} // エラー時は空配列
+	}
+
+	// 検索パラメータを取得
+	var searchParams service.PhotographSearchParams
+	if err := c.ShouldBindQuery(&searchParams); err == nil {
+		// 検索パラメータがある場合は検索実行
+		if searchParams.Name != "" || searchParams.GroupID != 0 || searchParams.PhotoType != "" {
+			photographs, err := h.SearchService.SearchPhotograph(ctx, searchParams)
+			if err != nil {
+				c.HTML(http.StatusInternalServerError, "500.go.tmpl", gin.H{
+					"error": err.Error(),
+				})
+				return
+			}
+
+			c.HTML(http.StatusOK, "admin/photograph_list.go.tmpl", gin.H{
+				"photographs":   photographs,
+				"searchParams":  searchParams,
+				"groups":        groups,
+				"photoTypes":    photoTypes,
+			})
+			return
+		}
+	}
+
+	// 検索パラメータがない場合は全件取得
 	photographs, err := h.PhotographService.ListAllForAdmin(ctx)
 	if err != nil {
 		c.HTML(http.StatusInternalServerError, "500.go.tmpl", gin.H{
@@ -24,7 +61,10 @@ func (h *AdminPhotographHandler) ListPhotograph(c *gin.Context) {
 	}
 
 	c.HTML(http.StatusOK, "admin/photograph_list.go.tmpl", gin.H{
-		"photographs": photographs,
+		"photographs":  photographs,
+		"searchParams": service.PhotographSearchParams{},
+		"groups":       groups,
+		"photoTypes":   photoTypes,
 	})
 }
 

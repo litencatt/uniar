@@ -5,6 +5,7 @@ import (
 	"strconv"
 
 	"github.com/gin-gonic/gin"
+	"github.com/litencatt/uniar/repository"
 	"github.com/litencatt/uniar/service"
 )
 
@@ -15,6 +16,17 @@ type AdminMusicHandler struct {
 
 func (h *AdminMusicHandler) ListMusic(c *gin.Context) {
 	ctx := c.Request.Context()
+
+	// ドロップダウン選択肢用のデータを取得
+	lives, err := h.SearchService.Querier.GetLiveList(ctx, h.SearchService.DB)
+	if err != nil {
+		lives = []repository.GetLiveListRow{} // エラー時は空配列
+	}
+
+	colors, err := h.SearchService.Querier.GetColorTypeList(ctx, h.SearchService.DB)
+	if err != nil {
+		colors = []repository.GetColorTypeListRow{} // エラー時は空配列
+	}
 
 	// 検索パラメータを取得
 	var searchParams service.MusicSearchParams
@@ -27,20 +39,6 @@ func (h *AdminMusicHandler) ListMusic(c *gin.Context) {
 					"error": err.Error(),
 				})
 				return
-			}
-
-			// 選択肢用のデータを取得（簡易実装）
-			lives := []struct{ ID int64; Name string }{
-				{1, "1st Live"},
-				{2, "2nd Live"},
-				{3, "3rd Live"},
-			}
-			colors := []struct{ ID int64; Name string }{
-				{1, "Red"},
-				{2, "Blue"},
-				{3, "Yellow"},
-				{4, "Green"},
-				{5, "Purple"},
 			}
 
 			c.HTML(http.StatusOK, "admin/music_list.go.tmpl", gin.H{
@@ -60,20 +58,6 @@ func (h *AdminMusicHandler) ListMusic(c *gin.Context) {
 			"error": err.Error(),
 		})
 		return
-	}
-
-	// 選択肢用のデータを取得（簡易実装）
-	lives := []struct{ ID int64; Name string }{
-		{1, "1st Live"},
-		{2, "2nd Live"},
-		{3, "3rd Live"},
-	}
-	colors := []struct{ ID int64; Name string }{
-		{1, "Red"},
-		{2, "Blue"},
-		{3, "Yellow"},
-		{4, "Green"},
-		{5, "Purple"},
 	}
 
 	c.HTML(http.StatusOK, "admin/music_list.go.tmpl", gin.H{

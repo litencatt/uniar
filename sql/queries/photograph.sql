@@ -89,3 +89,6 @@ WHERE
 	(CASE WHEN ?2 != 0 THEN p.group_id = ?2 ELSE 1 END) AND
 	(CASE WHEN ?3 != '' THEN p.photo_type = ?3 ELSE 1 END)
 ORDER BY p.id DESC;
+
+-- name: GetPhotoTypeList :many
+SELECT DISTINCT photo_type FROM photograph ORDER BY photo_type;

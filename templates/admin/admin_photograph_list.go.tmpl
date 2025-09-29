@@ -43,9 +43,9 @@
                             <label for="photo_type" class="form-label">撮影タイプ</label>
                             <select class="form-control" id="photo_type" name="photo_type">
                                 <option value="">すべて</option>
-                                <option value="Live" {{ if eq "Live" .searchParams.PhotoType }}selected{{ end }}>Live</option>
-                                <option value="Event" {{ if eq "Event" .searchParams.PhotoType }}selected{{ end }}>Event</option>
-                                <option value="Special" {{ if eq "Special" .searchParams.PhotoType }}selected{{ end }}>Special</option>
+                                {{ range .photoTypes }}
+                                <option value="{{ . }}" {{ if eq . $.searchParams.PhotoType }}selected{{ end }}>{{ . }}</option>
+                                {{ end }}
                             </select>
                         </div>
                     </div>
