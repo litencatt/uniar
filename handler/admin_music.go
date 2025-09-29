@@ -16,6 +16,44 @@ type AdminMusicHandler struct {
 func (h *AdminMusicHandler) ListMusic(c *gin.Context) {
 	ctx := c.Request.Context()
 
+	// 検索パラメータを取得
+	var searchParams service.MusicSearchParams
+	if err := c.ShouldBindQuery(&searchParams); err == nil {
+		// 検索パラメータがある場合は検索実行
+		if searchParams.Name != "" || searchParams.LiveID != 0 || searchParams.ColorTypeID != 0 {
+			musics, err := h.SearchService.SearchMusic(ctx, searchParams)
+			if err != nil {
+				c.HTML(http.StatusInternalServerError, "500.go.tmpl", gin.H{
+					"error": err.Error(),
+				})
+				return
+			}
+
+			// 選択肢用のデータを取得（簡易実装）
+			lives := []struct{ ID int64; Name string }{
+				{1, "1st Live"},
+				{2, "2nd Live"},
+				{3, "3rd Live"},
+			}
+			colors := []struct{ ID int64; Name string }{
+				{1, "Red"},
+				{2, "Blue"},
+				{3, "Yellow"},
+				{4, "Green"},
+				{5, "Purple"},
+			}
+
+			c.HTML(http.StatusOK, "admin/music_list.go.tmpl", gin.H{
+				"musics":       musics,
+				"searchParams": searchParams,
+				"lives":        lives,
+				"colors":       colors,
+			})
+			return
+		}
+	}
+
+	// 検索パラメータがない場合は全件取得
 	musics, err := h.MusicService.ListAll(ctx)
 	if err != nil {
 		c.HTML(http.StatusInternalServerError, "500.go.tmpl", gin.H{
@@ -24,8 +62,25 @@ func (h *AdminMusicHandler) ListMusic(c *gin.Context) {
 		return
 	}
 
+	// 選択肢用のデータを取得（簡易実装）
+	lives := []struct{ ID int64; Name string }{
+		{1, "1st Live"},
+		{2, "2nd Live"},
+		{3, "3rd Live"},
+	}
+	colors := []struct{ ID int64; Name string }{
+		{1, "Red"},
+		{2, "Blue"},
+		{3, "Yellow"},
+		{4, "Green"},
+		{5, "Purple"},
+	}
+
 	c.HTML(http.StatusOK, "admin/music_list.go.tmpl", gin.H{
-		"musics": musics,
+		"musics":       musics,
+		"searchParams": service.MusicSearchParams{},
+		"lives":        lives,
+		"colors":       colors,
 	})
 }
 

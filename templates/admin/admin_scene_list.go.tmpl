@@ -8,6 +8,74 @@
     <a href="/admin/import/scene" class="btn btn-secondary">CSVインポート</a>
 </div>
 
+<!-- 検索フォーム -->
+<div class="card mb-4">
+    <div class="card-header">
+        <h5 class="mb-0">
+            <button class="btn btn-link" type="button" data-bs-toggle="collapse" data-bs-target="#searchForm" aria-expanded="false" aria-controls="searchForm">
+                🔍 検索・フィルター
+            </button>
+        </h5>
+    </div>
+    <div id="searchForm" class="collapse">
+        <div class="card-body">
+            <form method="GET" action="/admin/scene">
+                <div class="row">
+                    <div class="col-md-3">
+                        <div class="mb-3">
+                            <label for="member_id" class="form-label">メンバー</label>
+                            <select class="form-control" id="member_id" name="member_id">
+                                <option value="0">すべて</option>
+                                {{ range .members }}
+                                <option value="{{ .ID }}" {{ if eq .ID $.searchParams.MemberID }}selected{{ end }}>{{ .Name }}</option>
+                                {{ end }}
+                            </select>
+                        </div>
+                    </div>
+                    <div class="col-md-3">
+                        <div class="mb-3">
+                            <label for="photograph_id" class="form-label">撮影</label>
+                            <select class="form-control" id="photograph_id" name="photograph_id">
+                                <option value="0">すべて</option>
+                                {{ range .photographs }}
+                                <option value="{{ .ID }}" {{ if eq .ID $.searchParams.PhotographID }}selected{{ end }}>{{ .Name }}</option>
+                                {{ end }}
+                            </select>
+                        </div>
+                    </div>
+                    <div class="col-md-3">
+                        <div class="mb-3">
+                            <label for="color_type_id" class="form-label">カラー</label>
+                            <select class="form-control" id="color_type_id" name="color_type_id">
+                                <option value="0">すべて</option>
+                                {{ range .colors }}
+                                <option value="{{ .ID }}" {{ if eq .ID $.searchParams.ColorTypeID }}selected{{ end }}>{{ .Name }}</option>
+                                {{ end }}
+                            </select>
+                        </div>
+                    </div>
+                    <div class="col-md-3">
+                        <div class="mb-3">
+                            <label for="ssr_plus" class="form-label">レアリティ</label>
+                            <select class="form-control" id="ssr_plus" name="ssr_plus">
+                                <option value="-1">すべて</option>
+                                <option value="1" {{ if eq 1 .searchParams.SSRPlus }}selected{{ end }}>SSR+</option>
+                                <option value="0" {{ if eq 0 .searchParams.SSRPlus }}selected{{ end }}>通常</option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-12">
+                        <button type="submit" class="btn btn-primary">検索</button>
+                        <a href="/admin/scene" class="btn btn-secondary">クリア</a>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
 <table class="table">
     <thead>
         <tr>
