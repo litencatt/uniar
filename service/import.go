@@ -123,6 +123,10 @@ func (s *ImportService) ImportMusicFromCSV(ctx context.Context, reader io.Reader
 		}
 
 		if validateOnly {
+			// Validate the data even in preview mode
+			if err := s.validateAndInsertMusic(ctx, nil, musicRow, rowNum, result); err != nil {
+				continue
+			}
 			previewData := map[string]interface{}{
 				"name":          musicRow.Name,
 				"normal":        musicRow.Normal,
@@ -214,6 +218,10 @@ func (s *ImportService) ImportPhotographFromCSV(ctx context.Context, reader io.R
 		}
 
 		if validateOnly {
+			// Validate the data even in preview mode
+			if err := s.validateAndInsertPhotograph(ctx, nil, photographRow, rowNum, result); err != nil {
+				continue
+			}
 			previewData := map[string]interface{}{
 				"name":       photographRow.Name,
 				"group_id":   photographRow.GroupID,
@@ -307,6 +315,10 @@ func (s *ImportService) ImportSceneFromCSV(ctx context.Context, reader io.Reader
 		}
 
 		if validateOnly {
+			// Validate the data even in preview mode
+			if err := s.validateAndInsertScene(ctx, nil, sceneRow, rowNum, result); err != nil {
+				continue
+			}
 			previewData := map[string]interface{}{
 				"photograph_id":   sceneRow.PhotographID,
 				"member_id":       sceneRow.MemberID,
@@ -431,22 +443,25 @@ func (s *ImportService) validateAndInsertMusic(ctx context.Context, tx *sql.Tx, 
 	}
 
 
-	if err := s.Querier.RegistMusic(ctx, tx, repository.RegistMusicParams{
-		Name:        row.Name,
-		Normal:      normal,
-		Pro:         pro,
-		Master:      master,
-		Length:      length,
-		ColorTypeID: colorTypeID,
-		LiveID:      liveID,
-	}); err != nil {
-		result.Failed++
-		result.Errors = append(result.Errors, ImportError{
-			Row:     rowNum,
-			Field:   "database",
-			Message: fmt.Sprintf("failed to insert: %v", err),
-		})
-		return fmt.Errorf("database error")
+	// Skip database insert if tx is nil (validate-only mode)
+	if tx != nil {
+		if err := s.Querier.RegistMusic(ctx, tx, repository.RegistMusicParams{
+			Name:        row.Name,
+			Normal:      normal,
+			Pro:         pro,
+			Master:      master,
+			Length:      length,
+			ColorTypeID: colorTypeID,
+			LiveID:      liveID,
+		}); err != nil {
+			result.Failed++
+			result.Errors = append(result.Errors, ImportError{
+				Row:     rowNum,
+				Field:   "database",
+				Message: fmt.Sprintf("failed to insert: %v", err),
+			})
+			return fmt.Errorf("database error")
+		}
 	}
 
 	return nil
@@ -474,18 +489,21 @@ func (s *ImportService) validateAndInsertPhotograph(ctx context.Context, tx *sql
 		return fmt.Errorf("validation failed")
 	}
 
-	if err := s.Querier.RegistPhotograph(ctx, tx, repository.RegistPhotographParams{
-		Name:      row.Name,
-		GroupID:   groupID,
-		PhotoType: row.PhotoType,
-	}); err != nil {
-		result.Failed++
-		result.Errors = append(result.Errors, ImportError{
-			Row:     rowNum,
-			Field:   "database",
-			Message: fmt.Sprintf("failed to insert: %v", err),
-		})
-		return fmt.Errorf("database error")
+	// Skip database insert if tx is nil (validate-only mode)
+	if tx != nil {
+		if err := s.Querier.RegistPhotograph(ctx, tx, repository.RegistPhotographParams{
+			Name:      row.Name,
+			GroupID:   groupID,
+			PhotoType: row.PhotoType,
+		}); err != nil {
+			result.Failed++
+			result.Errors = append(result.Errors, ImportError{
+				Row:     rowNum,
+				Field:   "database",
+				Message: fmt.Sprintf("failed to insert: %v", err),
+			})
+			return fmt.Errorf("database error")
+		}
 	}
 
 	return nil
@@ -600,24 +618,27 @@ func (s *ImportService) validateAndInsertScene(ctx context.Context, tx *sql.Tx, 
 		Valid:  true,
 	}
 
-	if err := s.Querier.RegistScene(ctx, tx, repository.RegistSceneParams{
-		PhotographID:   photographID,
-		MemberID:       memberID,
-		ColorTypeID:    colorTypeID,
-		VocalMax:       vocalMax,
-		DanceMax:       danceMax,
-		PerformanceMax: performanceMax,
-		CenterSkill:    centerSkillNull,
-		ExpectedValue:  expectedValueNull,
-		SsrPlus:        ssrPlus,
-	}); err != nil {
-		result.Failed++
-		result.Errors = append(result.Errors, ImportError{
-			Row:     rowNum,
-			Field:   "database",
-			Message: fmt.Sprintf("failed to insert: %v", err),
-		})
-		return fmt.Errorf("database error")
+	// Skip database insert if tx is nil (validate-only mode)
+	if tx != nil {
+		if err := s.Querier.RegistScene(ctx, tx, repository.RegistSceneParams{
+			PhotographID:   photographID,
+			MemberID:       memberID,
+			ColorTypeID:    colorTypeID,
+			VocalMax:       vocalMax,
+			DanceMax:       danceMax,
+			PerformanceMax: performanceMax,
+			CenterSkill:    centerSkillNull,
+			ExpectedValue:  expectedValueNull,
+			SsrPlus:        ssrPlus,
+		}); err != nil {
+			result.Failed++
+			result.Errors = append(result.Errors, ImportError{
+				Row:     rowNum,
+				Field:   "database",
+				Message: fmt.Sprintf("failed to insert: %v", err),
+			})
+			return fmt.Errorf("database error")
+		}
 	}
 
 	return nil
