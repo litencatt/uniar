@@ -2,25 +2,40 @@
 <html>
 <head>
     <title>{{ .title }}</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <style type="text/css" media="screen">
+        @import url("/assets/css/styles.css");
+        @import url("/assets/css/scenes.css");
         @import url("/assets/css/regist.css");
     </style>
 </head>
 <body>
-  {{ if .LoggedIn }}
-  <p>Email: {{ .EMail }}</p>
-  <a href="/auth/scenes">シーン一覧</a>
-  <a href="/auth/regist/1">シーン登録(櫻坂46)</a>
-  <a href="/auth/regist/2">シーン登録(日向坂46)</a>
-  <a href="/auth/members">メンバー情報更新</a>  
-  <a href="/auth/logout">ログアウト</a>
-  {{ else }}
-  <a href="/login">ログイン</a>
-  {{ end }}
-
+  <header class="header">
+    <div class="nav-container">
+      {{ if .LoggedIn }}
+      <div class="user-info">
+        📧 {{ .EMail }}
+      </div>
+      <nav class="nav-links">
+        <a href="/auth/scenes">🎬 シーン一覧</a>
+        <a href="/auth/regist/1">📝 シーン登録(櫻坂46)</a>
+        <a href="/auth/regist/2">📝 シーン登録(日向坂46)</a>
+        <a href="/auth/members">👥 メンバー情報更新</a>
+        <a href="/auth/logout" class="logout">🚪 ログアウト</a>
+      </nav>
+      {{ else }}
+      <div></div>
+      <nav class="nav-links">
+        <a href="/login">🔐 ログイン</a>
+      </nav>
+      {{ end }}
+    </div>
+  </header>
+  <div class="main-container">
 {{ end }}
 
 {{ define "footer" }}
+  </div>
 </body>
 </html>
 {{ end }}

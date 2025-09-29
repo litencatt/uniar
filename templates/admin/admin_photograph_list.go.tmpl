@@ -1,98 +1,96 @@
 {{ define "admin/photograph_list.go.tmpl" }}
 {{ template "admin_header" . }}
 
-<h2>撮影管理</h2>
+<h2 class="section-title">撮影管理</h2>
 
-<div class="mb-3">
-    <a href="/admin/photograph/new" class="btn btn-primary">新規撮影追加</a>
-    <a href="/admin/import/photograph" class="btn btn-secondary">CSVインポート</a>
+<div class="card" style="margin-bottom: 2rem;">
+    <div style="padding: 1.5rem; display: flex; gap: 1rem; flex-wrap: wrap;">
+        <a href="/admin/photograph/new" class="admin-btn">➕ 新規撮影追加</a>
+        <a href="/admin/import/photograph" class="admin-btn admin-btn-secondary">📁 CSVインポート</a>
+    </div>
 </div>
 
 <!-- 検索フォーム -->
-<div class="card mb-4">
-    <div class="card-header">
-        <h5 class="mb-0">
-            <button class="btn btn-link" type="button" data-bs-toggle="collapse" data-bs-target="#searchForm" aria-expanded="false" aria-controls="searchForm">
-                🔍 検索・フィルター
-            </button>
-        </h5>
-    </div>
-    <div id="searchForm" class="collapse">
-        <div class="card-body">
-            <form method="GET" action="/admin/photograph">
-                <div class="row">
-                    <div class="col-md-4">
-                        <div class="mb-3">
-                            <label for="name" class="form-label">撮影名</label>
-                            <input type="text" class="form-control" id="name" name="name" value="{{ .searchParams.Name }}" placeholder="撮影名で検索">
-                        </div>
-                    </div>
-                    <div class="col-md-4">
-                        <div class="mb-3">
-                            <label for="group_id" class="form-label">グループ</label>
-                            <select class="form-control" id="group_id" name="group_id">
-                                <option value="0">すべて</option>
-                                {{ range .groups }}
-                                <option value="{{ .ID }}" {{ if eq .ID $.searchParams.GroupID }}selected{{ end }}>{{ .Name }}</option>
-                                {{ end }}
-                            </select>
-                        </div>
-                    </div>
-                    <div class="col-md-4">
-                        <div class="mb-3">
-                            <label for="photo_type" class="form-label">撮影タイプ</label>
-                            <select class="form-control" id="photo_type" name="photo_type">
-                                <option value="">すべて</option>
-                                {{ range .photoTypes }}
-                                <option value="{{ . }}" {{ if eq . $.searchParams.PhotoType }}selected{{ end }}>{{ . }}</option>
-                                {{ end }}
-                            </select>
-                        </div>
-                    </div>
+<div class="card" style="margin-bottom: 2rem;">
+    <div style="padding: 1.5rem;">
+        <h3 style="margin-bottom: 1.5rem; color: #4a5568; display: flex; align-items: center; gap: 0.5rem;">
+            🔍 検索・フィルター
+        </h3>
+        <form method="GET" action="/admin/photograph">
+            <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 1.5rem; margin-bottom: 1.5rem;">
+                <div class="admin-form-group">
+                    <label for="name" class="admin-form-label">撮影名</label>
+                    <input type="text" class="admin-form-control" id="name" name="name" value="{{ .searchParams.Name }}" placeholder="撮影名で検索">
                 </div>
-                <div class="row">
-                    <div class="col-12">
-                        <button type="submit" class="btn btn-primary">検索</button>
-                        <a href="/admin/photograph" class="btn btn-secondary">クリア</a>
-                    </div>
+                <div class="admin-form-group">
+                    <label for="group_id" class="admin-form-label">グループ</label>
+                    <select class="admin-form-control" id="group_id" name="group_id">
+                        <option value="0">すべて</option>
+                        {{ range .groups }}
+                        <option value="{{ .ID }}" {{ if eq .ID $.searchParams.GroupID }}selected{{ end }}>{{ .Name }}</option>
+                        {{ end }}
+                    </select>
                 </div>
-            </form>
-        </div>
+                <div class="admin-form-group">
+                    <label for="photo_type" class="admin-form-label">撮影タイプ</label>
+                    <select class="admin-form-control" id="photo_type" name="photo_type">
+                        <option value="">すべて</option>
+                        {{ range .photoTypes }}
+                        <option value="{{ . }}" {{ if eq . $.searchParams.PhotoType }}selected{{ end }}>{{ . }}</option>
+                        {{ end }}
+                    </select>
+                </div>
+            </div>
+            <div style="display: flex; gap: 1rem;">
+                <button type="submit" class="admin-btn">🔍 検索</button>
+                <a href="/admin/photograph" class="admin-btn admin-btn-secondary">🗑️ クリア</a>
+            </div>
+        </form>
     </div>
 </div>
 
-<table class="table">
-    <thead>
-        <tr>
-            <th>ID</th>
-            <th>撮影名</th>
-            <th>グループ</th>
-            <th>撮影タイプ</th>
-            <th>略称</th>
-            <th>並び順名</th>
-            <th>操作</th>
-        </tr>
-    </thead>
-    <tbody>
-        {{ range .photographs }}
-        <tr>
-            <td>{{ .ID }}</td>
-            <td>{{ .Name }}</td>
-            <td>{{ .GroupName }}</td>
-            <td>{{ .PhotoType }}</td>
-            <td>{{ .Abbreviation }}</td>
-            <td>{{ .NameForOrder }}</td>
-            <td>
-                <a href="/admin/photograph/{{ .ID }}/edit" class="btn">編集</a>
-                <form method="post" action="/admin/photograph/{{ .ID }}/delete" style="display: inline;"
-                      onsubmit="return confirm('この撮影を削除しますか？')">
-                    <button type="submit" class="btn btn-danger">削除</button>
-                </form>
-            </td>
-        </tr>
-        {{ end }}
-    </tbody>
-</table>
+<div class="admin-table-container">
+    <h3 class="section-title">撮影一覧</h3>
+    <table class="admin-table">
+        <thead>
+            <tr>
+                <th>ID</th>
+                <th>撮影名</th>
+                <th>グループ</th>
+                <th>撮影タイプ</th>
+                <th>略称</th>
+                <th>並び順名</th>
+                <th>操作</th>
+            </tr>
+        </thead>
+        <tbody>
+            {{ range .photographs }}
+            <tr>
+                <td>{{ .ID }}</td>
+                <td style="font-weight: 600; color: #2d3748;">{{ .Name }}</td>
+                <td>
+                    <span style="padding: 0.25rem 0.75rem; border-radius: 12px; font-size: 0.8rem; font-weight: 500;
+                          {{if eq .GroupName "櫻坂46"}}background: rgba(255, 105, 180, 0.2); color: #e53e3e;
+                          {{else if eq .GroupName "日向坂46"}}background: rgba(99, 179, 255, 0.2); color: #3182ce;
+                          {{else}}background: rgba(113, 128, 150, 0.2); color: #718096;{{end}}">
+                        {{ .GroupName }}
+                    </span>
+                </td>
+                <td>{{ .PhotoType }}</td>
+                <td style="font-family: monospace; background: rgba(247, 250, 252, 0.8); padding: 0.25rem 0.5rem; border-radius: 4px;">{{ .Abbreviation }}</td>
+                <td style="color: #718096;">{{ .NameForOrder }}</td>
+                <td>
+                    <a href="/admin/photograph/{{ .ID }}/edit" class="admin-btn">✏️ 編集</a>
+                    <form method="post" action="/admin/photograph/{{ .ID }}/delete" style="display: inline;"
+                          onsubmit="return confirm('この撮影を削除しますか？')">
+                        <button type="submit" class="admin-btn admin-btn-danger">🗑️ 削除</button>
+                    </form>
+                </td>
+            </tr>
+            {{ end }}
+        </tbody>
+    </table>
+</div>
 
 {{ template "admin_footer" . }}
 {{ end }}

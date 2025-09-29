@@ -1,91 +1,126 @@
 {{ define "scenes/index.go.tmpl" }}
 {{ template "header" . }}
-<form action="/auth/scenes" method="GET">
-  <select name="photograph" id="photo-select">
-    <option value="">All photograph</option>
-    {{range $p := .photograph}}
-    <option value="{{ $p.Name }}" {{ if eq $p.Name $.selectedPhotograph }}selected="selected"{{ end }}>{{.Name}}</option>
-    {{end}}
-  </select>
 
-  <select name="color" id="color-select">
-    <option value="">All color</option>
-    {{range $c := .color}}
-    <option value="{{ $c }}" {{ if eq $c $.selectedColor }}selected="selected"{{ end }}>{{$c}}</option>
-    {{end}}
-  </select>
+<div class="filter-section">
+  <h2 class="filter-title">フィルター設定</h2>
+  <form action="/auth/scenes" method="GET" class="filter-form">
+    <div class="filter-group">
+      <label for="photo-select" class="filter-label">撮影</label>
+      <select name="photograph" id="photo-select" class="filter-select">
+        <option value="">すべての撮影</option>
+        {{range $p := .photograph}}
+        <option value="{{ $p.Name }}" {{ if eq $p.Name $.selectedPhotograph }}selected="selected"{{ end }}>{{.Name}}</option>
+        {{end}}
+      </select>
+    </div>
 
-  <select name="member" id="member-select">
-    <option value="">All member</option>
-    {{range $m := .member}}
-    <option value="{{ $m.Name }}" {{ if eq $m.Name $.selectedMember }}selected="selected"{{ end }}>{{$m.Name}}</option>
-    {{end}}
-  </select>
+    <div class="filter-group">
+      <label for="color-select" class="filter-label">カラー</label>
+      <select name="color" id="color-select" class="filter-select">
+        <option value="">すべてのカラー</option>
+        {{range $c := .color}}
+        <option value="{{ $c }}" {{ if eq $c $.selectedColor }}selected="selected"{{ end }}>{{$c}}</option>
+        {{end}}
+      </select>
+    </div>
 
-  <input type="checkbox" id="have" name="have" value="1" {{ if .have}}checked{{end}}>
-  <label for="have">Have</label>
+    <div class="filter-group">
+      <label for="member-select" class="filter-label">メンバー</label>
+      <select name="member" id="member-select" class="filter-select">
+        <option value="">すべてのメンバー</option>
+        {{range $m := .member}}
+        <option value="{{ $m.Name }}" {{ if eq $m.Name $.selectedMember }}selected="selected"{{ end }}>{{$m.Name}}</option>
+        {{end}}
+      </select>
+    </div>
 
-  <input type="checkbox" id="not_have" name="not_have" value="1" {{ if .notHave}}checked{{end}}>
-  <label for="not_have">NotHave</label>
+    <div class="filter-group">
+      <label for="sort-select" class="filter-label">ソート</label>
+      <select name="sort" id="sort-select" class="filter-select">
+        {{range $s := .sort}}
+        <option value="{{ $s }}" {{ if eq $s $.selectedSort }}selected="selected"{{ end }}>{{$s}}</option>
+        {{end}}
+      </select>
+    </div>
 
-  <input type="checkbox" id="detail" name="detail" value="1" {{ if .detail}}checked{{end}}>
-  <label for="detail">Detail</label>
+    <div class="filter-group">
+      <label class="filter-label">所持状況</label>
+      <div class="filter-checkboxes">
+        <div class="checkbox-item">
+          <input type="checkbox" id="have" name="have" value="1" {{ if .have}}checked{{end}}>
+          <label for="have">所持済み</label>
+        </div>
+        <div class="checkbox-item">
+          <input type="checkbox" id="not_have" name="not_have" value="1" {{ if .notHave}}checked{{end}}>
+          <label for="not_have">未所持</label>
+        </div>
+        <div class="checkbox-item">
+          <input type="checkbox" id="detail" name="detail" value="1" {{ if .detail}}checked{{end}}>
+          <label for="detail">詳細表示</label>
+        </div>
+      </div>
+    </div>
 
-  <label for="sort">Sort</label>
-  <select name="sort" id="sort-select">
-    {{range $s := .sort}}
-    <option value="{{ $s }}" {{ if eq $s $.selectedSort }}selected="selected"{{ end }}>{{$s}}</option>
-    {{end}}
-  </select>
+    <div class="filter-group">
+      <input type="submit" value="フィルター適用" class="filter-submit">
+    </div>
+  </form>
+</div>
 
-  <input type="submit">
-</form>
-
-<table border="1">
-  <thead>
-    <tr>
-      <th>Photograph</th>
-      <th>Color</th>
-      <th>Member</th>
-      <th>Expect</th>
-      <th>Total</th>
-      <th>Vo</th>
-      <th>Da</th>
-      <th>Pe</th>
-      <th>ALL35</th>
-      <th>VoDa50</th>
-      <th>DaPe50</th>
-      <th>VoPe50</th>
-      <th>Vo85</th>
-      <th>Da85</th>
-      <th>Pe85</th>
-    </tr>
-  </thead>
-  <tbody>
-  {{range .scenes}}
-    <tr>
-      {{if .SsrPlus}}
-      <td>{{.Photograph}}+</td>
-      {{else}}
-      <td>{{.Photograph}}</td>
+<div class="table-section">
+  <h2 class="table-title">シーン一覧</h2>
+  <div class="table-container">
+    <table class="scenes-table">
+      <thead>
+        <tr>
+          <th>撮影</th>
+          <th>カラー</th>
+          <th>メンバー</th>
+          <th>期待値</th>
+          <th>合計</th>
+          <th>Vo</th>
+          <th>Da</th>
+          <th>Pe</th>
+          <th>ALL35</th>
+          <th>VoDa50</th>
+          <th>DaPe50</th>
+          <th>VoPe50</th>
+          <th>Vo85</th>
+          <th>Da85</th>
+          <th>Pe85</th>
+        </tr>
+      </thead>
+      <tbody>
+      {{range .scenes}}
+        <tr>
+          <td>
+            {{if .SsrPlus}}
+            <span class="ssr-plus">{{.Photograph}}+</span>
+            {{else}}
+            {{.Photograph}}
+            {{end}}
+          </td>
+          <td data-color="{{.Color}}">{{.Color}}</td>
+          <td>{{.Member}}</td>
+          <td>{{.Expect}}</td>
+          <td class="{{if gt .Total 80000}}score-high{{else if gt .Total 60000}}score-medium{{else}}score-low{{end}}">
+            {{.Total}}
+          </td>
+          <td>{{.Vo}}</td>
+          <td>{{.Da}}</td>
+          <td>{{.Pe}}</td>
+          <td>{{.All35}}</td>
+          <td>{{.VoDa50}}</td>
+          <td>{{.DaPe50}}</td>
+          <td>{{.VoPe50}}</td>
+          <td>{{.Vo85}}</td>
+          <td>{{.Da85}}</td>
+          <td>{{.Pe85}}</td>
+        </tr>
       {{end}}
-      <td>{{.Color}}</td>
-      <td>{{.Member}}</td>
-      <td>{{.Expect}}</td>
-      <td>{{.Total}}</td>
-      <td>{{.Vo}}</td>
-      <td>{{.Da}}</td>
-      <td>{{.Pe}}</td>
-      <td>{{.All35}}</td>
-      <td>{{.VoDa50}}</td>
-      <td>{{.DaPe50}}</td>
-      <td>{{.VoPe50}}</td>
-      <td>{{.Vo85}}</td>
-      <td>{{.Da85}}</td>
-      <td>{{.Pe85}}</td>
-    </tr>
-  {{end}}
-  </tbody>
-</table>
+      </tbody>
+    </table>
+  </div>
+</div>
 {{ template "footer" . }}
 {{ end }}

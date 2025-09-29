@@ -1,119 +1,124 @@
 {{ define "admin_scene_list.go.tmpl" }}
 {{ template "admin_header" . }}
 
-<h2>シーンカード管理</h2>
+<h2 class="section-title">シーンカード管理</h2>
 
-<div class="mb-3">
-    <a href="/admin/scene/new" class="btn btn-primary">新規シーンカード追加</a>
-    <a href="/admin/import/scene" class="btn btn-secondary">CSVインポート</a>
+<div class="card mb-4">
+    <div style="padding: 1.5rem; display: flex; gap: 1rem; flex-wrap: wrap;">
+        <a href="/admin/scene/new" class="btn btn-primary">➕ 新規シーンカード追加</a>
+        <a href="/admin/import/scene" class="btn btn-secondary">📁 CSVインポート</a>
+    </div>
 </div>
 
 <!-- 検索フォーム -->
 <div class="card mb-4">
-    <div class="card-header">
-        <h5 class="mb-0">
-            <button class="btn btn-link" type="button" data-bs-toggle="collapse" data-bs-target="#searchForm" aria-expanded="false" aria-controls="searchForm">
-                🔍 検索・フィルター
-            </button>
-        </h5>
-    </div>
-    <div id="searchForm" class="collapse">
-        <div class="card-body">
-            <form method="GET" action="/admin/scene">
-                <div class="row">
-                    <div class="col-md-3">
-                        <div class="mb-3">
-                            <label for="member_id" class="form-label">メンバー</label>
-                            <select class="form-control" id="member_id" name="member_id">
-                                <option value="0">すべて</option>
-                                {{ range .members }}
-                                <option value="{{ .ID }}" {{ if eq .ID $.searchParams.MemberID }}selected{{ end }}>{{ .Name }}</option>
-                                {{ end }}
-                            </select>
-                        </div>
-                    </div>
-                    <div class="col-md-3">
-                        <div class="mb-3">
-                            <label for="photograph_id" class="form-label">撮影</label>
-                            <select class="form-control" id="photograph_id" name="photograph_id">
-                                <option value="0">すべて</option>
-                                {{ range .photographs }}
-                                <option value="{{ .ID }}" {{ if eq .ID $.searchParams.PhotographID }}selected{{ end }}>{{ .Name }}</option>
-                                {{ end }}
-                            </select>
-                        </div>
-                    </div>
-                    <div class="col-md-3">
-                        <div class="mb-3">
-                            <label for="color_type_id" class="form-label">カラー</label>
-                            <select class="form-control" id="color_type_id" name="color_type_id">
-                                <option value="0">すべて</option>
-                                {{ range .colors }}
-                                <option value="{{ .ID }}" {{ if eq .ID $.searchParams.ColorTypeID }}selected{{ end }}>{{ .Name }}</option>
-                                {{ end }}
-                            </select>
-                        </div>
-                    </div>
-                    <div class="col-md-3">
-                        <div class="mb-3">
-                            <label for="ssr_plus" class="form-label">レアリティ</label>
-                            <select class="form-control" id="ssr_plus" name="ssr_plus">
-                                <option value="-1">すべて</option>
-                                <option value="1" {{ if eq 1 .searchParams.SSRPlus }}selected{{ end }}>SSR+</option>
-                                <option value="0" {{ if eq 0 .searchParams.SSRPlus }}selected{{ end }}>通常</option>
-                            </select>
-                        </div>
-                    </div>
+    <div style="padding: 1.5rem;">
+        <h3 style="margin-bottom: 1.5rem; color: #4a5568; display: flex; align-items: center; gap: 0.5rem;">
+            🔍 検索・フィルター
+        </h3>
+        <form method="GET" action="/admin/scene">
+            <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 1.5rem; margin-bottom: 1.5rem;">
+                <div class="admin-form-group">
+                    <label for="member_id" class="form-label">メンバー</label>
+                    <select class="form-control" id="member_id" name="member_id">
+                        <option value="0">すべて</option>
+                        {{ range .members }}
+                        <option value="{{ .ID }}" {{ if eq .ID $.searchParams.MemberID }}selected{{ end }}>{{ .Name }}</option>
+                        {{ end }}
+                    </select>
                 </div>
-                <div class="row">
-                    <div class="col-12">
-                        <button type="submit" class="btn btn-primary">検索</button>
-                        <a href="/admin/scene" class="btn btn-secondary">クリア</a>
-                    </div>
+                <div class="admin-form-group">
+                    <label for="photograph_id" class="form-label">撮影</label>
+                    <select class="form-control" id="photograph_id" name="photograph_id">
+                        <option value="0">すべて</option>
+                        {{ range .photographs }}
+                        <option value="{{ .ID }}" {{ if eq .ID $.searchParams.PhotographID }}selected{{ end }}>{{ .Name }}</option>
+                        {{ end }}
+                    </select>
                 </div>
-            </form>
-        </div>
+                <div class="admin-form-group">
+                    <label for="color_type_id" class="form-label">カラー</label>
+                    <select class="form-control" id="color_type_id" name="color_type_id">
+                        <option value="0">すべて</option>
+                        {{ range .colors }}
+                        <option value="{{ .ID }}" {{ if eq .ID $.searchParams.ColorTypeID }}selected{{ end }}>{{ .Name }}</option>
+                        {{ end }}
+                    </select>
+                </div>
+                <div class="admin-form-group">
+                    <label for="ssr_plus" class="form-label">レアリティ</label>
+                    <select class="form-control" id="ssr_plus" name="ssr_plus">
+                        <option value="-1">すべて</option>
+                        <option value="1" {{ if eq 1 .searchParams.SSRPlus }}selected{{ end }}>SSR+</option>
+                        <option value="0" {{ if eq 0 .searchParams.SSRPlus }}selected{{ end }}>通常</option>
+                    </select>
+                </div>
+            </div>
+            <div style="display: flex; gap: 1rem;">
+                <button type="submit" class="btn btn-primary">🔍 検索</button>
+                <a href="/admin/scene" class="btn btn-secondary">🗑️ クリア</a>
+            </div>
+        </form>
     </div>
 </div>
 
-<table class="table">
-    <thead>
-        <tr>
-            <th>ID</th>
-            <th>撮影</th>
-            <th>メンバー</th>
-            <th>カラー</th>
-            <th>Vocal</th>
-            <th>Dance</th>
-            <th>Performance</th>
-            <th>期待値</th>
-            <th>SSR+</th>
-            <th>操作</th>
-        </tr>
-    </thead>
-    <tbody>
-        {{ range .scenes }}
-        <tr>
-            <td>{{ .ID }}</td>
-            <td>{{ .PhotographName }}</td>
-            <td>{{ .MemberName }}</td>
-            <td>{{ .ColorName }}</td>
-            <td>{{ .VocalMax }}</td>
-            <td>{{ .DanceMax }}</td>
-            <td>{{ .PerformanceMax }}</td>
-            <td>{{ .ExpectedValue }}</td>
-            <td>{{ if eq .SsrPlus 1 }}Yes{{ else }}No{{ end }}</td>
-            <td>
-                <a href="/admin/scene/{{ .ID }}/edit" class="btn">編集</a>
-                <form method="post" action="/admin/scene/{{ .ID }}/delete" style="display: inline;"
-                      onsubmit="return confirm('このシーンカードを削除しますか？')">
-                    <button type="submit" class="btn btn-danger">削除</button>
-                </form>
-            </td>
-        </tr>
-        {{ end }}
-    </tbody>
-</table>
+<div class="card">
+    <div style="padding: 1.5rem; overflow-x: auto;">
+        <h3 class="section-title" style="margin-bottom: 1.5rem;">🌬️ シーンカード一覧</h3>
+        <table class="table">
+            <thead>
+                <tr>
+                    <th>ID</th>
+                    <th>撮影</th>
+                    <th>メンバー</th>
+                    <th>カラー</th>
+                    <th>Vocal</th>
+                    <th>Dance</th>
+                    <th>Performance</th>
+                    <th>期待値</th>
+                    <th>SSR+</th>
+                    <th>操作</th>
+                </tr>
+            </thead>
+            <tbody>
+                {{ range .scenes }}
+                <tr>
+                    <td>{{ .ID }}</td>
+                    <td style="font-weight: 600; color: #2d3748;">{{ .PhotographName }}</td>
+                    <td>{{ .MemberName }}</td>
+                    <td>
+                        <span style="padding: 0.25rem 0.75rem; border-radius: 12px; font-size: 0.8rem; font-weight: 500;
+                              {{if eq .ColorName "Red"}}background: rgba(255, 99, 99, 0.2); color: #e53e3e;
+                              {{else if eq .ColorName "Blue"}}background: rgba(99, 179, 255, 0.2); color: #3182ce;
+                              {{else if eq .ColorName "Yellow"}}background: rgba(255, 235, 99, 0.2); color: #d69e2e;
+                              {{else}}background: rgba(113, 128, 150, 0.2); color: #718096;{{end}}">
+                            {{ .ColorName }}
+                        </span>
+                    </td>
+                    <td style="font-family: monospace; color: #667eea; font-weight: 500;">{{ .VocalMax }}</td>
+                    <td style="font-family: monospace; color: #e53e3e; font-weight: 500;">{{ .DanceMax }}</td>
+                    <td style="font-family: monospace; color: #38a169; font-weight: 500;">{{ .PerformanceMax }}</td>
+                    <td style="font-weight: 600; color: #2d3748;">{{ .ExpectedValue }}</td>
+                    <td>
+                        {{ if eq .SsrPlus 1 }}
+                        <span style="color: #e53e3e; font-weight: bold; background: rgba(229, 62, 62, 0.1); padding: 0.25rem 0.5rem; border-radius: 8px;">✨ Yes</span>
+                        {{ else }}
+                        <span style="color: #718096;">❌ No</span>
+                        {{ end }}
+                    </td>
+                    <td>
+                        <a href="/admin/scene/{{ .ID }}/edit" class="btn btn-primary">✏️ 編集</a>
+                        <form method="post" action="/admin/scene/{{ .ID }}/delete" style="display: inline;"
+                              onsubmit="return confirm('このシーンカードを削除しますか？')">
+                            <button type="submit" class="btn btn-danger">🗑️ 削除</button>
+                        </form>
+                    </td>
+                </tr>
+                {{ end }}
+            </tbody>
+        </table>
+    </div>
+</div>
 
 <!-- ページネーション -->
 <div class="pagination">

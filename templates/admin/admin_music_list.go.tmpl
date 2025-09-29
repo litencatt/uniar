@@ -1,104 +1,103 @@
 {{ define "admin/music_list.go.tmpl" }}
 {{ template "admin_header" . }}
 
-<h2>楽曲管理</h2>
+<h2 class="section-title">楽曲管理</h2>
 
-<div class="mb-3">
-    <a href="/admin/music/new" class="btn btn-primary">新規楽曲追加</a>
-    <a href="/admin/import/music" class="btn btn-secondary">CSVインポート</a>
+<div class="card" style="margin-bottom: 2rem;">
+    <div style="padding: 1.5rem; display: flex; gap: 1rem; flex-wrap: wrap;">
+        <a href="/admin/music/new" class="admin-btn">➕ 新規楽曲追加</a>
+        <a href="/admin/import/music" class="admin-btn admin-btn-secondary">📁 CSVインポート</a>
+    </div>
 </div>
 
 <!-- 検索フォーム -->
-<div class="card mb-4">
-    <div class="card-header">
-        <h5 class="mb-0">
-            <button class="btn btn-link" type="button" data-bs-toggle="collapse" data-bs-target="#searchForm" aria-expanded="false" aria-controls="searchForm">
-                🔍 検索・フィルター
-            </button>
-        </h5>
-    </div>
-    <div id="searchForm" class="collapse">
-        <div class="card-body">
-            <form method="GET" action="/admin/music">
-                <div class="row">
-                    <div class="col-md-4">
-                        <div class="mb-3">
-                            <label for="name" class="form-label">楽曲名</label>
-                            <input type="text" class="form-control" id="name" name="name" value="{{ .searchParams.Name }}" placeholder="楽曲名で検索">
-                        </div>
-                    </div>
-                    <div class="col-md-4">
-                        <div class="mb-3">
-                            <label for="live_id" class="form-label">ライブ</label>
-                            <select class="form-control" id="live_id" name="live_id">
-                                <option value="0">すべて</option>
-                                {{ range .lives }}
-                                <option value="{{ .ID }}" {{ if eq .ID $.searchParams.LiveID }}selected{{ end }}>{{ .Name }}</option>
-                                {{ end }}
-                            </select>
-                        </div>
-                    </div>
-                    <div class="col-md-4">
-                        <div class="mb-3">
-                            <label for="color_type_id" class="form-label">カラー</label>
-                            <select class="form-control" id="color_type_id" name="color_type_id">
-                                <option value="0">すべて</option>
-                                {{ range .colors }}
-                                <option value="{{ .ID }}" {{ if eq .ID $.searchParams.ColorTypeID }}selected{{ end }}>{{ .Name }}</option>
-                                {{ end }}
-                            </select>
-                        </div>
-                    </div>
+<div class="card" style="margin-bottom: 2rem;">
+    <div style="padding: 1.5rem;">
+        <h3 style="margin-bottom: 1.5rem; color: #4a5568; display: flex; align-items: center; gap: 0.5rem;">
+            🔍 検索・フィルター
+        </h3>
+        <form method="GET" action="/admin/music">
+            <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 1.5rem; margin-bottom: 1.5rem;">
+                <div class="admin-form-group">
+                    <label for="name" class="admin-form-label">楽曲名</label>
+                    <input type="text" class="admin-form-control" id="name" name="name" value="{{ .searchParams.Name }}" placeholder="楽曲名で検索">
                 </div>
-                <div class="row">
-                    <div class="col-12">
-                        <button type="submit" class="btn btn-primary">検索</button>
-                        <a href="/admin/music" class="btn btn-secondary">クリア</a>
-                    </div>
+                <div class="admin-form-group">
+                    <label for="live_id" class="admin-form-label">ライブ</label>
+                    <select class="admin-form-control" id="live_id" name="live_id">
+                        <option value="0">すべて</option>
+                        {{ range .lives }}
+                        <option value="{{ .ID }}" {{ if eq .ID $.searchParams.LiveID }}selected{{ end }}>{{ .Name }}</option>
+                        {{ end }}
+                    </select>
                 </div>
-            </form>
-        </div>
+                <div class="admin-form-group">
+                    <label for="color_type_id" class="admin-form-label">カラー</label>
+                    <select class="admin-form-control" id="color_type_id" name="color_type_id">
+                        <option value="0">すべて</option>
+                        {{ range .colors }}
+                        <option value="{{ .ID }}" {{ if eq .ID $.searchParams.ColorTypeID }}selected{{ end }}>{{ .Name }}</option>
+                        {{ end }}
+                    </select>
+                </div>
+            </div>
+            <div style="display: flex; gap: 1rem;">
+                <button type="submit" class="admin-btn">🔍 検索</button>
+                <a href="/admin/music" class="admin-btn admin-btn-secondary">🗑️ クリア</a>
+            </div>
+        </form>
     </div>
 </div>
 
-<table class="table">
-    <thead>
-        <tr>
-            <th>ID</th>
-            <th>楽曲名</th>
-            <th>ライブ</th>
-            <th>カラー</th>
-            <th>Normal</th>
-            <th>Pro</th>
-            <th>Master</th>
-            <th>長さ</th>
-            <th>楽曲ボーナス</th>
-            <th>操作</th>
-        </tr>
-    </thead>
-    <tbody>
-        {{ range .musics }}
-        <tr>
-            <td>{{ .ID }}</td>
-            <td>{{ .Name }}</td>
-            <td>{{ .LiveName }}</td>
-            <td>{{ .ColorName }}</td>
-            <td>{{ .Normal }}</td>
-            <td>{{ .Pro }}</td>
-            <td>{{ .Master }}</td>
-            <td>{{ .Length }}</td>
-            <td>{{ .MusicBonus }}</td>
-            <td>
-                <a href="/admin/music/{{ .ID }}/edit" class="btn">編集</a>
-                <form method="post" action="/admin/music/{{ .ID }}/delete" style="display: inline;"
-                      onsubmit="return confirm('この楽曲を削除しますか？')">
-                    <button type="submit" class="btn btn-danger">削除</button>
-                </form>
-            </td>
-        </tr>
-        {{ end }}
-    </tbody>
-</table>
+<div class="admin-table-container">
+    <h3 class="section-title">楽曲一覧</h3>
+    <table class="admin-table">
+        <thead>
+            <tr>
+                <th>ID</th>
+                <th>楽曲名</th>
+                <th>ライブ</th>
+                <th>カラー</th>
+                <th>Normal</th>
+                <th>Pro</th>
+                <th>Master</th>
+                <th>長さ</th>
+                <th>楽曲ボーナス</th>
+                <th>操作</th>
+            </tr>
+        </thead>
+        <tbody>
+            {{ range .musics }}
+            <tr>
+                <td>{{ .ID }}</td>
+                <td style="font-weight: 600; color: #2d3748;">{{ .Name }}</td>
+                <td>{{ .LiveName }}</td>
+                <td>
+                    <span style="padding: 0.25rem 0.75rem; border-radius: 12px; font-size: 0.8rem; font-weight: 500;
+                          {{if eq .ColorName "Red"}}background: rgba(255, 99, 99, 0.2); color: #e53e3e;
+                          {{else if eq .ColorName "Blue"}}background: rgba(99, 179, 255, 0.2); color: #3182ce;
+                          {{else if eq .ColorName "Yellow"}}background: rgba(255, 235, 99, 0.2); color: #d69e2e;
+                          {{else}}background: rgba(113, 128, 150, 0.2); color: #718096;{{end}}">
+                        {{ .ColorName }}
+                    </span>
+                </td>
+                <td>{{ .Normal }}</td>
+                <td>{{ .Pro }}</td>
+                <td>{{ .Master }}</td>
+                <td>{{ .Length }}秒</td>
+                <td>{{ .MusicBonus }}%</td>
+                <td>
+                    <a href="/admin/music/{{ .ID }}/edit" class="admin-btn">✏️ 編集</a>
+                    <form method="post" action="/admin/music/{{ .ID }}/delete" style="display: inline;"
+                          onsubmit="return confirm('この楽曲を削除しますか？')">
+                        <button type="submit" class="admin-btn admin-btn-danger">🗑️ 削除</button>
+                    </form>
+                </td>
+            </tr>
+            {{ end }}
+        </tbody>
+    </table>
+</div>
 
 {{ template "admin_footer" . }}
 {{ end }}
