@@ -31,6 +31,7 @@ func (ls *ListMember) ListMember(c *gin.Context) {
 		"title":    "Members",
 		"LoggedIn": us.LoggedIn,
 		"EMail":    us.EMail,
+		"IsAdmin":  us.IsAdmin,
 		"members":  ms,
 	})
 }

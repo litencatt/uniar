@@ -7,6 +7,7 @@ import (
 	"fmt"
 	"net/http"
 	"net/http/httptest"
+	"os"
 	"testing"
 
 	"github.com/gin-contrib/sessions"
@@ -242,5 +243,172 @@ func TestBasicRouting(t *testing.T) {
 				t.Errorf("Expected status code %d, got %d", tc.expectedCode, w.Code)
 			}
 		})
+	}
+}
+
+func TestGetUserSession_AdminDebug(t *testing.T) {
+	gin.SetMode(gin.TestMode)
+
+	tests := []struct {
+		name           string
+		adminDebug     string
+		originalAdmin  bool
+		expectedAdmin  bool
+	}{
+		{
+			name:          "ADMIN_DEBUG=true sets IsAdmin to true",
+			adminDebug:    "true",
+			originalAdmin: false,
+			expectedAdmin: true,
+		},
+		{
+			name:          "ADMIN_DEBUG=true keeps IsAdmin true",
+			adminDebug:    "true",
+			originalAdmin: true,
+			expectedAdmin: true,
+		},
+		{
+			name:          "ADMIN_DEBUG=false preserves original IsAdmin false",
+			adminDebug:    "false",
+			originalAdmin: false,
+			expectedAdmin: false,
+		},
+		{
+			name:          "ADMIN_DEBUG=false preserves original IsAdmin true",
+			adminDebug:    "false",
+			originalAdmin: true,
+			expectedAdmin: true,
+		},
+		{
+			name:          "No ADMIN_DEBUG preserves original IsAdmin",
+			adminDebug:    "",
+			originalAdmin: false,
+			expectedAdmin: false,
+		},
+	}
+
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			// 環境変数を設定
+			originalValue := os.Getenv("ADMIN_DEBUG")
+			defer func() {
+				if originalValue == "" {
+					os.Unsetenv("ADMIN_DEBUG")
+				} else {
+					os.Setenv("ADMIN_DEBUG", originalValue)
+				}
+			}()
+
+			if tt.adminDebug != "" {
+				os.Setenv("ADMIN_DEBUG", tt.adminDebug)
+			} else {
+				os.Unsetenv("ADMIN_DEBUG")
+			}
+
+			router := setupTestRouter()
+
+			// セッションにユーザー情報を設定
+			router.GET("/test", func(c *gin.Context) {
+				session := sessions.Default(c)
+				userSession := &UserSession{
+					ProducerId: 1,
+					IdentityId: "test-user",
+					EMail:      "test@example.com",
+					LoggedIn:   true,
+					IsAdmin:    tt.originalAdmin,
+				}
+				session.Set("uniar_session", userSession)
+				session.Save()
+
+				// getUserSessionを呼び出してテスト
+				us, err := getUserSession(c)
+				if err != nil {
+					t.Errorf("getUserSession returned error: %v", err)
+					return
+				}
+
+				if us.IsAdmin != tt.expectedAdmin {
+					t.Errorf("Expected IsAdmin %v, got %v", tt.expectedAdmin, us.IsAdmin)
+				}
+
+				c.JSON(http.StatusOK, gin.H{"isAdmin": us.IsAdmin})
+			})
+
+			req, _ := http.NewRequest("GET", "/test", nil)
+			w := httptest.NewRecorder()
+			router.ServeHTTP(w, req)
+
+			if w.Code != http.StatusOK {
+				t.Errorf("Expected status code %d, got %d", http.StatusOK, w.Code)
+			}
+		})
+	}
+}
+
+func TestAuthHandler_IsAdminField(t *testing.T) {
+	gin.SetMode(gin.TestMode)
+	router := setupTestRouter()
+
+	// モックサービス設定（管理者ユーザー）
+	mockService := &MockProducerService{
+		findProducerFunc: func(ctx context.Context, identityId string) (entity.Producer, error) {
+			if identityId == "admin-user-123" {
+				return entity.Producer{
+					ID:         1,
+					IdentityId: identityId,
+					IsAdmin:    true,
+				}, nil
+			}
+			return entity.Producer{}, sql.ErrNoRows
+		},
+	}
+
+	loginHandler := &LoginProducer{
+		ProducerService: mockService,
+	}
+
+	router.GET("/auth/", func(c *gin.Context) {
+		// Google認証情報をモック
+		c.Set("user", goauth.Userinfo{
+			Id:    "admin-user-123",
+			Email: "admin@example.com",
+		})
+		loginHandler.AuthHandler(c)
+	})
+
+	// テスト実行
+	req, _ := http.NewRequest("GET", "/auth/", nil)
+	w := httptest.NewRecorder()
+	router.ServeHTTP(w, req)
+
+	// セッションからユーザー情報を取得して検証
+	router.GET("/verify", func(c *gin.Context) {
+		us, err := getUserSession(c)
+		if err != nil {
+			t.Errorf("getUserSession returned error: %v", err)
+			return
+		}
+
+		if !us.IsAdmin {
+			t.Errorf("Expected IsAdmin to be true for admin user")
+		}
+
+		c.JSON(http.StatusOK, gin.H{"isAdmin": us.IsAdmin})
+	})
+
+	// 検証のための2回目のリクエスト
+	req2, _ := http.NewRequest("GET", "/verify", nil)
+	// セッションCookieを引き継ぐ
+	if cookies := w.Result().Cookies(); len(cookies) > 0 {
+		for _, cookie := range cookies {
+			req2.AddCookie(cookie)
+		}
+	}
+
+	w2 := httptest.NewRecorder()
+	router.ServeHTTP(w2, req2)
+
+	if w2.Code != http.StatusOK {
+		t.Errorf("Expected status code %d, got %d", http.StatusOK, w2.Code)
 	}
 }

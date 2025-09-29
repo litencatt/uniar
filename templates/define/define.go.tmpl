@@ -21,6 +21,9 @@
         <a href="/auth/regist/1">📝 シーン登録(櫻坂46)</a>
         <a href="/auth/regist/2">📝 シーン登録(日向坂46)</a>
         <a href="/auth/members">👥 メンバー情報更新</a>
+        {{ if .IsAdmin }}
+        <a href="/admin">⚙️ 管理者ページ</a>
+        {{ end }}
         <a href="/auth/logout" class="logout">🚪 ログアウト</a>
       </nav>
       {{ else }}

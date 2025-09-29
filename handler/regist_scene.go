@@ -89,6 +89,7 @@ func (x *RegistScene) GetRegist(c *gin.Context) {
 		"title":          "Regist Index",
 		"LoggedIn":       us.LoggedIn,
 		"EMail":          us.EMail,
+		"IsAdmin":        us.IsAdmin,
 		"groupId":        groupId,
 		"photos":         photos,
 		"members":        members,
