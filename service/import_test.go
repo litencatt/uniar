@@ -14,7 +14,7 @@ func TestImportMusicFromCSV(t *testing.T) {
 	testCases := []struct {
 		name         string
 		csvData      string
-		validateOnly bool
+		previewMode bool
 		expectError  bool
 		expectFailed int
 		expectSuccess int
@@ -22,7 +22,7 @@ func TestImportMusicFromCSV(t *testing.T) {
 		{
 			name:         "ValidMusicCSV",
 			csvData:      "name,normal,pro,master,length,color_type_id,live_id\nTest Music,500,800,1200,180,1,1",
-			validateOnly: true,
+			previewMode: true,
 			expectError:  false,
 			expectSuccess: 1,
 			expectFailed: 0,
@@ -30,7 +30,7 @@ func TestImportMusicFromCSV(t *testing.T) {
 		{
 			name:         "InvalidMusicCSV_MissingName",
 			csvData:      "name,normal,pro,master,length,color_type_id,live_id\n,500,800,1200,180,1,1",
-			validateOnly: true,
+			previewMode: true,
 			expectError:  false,
 			expectSuccess: 0,
 			expectFailed: 1,
@@ -38,7 +38,7 @@ func TestImportMusicFromCSV(t *testing.T) {
 		{
 			name:         "InvalidMusicCSV_InvalidNumber",
 			csvData:      "name,normal,pro,master,length,color_type_id,live_id\nTest Music,invalid,800,1200,180,1,1",
-			validateOnly: true,
+			previewMode: true,
 			expectError:  false,
 			expectSuccess: 0,
 			expectFailed: 1,
@@ -46,7 +46,7 @@ func TestImportMusicFromCSV(t *testing.T) {
 		{
 			name:         "InvalidHeader",
 			csvData:      "wrong,header,format\nTest Music,500,800",
-			validateOnly: true,
+			previewMode: true,
 			expectError:  true,
 			expectSuccess: 0,
 			expectFailed: 0,
@@ -63,7 +63,7 @@ func TestImportMusicFromCSV(t *testing.T) {
 			defer mockCtrl.Finish()
 			q := repository.NewMockQuerier(mockCtrl)
 
-			if !tc.validateOnly {
+			if !tc.previewMode {
 				mock.ExpectBegin()
 				if !tc.expectError && tc.expectFailed == 0 {
 					q.EXPECT().RegistMusic(ctx, gomock.Any(), gomock.Any()).Return(nil).AnyTimes()
@@ -79,7 +79,7 @@ func TestImportMusicFromCSV(t *testing.T) {
 			}
 
 			reader := strings.NewReader(tc.csvData)
-			result, err := svc.ImportMusicFromCSV(ctx, reader, tc.validateOnly)
+			result, err := svc.ImportMusicFromCSV(ctx, reader, tc.previewMode)
 
 			if tc.expectError {
 				if err == nil {
@@ -100,7 +100,7 @@ func TestImportMusicFromCSV(t *testing.T) {
 				t.Errorf("Expected %d failed records, got %d", tc.expectFailed, result.Failed)
 			}
 
-			if tc.validateOnly && tc.expectSuccess > 0 {
+			if tc.previewMode && tc.expectSuccess > 0 {
 				if len(result.PreviewData) != tc.expectSuccess {
 					t.Errorf("Expected %d preview records, got %d", tc.expectSuccess, len(result.PreviewData))
 				}
@@ -113,7 +113,7 @@ func TestImportPhotographFromCSV(t *testing.T) {
 	testCases := []struct {
 		name         string
 		csvData      string
-		validateOnly bool
+		previewMode bool
 		expectError  bool
 		expectFailed int
 		expectSuccess int
@@ -121,7 +121,7 @@ func TestImportPhotographFromCSV(t *testing.T) {
 		{
 			name:         "ValidPhotographCSV",
 			csvData:      "name,group_id,photo_type\nTest Photo,1,Live",
-			validateOnly: true,
+			previewMode: true,
 			expectError:  false,
 			expectSuccess: 1,
 			expectFailed: 0,
@@ -129,7 +129,7 @@ func TestImportPhotographFromCSV(t *testing.T) {
 		{
 			name:         "InvalidPhotographCSV_MissingName",
 			csvData:      "name,group_id,photo_type\n,1,Live",
-			validateOnly: true,
+			previewMode: true,
 			expectError:  false,
 			expectSuccess: 0,
 			expectFailed: 1,
@@ -137,7 +137,7 @@ func TestImportPhotographFromCSV(t *testing.T) {
 		{
 			name:         "InvalidPhotographCSV_InvalidGroupID",
 			csvData:      "name,group_id,photo_type\nTest Photo,invalid,Live",
-			validateOnly: true,
+			previewMode: true,
 			expectError:  false,
 			expectSuccess: 0,
 			expectFailed: 1,
@@ -154,7 +154,7 @@ func TestImportPhotographFromCSV(t *testing.T) {
 			defer mockCtrl.Finish()
 			q := repository.NewMockQuerier(mockCtrl)
 
-			if !tc.validateOnly {
+			if !tc.previewMode {
 				mock.ExpectBegin()
 				if !tc.expectError && tc.expectFailed == 0 {
 					q.EXPECT().RegistPhotograph(ctx, gomock.Any(), gomock.Any()).Return(nil).AnyTimes()
@@ -170,7 +170,7 @@ func TestImportPhotographFromCSV(t *testing.T) {
 			}
 
 			reader := strings.NewReader(tc.csvData)
-			result, err := svc.ImportPhotographFromCSV(ctx, reader, tc.validateOnly)
+			result, err := svc.ImportPhotographFromCSV(ctx, reader, tc.previewMode)
 
 			if tc.expectError {
 				if err == nil {
@@ -198,7 +198,7 @@ func TestImportSceneFromCSV(t *testing.T) {
 	testCases := []struct {
 		name         string
 		csvData      string
-		validateOnly bool
+		previewMode bool
 		expectError  bool
 		expectFailed int
 		expectSuccess int
@@ -206,7 +206,7 @@ func TestImportSceneFromCSV(t *testing.T) {
 		{
 			name:         "ValidSceneCSV",
 			csvData:      "photograph_id,member_id,color_type_id,vocal_max,dance_max,performance_max,center_skill,expected_value,ssr_plus\n1,1,1,5000,4800,4900,100,500,1",
-			validateOnly: true,
+			previewMode: true,
 			expectError:  false,
 			expectSuccess: 1,
 			expectFailed: 0,
@@ -214,7 +214,7 @@ func TestImportSceneFromCSV(t *testing.T) {
 		{
 			name:         "InvalidSceneCSV_InvalidPhotographID",
 			csvData:      "photograph_id,member_id,color_type_id,vocal_max,dance_max,performance_max,center_skill,expected_value,ssr_plus\ninvalid,1,1,5000,4800,4900,100,500,1",
-			validateOnly: true,
+			previewMode: true,
 			expectError:  false,
 			expectSuccess: 0,
 			expectFailed: 1,
@@ -222,7 +222,7 @@ func TestImportSceneFromCSV(t *testing.T) {
 		{
 			name:         "InvalidSceneCSV_InvalidVocalMax",
 			csvData:      "photograph_id,member_id,color_type_id,vocal_max,dance_max,performance_max,center_skill,expected_value,ssr_plus\n1,1,1,invalid,4800,4900,100,500,1",
-			validateOnly: true,
+			previewMode: true,
 			expectError:  false,
 			expectSuccess: 0,
 			expectFailed: 1,
@@ -239,7 +239,7 @@ func TestImportSceneFromCSV(t *testing.T) {
 			defer mockCtrl.Finish()
 			q := repository.NewMockQuerier(mockCtrl)
 
-			if !tc.validateOnly {
+			if !tc.previewMode {
 				mock.ExpectBegin()
 				if !tc.expectError && tc.expectFailed == 0 {
 					q.EXPECT().RegistScene(ctx, gomock.Any(), gomock.Any()).Return(nil).AnyTimes()
@@ -255,7 +255,7 @@ func TestImportSceneFromCSV(t *testing.T) {
 			}
 
 			reader := strings.NewReader(tc.csvData)
-			result, err := svc.ImportSceneFromCSV(ctx, reader, tc.validateOnly)
+			result, err := svc.ImportSceneFromCSV(ctx, reader, tc.previewMode)
 
 			if tc.expectError {
 				if err == nil {

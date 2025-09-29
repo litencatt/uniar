@@ -58,7 +58,7 @@ type SceneImportRow struct {
 	SSRPlus         string `csv:"ssr_plus"`
 }
 
-func (s *ImportService) ImportMusicFromCSV(ctx context.Context, reader io.Reader, validateOnly bool) (*ImportResult, error) {
+func (s *ImportService) ImportMusicFromCSV(ctx context.Context, reader io.Reader, previewMode bool) (*ImportResult, error) {
 	csvReader := csv.NewReader(reader)
 	csvReader.FieldsPerRecord = -1
 
@@ -83,12 +83,12 @@ func (s *ImportService) ImportMusicFromCSV(ctx context.Context, reader io.Reader
 		Errors:  []ImportError{},
 	}
 
-	if validateOnly {
+	if previewMode {
 		result.PreviewData = make([]map[string]interface{}, 0)
 	}
 
 	var tx *sql.Tx
-	if !validateOnly {
+	if !previewMode {
 		var err error
 		tx, err = s.DB.BeginTx(ctx, nil)
 		if err != nil {
@@ -122,8 +122,8 @@ func (s *ImportService) ImportMusicFromCSV(ctx context.Context, reader io.Reader
 			LiveID:      strings.TrimSpace(record[6]),
 		}
 
-		if validateOnly {
-			// Validate the data even in preview mode
+		if previewMode {
+			// Validate the data and prepare preview without database insert
 			if err := s.validateAndInsertMusic(ctx, nil, musicRow, rowNum, result); err != nil {
 				continue
 			}
@@ -148,7 +148,7 @@ func (s *ImportService) ImportMusicFromCSV(ctx context.Context, reader io.Reader
 		result.Success++
 	}
 
-	if !validateOnly && result.Failed == 0 {
+	if !previewMode && result.Failed == 0 {
 		if err := tx.Commit(); err != nil {
 			return nil, fmt.Errorf("failed to commit transaction: %w", err)
 		}
@@ -157,7 +157,7 @@ func (s *ImportService) ImportMusicFromCSV(ctx context.Context, reader io.Reader
 	return result, nil
 }
 
-func (s *ImportService) ImportPhotographFromCSV(ctx context.Context, reader io.Reader, validateOnly bool) (*ImportResult, error) {
+func (s *ImportService) ImportPhotographFromCSV(ctx context.Context, reader io.Reader, previewMode bool) (*ImportResult, error) {
 	csvReader := csv.NewReader(reader)
 	csvReader.FieldsPerRecord = -1
 
@@ -182,12 +182,12 @@ func (s *ImportService) ImportPhotographFromCSV(ctx context.Context, reader io.R
 		Errors:  []ImportError{},
 	}
 
-	if validateOnly {
+	if previewMode {
 		result.PreviewData = make([]map[string]interface{}, 0)
 	}
 
 	var tx *sql.Tx
-	if !validateOnly {
+	if !previewMode {
 		var err error
 		tx, err = s.DB.BeginTx(ctx, nil)
 		if err != nil {
@@ -217,8 +217,8 @@ func (s *ImportService) ImportPhotographFromCSV(ctx context.Context, reader io.R
 			PhotoType: strings.TrimSpace(record[2]),
 		}
 
-		if validateOnly {
-			// Validate the data even in preview mode
+		if previewMode {
+			// Validate the data and prepare preview without database insert
 			if err := s.validateAndInsertPhotograph(ctx, nil, photographRow, rowNum, result); err != nil {
 				continue
 			}
@@ -239,7 +239,7 @@ func (s *ImportService) ImportPhotographFromCSV(ctx context.Context, reader io.R
 		result.Success++
 	}
 
-	if !validateOnly && result.Failed == 0 {
+	if !previewMode && result.Failed == 0 {
 		if err := tx.Commit(); err != nil {
 			return nil, fmt.Errorf("failed to commit transaction: %w", err)
 		}
@@ -248,7 +248,7 @@ func (s *ImportService) ImportPhotographFromCSV(ctx context.Context, reader io.R
 	return result, nil
 }
 
-func (s *ImportService) ImportSceneFromCSV(ctx context.Context, reader io.Reader, validateOnly bool) (*ImportResult, error) {
+func (s *ImportService) ImportSceneFromCSV(ctx context.Context, reader io.Reader, previewMode bool) (*ImportResult, error) {
 	csvReader := csv.NewReader(reader)
 	csvReader.FieldsPerRecord = -1
 
@@ -273,12 +273,12 @@ func (s *ImportService) ImportSceneFromCSV(ctx context.Context, reader io.Reader
 		Errors:  []ImportError{},
 	}
 
-	if validateOnly {
+	if previewMode {
 		result.PreviewData = make([]map[string]interface{}, 0)
 	}
 
 	var tx *sql.Tx
-	if !validateOnly {
+	if !previewMode {
 		var err error
 		tx, err = s.DB.BeginTx(ctx, nil)
 		if err != nil {
@@ -314,8 +314,8 @@ func (s *ImportService) ImportSceneFromCSV(ctx context.Context, reader io.Reader
 			SSRPlus:        strings.TrimSpace(record[8]),
 		}
 
-		if validateOnly {
-			// Validate the data even in preview mode
+		if previewMode {
+			// Validate the data and prepare preview without database insert
 			if err := s.validateAndInsertScene(ctx, nil, sceneRow, rowNum, result); err != nil {
 				continue
 			}
@@ -342,7 +342,7 @@ func (s *ImportService) ImportSceneFromCSV(ctx context.Context, reader io.Reader
 		result.Success++
 	}
 
-	if !validateOnly && result.Failed == 0 {
+	if !previewMode && result.Failed == 0 {
 		if err := tx.Commit(); err != nil {
 			return nil, fmt.Errorf("failed to commit transaction: %w", err)
 		}
@@ -443,7 +443,7 @@ func (s *ImportService) validateAndInsertMusic(ctx context.Context, tx *sql.Tx, 
 	}
 
 
-	// Skip database insert if tx is nil (validate-only mode)
+	// Skip database insert if tx is nil (preview mode)
 	if tx != nil {
 		if err := s.Querier.RegistMusic(ctx, tx, repository.RegistMusicParams{
 			Name:        row.Name,
@@ -489,7 +489,7 @@ func (s *ImportService) validateAndInsertPhotograph(ctx context.Context, tx *sql
 		return fmt.Errorf("validation failed")
 	}
 
-	// Skip database insert if tx is nil (validate-only mode)
+	// Skip database insert if tx is nil (preview mode)
 	if tx != nil {
 		if err := s.Querier.RegistPhotograph(ctx, tx, repository.RegistPhotographParams{
 			Name:      row.Name,
@@ -618,7 +618,7 @@ func (s *ImportService) validateAndInsertScene(ctx context.Context, tx *sql.Tx, 
 		Valid:  true,
 	}
 
-	// Skip database insert if tx is nil (validate-only mode)
+	// Skip database insert if tx is nil (preview mode)
 	if tx != nil {
 		if err := s.Querier.RegistScene(ctx, tx, repository.RegistSceneParams{
 			PhotographID:   photographID,

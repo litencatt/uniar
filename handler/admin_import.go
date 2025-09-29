@@ -71,18 +71,18 @@ func (h *AdminImportHandler) ImportCSVUpload(c *gin.Context) {
 	}
 	defer src.Close()
 
-	validateOnlyStr := c.PostForm("validate_only")
-	validateOnly, _ := strconv.ParseBool(validateOnlyStr)
+	previewModeStr := c.PostForm("preview_mode")
+	previewMode, _ := strconv.ParseBool(previewModeStr)
 
 	var result *service.ImportResult
 
 	switch entityType {
 	case "music":
-		result, err = h.ImportService.ImportMusicFromCSV(c.Request.Context(), src, validateOnly)
+		result, err = h.ImportService.ImportMusicFromCSV(c.Request.Context(), src, previewMode)
 	case "photograph":
-		result, err = h.ImportService.ImportPhotographFromCSV(c.Request.Context(), src, validateOnly)
+		result, err = h.ImportService.ImportPhotographFromCSV(c.Request.Context(), src, previewMode)
 	case "scene":
-		result, err = h.ImportService.ImportSceneFromCSV(c.Request.Context(), src, validateOnly)
+		result, err = h.ImportService.ImportSceneFromCSV(c.Request.Context(), src, previewMode)
 	default:
 		c.HTML(http.StatusBadRequest, "error/400.go.tmpl", gin.H{
 			"title":   "Bad Request",
@@ -99,12 +99,12 @@ func (h *AdminImportHandler) ImportCSVUpload(c *gin.Context) {
 		return
 	}
 
-	if validateOnly {
+	if previewMode {
 		c.HTML(http.StatusOK, "admin/import_preview.go.tmpl", gin.H{
 			"title":       "Import Preview",
 			"entityType":  entityType,
 			"result":      result,
-			"validateOnly": true,
+			"previewMode": true,
 		})
 		return
 	}
