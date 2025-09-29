@@ -1,30 +1,58 @@
 {{ define "regist/index.go.tmpl" }}
 {{ template "header" . }}
-<form action="/auth/regist/{{ .groupId }}" method="POST">
-  <input type="submit" />    
-  <div>
-    <table border="1">
-      <thead>
-        <tr>
-          <th>photograph\member</th>
-          {{range .members}}
-          <th>{{ .Name }}</th>
-          {{end}}        
-        </tr>
-      </thead>
-      <tbody>
-      {{range $pi, $pv := .photos}}
-        <tr>
-          <td>{{ .Name }}</td>
-          {{range $mi, $mv := $.members}}
-            {{ $have := index (index $.producerScenes $pv.ID) $mv.ID }}
-            <td><input type="checkbox" name="member_{{$mv.ID}}[]" value="{{$pv.ID}}" {{if eq $have 1}}checked{{end}} {{if eq $have -1}}disabled{{end}}></td>    
+
+<div class="regist-section">
+  <h2 class="regist-title">シーン登録
+    {{ if eq .groupId 1 }}(櫻坂46){{ else if eq .groupId 2 }}(日向坂46){{ end }}
+  </h2>
+
+  <form action="/auth/regist/{{ .groupId }}" method="POST" class="regist-form">
+    <div class="submit-container">
+      <button type="submit" class="regist-submit">💾 登録内容を保存</button>
+    </div>
+
+    <div class="regist-table-container">
+      <h3 class="regist-table-title">シーンカード選択</h3>
+      <div class="table-wrapper">
+        <table class="regist-table">
+          <thead>
+            <tr>
+              <th>撮影 / メンバー</th>
+              {{range .members}}
+              <th>{{ .Name }}</th>
+              {{end}}
+            </tr>
+          </thead>
+          <tbody>
+          {{range $pi, $pv := .photos}}
+            <tr>
+              <td>{{ .Name }}</td>
+              {{range $mi, $mv := $.members}}
+                {{ $have := index (index $.producerScenes $pv.ID) $mv.ID }}
+                <td>
+                  <div class="regist-checkbox">
+                    <input type="checkbox"
+                           name="member_{{$mv.ID}}[]"
+                           value="{{$pv.ID}}"
+                           id="checkbox_{{$pv.ID}}_{{$mv.ID}}"
+                           {{if eq $have 1}}checked{{end}}
+                           {{if eq $have -1}}disabled{{end}}>
+                    <div class="checkbox-custom"></div>
+                  </div>
+                </td>
+              {{end}}
+            </tr>
           {{end}}
-        </tr>
-      {{end}}
-      </tbody>
-    </table>
-  </div>
-</form>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </form>
+</div>
+
+<style>
+  @import url("/assets/css/regist-new.css");
+</style>
+
 {{ template "footer" . }}
 {{ end }}
