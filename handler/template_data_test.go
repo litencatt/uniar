@@ -103,7 +103,7 @@ func setupRouterWithSession(userSession *UserSession) *gin.Engine {
 		if userSession != nil {
 			session := sessions.Default(c)
 			session.Set("uniar_session", userSession)
-			session.Save()
+			_ = session.Save() // テスト環境ではエラーを無視
 		}
 		c.Next()
 	})

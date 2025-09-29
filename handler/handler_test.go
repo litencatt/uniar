@@ -318,7 +318,10 @@ func TestGetUserSession_AdminDebug(t *testing.T) {
 					IsAdmin:    tt.originalAdmin,
 				}
 				session.Set("uniar_session", userSession)
-				session.Save()
+				if err := session.Save(); err != nil {
+					t.Errorf("Failed to save session: %v", err)
+					return
+				}
 
 				// getUserSessionを呼び出してテスト
 				us, err := getUserSession(c)
