@@ -94,7 +94,9 @@ func (s *ImportService) ImportMusicFromCSV(ctx context.Context, reader io.Reader
 		if err != nil {
 			return nil, fmt.Errorf("failed to begin transaction: %w", err)
 		}
-		defer tx.Rollback()
+		defer func() {
+			_ = tx.Rollback() // ロールバックエラーは無視
+		}()
 	}
 
 	for i, record := range records[1:] {
@@ -187,7 +189,9 @@ func (s *ImportService) ImportPhotographFromCSV(ctx context.Context, reader io.R
 		if err != nil {
 			return nil, fmt.Errorf("failed to begin transaction: %w", err)
 		}
-		defer tx.Rollback()
+		defer func() {
+			_ = tx.Rollback() // ロールバックエラーは無視
+		}()
 	}
 
 	for i, record := range records[1:] {
@@ -272,7 +276,9 @@ func (s *ImportService) ImportSceneFromCSV(ctx context.Context, reader io.Reader
 		if err != nil {
 			return nil, fmt.Errorf("failed to begin transaction: %w", err)
 		}
-		defer tx.Rollback()
+		defer func() {
+			_ = tx.Rollback() // ロールバックエラーは無視
+		}()
 	}
 
 	for i, record := range records[1:] {
