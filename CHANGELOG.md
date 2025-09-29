@@ -1,5 +1,12 @@
 # Changelog
 
+## [v0.21.0](https://github.com/litencatt/uniar/compare/v0.20.0...v0.21.0) - 2025-09-29
+- Add github integration guidelines by @litencatt in https://github.com/litencatt/uniar/pull/109
+- CSVインポート機能（Phase 1）の実装 by @litencatt in https://github.com/litencatt/uniar/pull/111
+- 管理画面に動的フィルター機能を追加 by @litencatt in https://github.com/litencatt/uniar/pull/112
+- Implement modern UI styling across all pages with unified design system by @litencatt in https://github.com/litencatt/uniar/pull/113
+- Show admin link to user page by @litencatt in https://github.com/litencatt/uniar/pull/114
+
 ## [v0.20.0](https://github.com/litencatt/uniar/compare/v0.19.5...v0.20.0) - 2025-09-28
 - Add Admin Panel with CRUD Operations for Music, Photograph, and Scene Management by @litencatt in https://github.com/litencatt/uniar/pull/107
 
