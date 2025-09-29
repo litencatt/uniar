@@ -27,10 +27,19 @@ docker compose up -d          # Start development environment
 docker compose down           # Stop and remove containers
 docker compose restart app    # Restart application container
 
-# NOTE: Container automatically starts with 'uniar server' command on startup
-# Server will be accessible at http://localhost:8090
-# Code changes are automatically reflected due to volume mounting (.:/app)
-# No need to rebuild Docker image after code changes
+# IMPORTANT: Docker Development Setup
+# Container automatically starts with Air hot-reload using .air.toml configuration
+# - Air runs 'make air-cmd' to build the binary
+# - Auto-executes 'APP_ENV=dev APP_USER=air ./tmp/main server'
+# - Server will be accessible at http://localhost:8090
+# - Code changes in Go/template files are automatically reflected (hot reload)
+# - No need to rebuild Docker image after code changes
+# - Volume mounting (.:/app) enables real-time code synchronization
+
+# If you get "bind: address already in use" error, the server is already running
+# Check with: docker compose ps
+# Stop with: docker compose exec app pkill -f "uniar server"
+
 docker compose exec app go run cmd/uniar/main.go [command]  # Run commands in container
 ```
 
