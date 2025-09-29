@@ -64,3 +64,17 @@ WHERE id = ?;
 
 -- name: DeleteMusic :exec
 DELETE FROM music WHERE id = ?;
+
+-- name: SearchMusicList :many
+SELECT
+	m.*,
+	l.name AS live_name,
+	c.name AS color_name
+FROM music m
+JOIN lives l ON m.live_id = l.id
+JOIN color_types c ON m.color_type_id = c.id
+WHERE
+	(CASE WHEN ?1 != '' THEN m.name LIKE '%' || ?1 || '%' ELSE 1 END) AND
+	(CASE WHEN ?2 != 0 THEN m.live_id = ?2 ELSE 1 END) AND
+	(CASE WHEN ?3 != 0 THEN m.color_type_id = ?3 ELSE 1 END)
+ORDER BY m.id DESC;

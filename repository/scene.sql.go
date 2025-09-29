@@ -444,6 +444,91 @@ func (q *Queries) RegistScene(ctx context.Context, db DBTX, arg RegistSceneParam
 	return err
 }
 
+const searchSceneList = `-- name: SearchSceneList :many
+SELECT s.id, s.photograph_id, s.member_id, s.color_type_id, s.vocal_max, s.dance_max, s.performance_max, s.life, s.luck, s.center_skill, s.expected_value, s.ssr_plus, s.created_at, p.name as photograph_name, m.name as member_name, c.name as color_name
+FROM scenes s
+JOIN photograph p ON s.photograph_id = p.id
+JOIN members m ON s.member_id = m.id
+JOIN color_types c ON s.color_type_id = c.id
+WHERE
+	(CASE WHEN ?1 != 0 THEN s.member_id = ?1 ELSE 1 END) AND
+	(CASE WHEN ?2 != 0 THEN s.photograph_id = ?2 ELSE 1 END) AND
+	(CASE WHEN ?3 != 0 THEN s.color_type_id = ?3 ELSE 1 END) AND
+	(CASE WHEN ?4 != -1 THEN s.ssr_plus = ?4 ELSE 1 END)
+ORDER BY s.id DESC
+`
+
+type SearchSceneListParams struct {
+	Column1 interface{}
+	Column2 interface{}
+	Column3 interface{}
+	Column4 interface{}
+}
+
+type SearchSceneListRow struct {
+	ID             int64
+	PhotographID   int64
+	MemberID       int64
+	ColorTypeID    int64
+	VocalMax       int64
+	DanceMax       int64
+	PerformanceMax int64
+	Life           int64
+	Luck           int64
+	CenterSkill    sql.NullString
+	ExpectedValue  sql.NullString
+	SsrPlus        int64
+	CreatedAt      time.Time
+	PhotographName string
+	MemberName     string
+	ColorName      string
+}
+
+func (q *Queries) SearchSceneList(ctx context.Context, db DBTX, arg SearchSceneListParams) ([]SearchSceneListRow, error) {
+	rows, err := db.QueryContext(ctx, searchSceneList,
+		arg.Column1,
+		arg.Column2,
+		arg.Column3,
+		arg.Column4,
+	)
+	if err != nil {
+		return nil, err
+	}
+	defer rows.Close()
+	var items []SearchSceneListRow
+	for rows.Next() {
+		var i SearchSceneListRow
+		if err := rows.Scan(
+			&i.ID,
+			&i.PhotographID,
+			&i.MemberID,
+			&i.ColorTypeID,
+			&i.VocalMax,
+			&i.DanceMax,
+			&i.PerformanceMax,
+			&i.Life,
+			&i.Luck,
+			&i.CenterSkill,
+			&i.ExpectedValue,
+			&i.SsrPlus,
+			&i.CreatedAt,
+			&i.PhotographName,
+			&i.MemberName,
+			&i.ColorName,
+		); err != nil {
+			return nil, err
+		}
+		items = append(items, i)
+	}
+	if err := rows.Close(); err != nil {
+		return nil, err
+	}
+	if err := rows.Err(); err != nil {
+		return nil, err
+	}
+	return items, nil
+}
+
 const updateScene = `-- name: UpdateScene :exec
 UPDATE scenes
 SET photograph_id = ?, member_id = ?, color_type_id = ?,

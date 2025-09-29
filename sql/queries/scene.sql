@@ -122,3 +122,16 @@ DELETE FROM scenes WHERE id = ?;
 
 -- name: CountScenesForAdmin :one
 SELECT COUNT(*) as total FROM scenes;
+
+-- name: SearchSceneList :many
+SELECT s.*, p.name as photograph_name, m.name as member_name, c.name as color_name
+FROM scenes s
+JOIN photograph p ON s.photograph_id = p.id
+JOIN members m ON s.member_id = m.id
+JOIN color_types c ON s.color_type_id = c.id
+WHERE
+	(CASE WHEN ?1 != 0 THEN s.member_id = ?1 ELSE 1 END) AND
+	(CASE WHEN ?2 != 0 THEN s.photograph_id = ?2 ELSE 1 END) AND
+	(CASE WHEN ?3 != 0 THEN s.color_type_id = ?3 ELSE 1 END) AND
+	(CASE WHEN ?4 != -1 THEN s.ssr_plus = ?4 ELSE 1 END)
+ORDER BY s.id DESC;

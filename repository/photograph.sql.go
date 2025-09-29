@@ -321,6 +321,72 @@ func (q *Queries) RegistPhotograph(ctx context.Context, db DBTX, arg RegistPhoto
 	return err
 }
 
+const searchPhotographList = `-- name: SearchPhotographList :many
+SELECT
+	p.id, p.name, p.group_id, p.abbreviation, p.photo_type, p.released_at, p.created_at, p.photo_type_id, p.name_for_order,
+	g.name AS group_name
+FROM photograph p
+JOIN groups g ON p.group_id = g.id
+WHERE
+	(CASE WHEN ?1 != '' THEN p.name LIKE '%' || ?1 || '%' ELSE 1 END) AND
+	(CASE WHEN ?2 != 0 THEN p.group_id = ?2 ELSE 1 END) AND
+	(CASE WHEN ?3 != '' THEN p.photo_type = ?3 ELSE 1 END)
+ORDER BY p.id DESC
+`
+
+type SearchPhotographListParams struct {
+	Column1 interface{}
+	Column2 interface{}
+	Column3 interface{}
+}
+
+type SearchPhotographListRow struct {
+	ID           int64
+	Name         string
+	GroupID      int64
+	Abbreviation string
+	PhotoType    string
+	ReleasedAt   interface{}
+	CreatedAt    time.Time
+	PhotoTypeID  sql.NullInt64
+	NameForOrder string
+	GroupName    string
+}
+
+func (q *Queries) SearchPhotographList(ctx context.Context, db DBTX, arg SearchPhotographListParams) ([]SearchPhotographListRow, error) {
+	rows, err := db.QueryContext(ctx, searchPhotographList, arg.Column1, arg.Column2, arg.Column3)
+	if err != nil {
+		return nil, err
+	}
+	defer rows.Close()
+	var items []SearchPhotographListRow
+	for rows.Next() {
+		var i SearchPhotographListRow
+		if err := rows.Scan(
+			&i.ID,
+			&i.Name,
+			&i.GroupID,
+			&i.Abbreviation,
+			&i.PhotoType,
+			&i.ReleasedAt,
+			&i.CreatedAt,
+			&i.PhotoTypeID,
+			&i.NameForOrder,
+			&i.GroupName,
+		); err != nil {
+			return nil, err
+		}
+		items = append(items, i)
+	}
+	if err := rows.Close(); err != nil {
+		return nil, err
+	}
+	if err := rows.Err(); err != nil {
+		return nil, err
+	}
+	return items, nil
+}
+
 const updatePhotograph = `-- name: UpdatePhotograph :exec
 UPDATE photograph
 SET name = ?, group_id = ?, photo_type = ?, abbreviation = ?, name_for_order = ?

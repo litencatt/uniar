@@ -652,6 +652,51 @@ func (mr *MockQuerierMockRecorder) RegistScene(ctx, db, arg interface{}) *gomock
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "RegistScene", reflect.TypeOf((*MockQuerier)(nil).RegistScene), ctx, db, arg)
 }
 
+// SearchMusicList mocks base method.
+func (m *MockQuerier) SearchMusicList(ctx context.Context, db DBTX, arg SearchMusicListParams) ([]SearchMusicListRow, error) {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "SearchMusicList", ctx, db, arg)
+	ret0, _ := ret[0].([]SearchMusicListRow)
+	ret1, _ := ret[1].(error)
+	return ret0, ret1
+}
+
+// SearchMusicList indicates an expected call of SearchMusicList.
+func (mr *MockQuerierMockRecorder) SearchMusicList(ctx, db, arg interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "SearchMusicList", reflect.TypeOf((*MockQuerier)(nil).SearchMusicList), ctx, db, arg)
+}
+
+// SearchPhotographList mocks base method.
+func (m *MockQuerier) SearchPhotographList(ctx context.Context, db DBTX, arg SearchPhotographListParams) ([]SearchPhotographListRow, error) {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "SearchPhotographList", ctx, db, arg)
+	ret0, _ := ret[0].([]SearchPhotographListRow)
+	ret1, _ := ret[1].(error)
+	return ret0, ret1
+}
+
+// SearchPhotographList indicates an expected call of SearchPhotographList.
+func (mr *MockQuerierMockRecorder) SearchPhotographList(ctx, db, arg interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "SearchPhotographList", reflect.TypeOf((*MockQuerier)(nil).SearchPhotographList), ctx, db, arg)
+}
+
+// SearchSceneList mocks base method.
+func (m *MockQuerier) SearchSceneList(ctx context.Context, db DBTX, arg SearchSceneListParams) ([]SearchSceneListRow, error) {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "SearchSceneList", ctx, db, arg)
+	ret0, _ := ret[0].([]SearchSceneListRow)
+	ret1, _ := ret[1].(error)
+	return ret0, ret1
+}
+
+// SearchSceneList indicates an expected call of SearchSceneList.
+func (mr *MockQuerierMockRecorder) SearchSceneList(ctx, db, arg interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "SearchSceneList", reflect.TypeOf((*MockQuerier)(nil).SearchSceneList), ctx, db, arg)
+}
+
 // UpdateMusic mocks base method.
 func (m *MockQuerier) UpdateMusic(ctx context.Context, db DBTX, arg UpdateMusicParams) error {
 	m.ctrl.T.Helper()

@@ -51,6 +51,9 @@ type Querier interface {
 	RegistProducerOffice(ctx context.Context, db DBTX, producerID int64) error
 	RegistProducerScene(ctx context.Context, db DBTX, arg RegistProducerSceneParams) error
 	RegistScene(ctx context.Context, db DBTX, arg RegistSceneParams) error
+	SearchMusicList(ctx context.Context, db DBTX, arg SearchMusicListParams) ([]SearchMusicListRow, error)
+	SearchPhotographList(ctx context.Context, db DBTX, arg SearchPhotographListParams) ([]SearchPhotographListRow, error)
+	SearchSceneList(ctx context.Context, db DBTX, arg SearchSceneListParams) ([]SearchSceneListRow, error)
 	UpdateMusic(ctx context.Context, db DBTX, arg UpdateMusicParams) error
 	UpdatePhotograph(ctx context.Context, db DBTX, arg UpdatePhotographParams) error
 	UpdateProducerMember(ctx context.Context, db DBTX, arg UpdateProducerMemberParams) error
