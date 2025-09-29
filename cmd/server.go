@@ -95,6 +95,9 @@ func run(ctx context.Context) error {
 	adminScene := &handler.AdminSceneHandler{
 		SceneService: &service.Scene{DB: db, Querier: q},
 	}
+	adminImport := &handler.AdminImportHandler{
+		ImportService: &service.ImportService{DB: db, Querier: q},
+	}
 
 	// Register type for save original struct to session
 	gob.Register(&handler.UserSession{})
@@ -173,6 +176,11 @@ func run(ctx context.Context) error {
 		admin.GET("/scene/:id/edit", adminScene.EditScene)
 		admin.POST("/scene/:id", adminScene.UpdateScene)
 		admin.POST("/scene/:id/delete", adminScene.DeleteScene)
+
+		// CSVインポート機能
+		admin.GET("/import/:entity", adminImport.ImportCSVForm)
+		admin.POST("/import/:entity/upload", adminImport.ImportCSVUpload)
+		admin.POST("/import/:entity/confirm", adminImport.ImportCSVConfirm)
 	}
 
 	return r.Run(":8090")

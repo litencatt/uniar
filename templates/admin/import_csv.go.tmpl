@@ -1,0 +1,94 @@
+{{define "admin/import_csv.go.tmpl"}}
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CSV Import - {{.entityType}} | Admin Dashboard</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+</head>
+<body>
+    <div class="container mt-4">
+        <div class="row">
+            <div class="col-md-8 mx-auto">
+                <div class="card">
+                    <div class="card-header">
+                        <h4><i class="fas fa-upload"></i> CSV Import - {{.entityType}}</h4>
+                        <a href="/admin/{{.entityType}}" class="btn btn-secondary btn-sm">
+                            <i class="fas fa-arrow-left"></i> Back to {{.entityType}} List
+                        </a>
+                    </div>
+                    <div class="card-body">
+                        <div class="mb-4">
+                            <h5>CSV Format Guidelines</h5>
+                            {{if eq .entityType "music"}}
+                            <p>Required columns (in this order):</p>
+                            <code>name,normal,pro,master,length,color_type_id,live_id</code>
+                            <div class="mt-2">
+                                <small class="text-muted">
+                                    Example: "New Song",500,800,1200,180,1,1
+                                </small>
+                            </div>
+                            {{else if eq .entityType "photograph"}}
+                            <p>Required columns (in this order):</p>
+                            <code>name,group_id,photo_type</code>
+                            <div class="mt-2">
+                                <small class="text-muted">
+                                    Example: "Photo Name",1,"Live"
+                                </small>
+                            </div>
+                            {{else if eq .entityType "scene"}}
+                            <p>Required columns (in this order):</p>
+                            <code>photograph_id,member_id,color_type_id,vocal_max,dance_max,performance_max,center_skill,expected_value,ssr_plus</code>
+                            <div class="mt-2">
+                                <small class="text-muted">
+                                    Example: 1,1,1,5000,4800,4900,100,500,1
+                                </small>
+                            </div>
+                            {{end}}
+                        </div>
+
+                        <form action="/admin/import/{{.entityType}}/upload" method="post" enctype="multipart/form-data">
+                            <div class="mb-3">
+                                <label for="csv_file" class="form-label">CSV File</label>
+                                <input type="file" class="form-control" id="csv_file" name="csv_file" accept=".csv" required>
+                                <div class="form-text">Please select a CSV file with the correct format.</div>
+                            </div>
+
+                            <div class="mb-3">
+                                <div class="form-check">
+                                    <input class="form-check-input" type="checkbox" id="preview_mode" name="preview_mode" value="true" checked>
+                                    <label class="form-check-label" for="preview_mode">
+                                        Preview mode
+                                    </label>
+                                    <div class="form-text">Check this to preview the data without importing.</div>
+                                </div>
+                            </div>
+
+                            <div class="d-grid gap-2">
+                                <button type="submit" class="btn btn-primary">
+                                    <i class="fas fa-upload"></i> Upload and Process
+                                </button>
+                            </div>
+                        </form>
+
+                        <div class="mt-4">
+                            <h6>Import Process:</h6>
+                            <ol class="small">
+                                <li>Upload your CSV file with the correct format</li>
+                                <li>Choose "Preview mode" to preview the data first</li>
+                                <li>Review any validation errors</li>
+                                <li>Uncheck "Preview mode" and upload again to import</li>
+                            </ol>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>
+{{end}}
